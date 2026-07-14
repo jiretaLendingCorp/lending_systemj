@@ -16,7 +16,7 @@ class KycStatusCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: _statusColor.withValues(alpha: 0.3),
+          color: _statusColor.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -28,7 +28,7 @@ class KycStatusCard extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: _statusColor.withValues(alpha: 0.1),
+                color: _statusColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(

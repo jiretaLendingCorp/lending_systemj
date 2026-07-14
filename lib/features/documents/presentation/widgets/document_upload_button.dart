@@ -88,7 +88,7 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
         ),
         label: Text('Uploading... ${(widget.progress * 100).toStringAsFixed(0)}%'),
         style: FilledButton.styleFrom(
-          backgroundColor: ColorTokens.accent.withValues(alpha: 0.7),
+          backgroundColor: ColorTokens.accent.withOpacity(0.7),
           padding: const EdgeInsets.symmetric(vertical: 12),
         ),
       ),

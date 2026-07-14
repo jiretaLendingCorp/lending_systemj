@@ -180,13 +180,13 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: isLight ? 0.08 : 0.3),
+                color: Colors.black.withOpacity(isLight ? 0.08 : 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
                 spreadRadius: 0,
               ),
               BoxShadow(
-                color: Colors.black.withValues(alpha: isLight ? 0.04 : 0.15),
+                color: Colors.black.withOpacity(isLight ? 0.04 : 0.15),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
                 spreadRadius: 0,

@@ -137,11 +137,11 @@ class _DiffView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bgColor = isOld
-        ? ColorTokens.lightError.withValues(alpha: 0.06)
-        : ColorTokens.lightSuccess.withValues(alpha: 0.06);
+        ? ColorTokens.lightError.withOpacity(0.06)
+        : ColorTokens.lightSuccess.withOpacity(0.06);
     final borderColor = isOld
-        ? ColorTokens.lightError.withValues(alpha: 0.2)
-        : ColorTokens.lightSuccess.withValues(alpha: 0.2);
+        ? ColorTokens.lightError.withOpacity(0.2)
+        : ColorTokens.lightSuccess.withOpacity(0.2);
     final textColor = isOld ? ColorTokens.lightError : ColorTokens.lightSuccess;
 
     return Container(

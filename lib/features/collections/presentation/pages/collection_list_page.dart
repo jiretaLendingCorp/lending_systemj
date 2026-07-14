@@ -116,7 +116,7 @@ class _CollectionListPageState
                       ? ColorTokens.darkSurface
                       : ColorTokens.lightSurface,
                   selectedColor:
-                      ColorTokens.accent.withValues(alpha: 0.15),
+                      ColorTokens.accent.withOpacity(0.15),
                   labelStyle: TextStyle(
                     fontSize: 12,
                     fontWeight:
@@ -159,7 +159,7 @@ class _CollectionListPageState
                       ? ColorTokens.darkSurface
                       : ColorTokens.lightSurface,
                   selectedColor: ColorTokens.secondaryAccent
-                      .withValues(alpha: 0.15),
+                      .withOpacity(0.15),
                   labelStyle: TextStyle(
                     fontSize: 12,
                     fontWeight:
@@ -513,7 +513,7 @@ class _AssignRiderCollectionDialogState
             backgroundColor: ColorTokens.accent,
             foregroundColor: Colors.white,
             disabledBackgroundColor:
-                ColorTokens.accent.withValues(alpha: 0.5),
+                ColorTokens.accent.withOpacity(0.5),
           ),
           child: _isAssigning
               ? const SizedBox(
@@ -622,7 +622,7 @@ class _AssignRiderCollectionDialogState
                     decoration: BoxDecoration(
                       color: isSelected
                           ? ColorTokens.accent
-                              .withValues(alpha: 0.08)
+                              .withOpacity(0.08)
                           : widget.isDark
                               ? ColorTokens.darkSurface
                               : ColorTokens.lightSurface,
@@ -641,7 +641,7 @@ class _AssignRiderCollectionDialogState
                         CircleAvatar(
                           radius: 20,
                           backgroundColor: ColorTokens.roleRider
-                              .withValues(alpha: 0.12),
+                              .withOpacity(0.12),
                           child: Text(
                             rider.name.isNotEmpty
                                 ? rider.name[0].toUpperCase()

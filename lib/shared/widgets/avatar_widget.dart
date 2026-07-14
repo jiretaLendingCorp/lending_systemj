@@ -28,13 +28,13 @@ class AvatarWidget extends StatelessWidget {
         radius: radius,
         backgroundImage: NetworkImage(avatarUrl!),
         onBackgroundImageError: (error, stackTrace) {},
-        backgroundColor: roleColor.withValues(alpha: 0.15),
+        backgroundColor: roleColor.withOpacity(0.15),
       );
     }
 
     return CircleAvatar(
       radius: radius,
-      backgroundColor: roleColor.withValues(alpha: 0.15),
+      backgroundColor: roleColor.withOpacity(0.15),
       child: Text(
         _initials(fullName),
         style: TextStyle(

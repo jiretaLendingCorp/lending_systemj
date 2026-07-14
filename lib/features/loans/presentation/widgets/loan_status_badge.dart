@@ -27,10 +27,10 @@ class LoanStatusBadge extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: isDark ? 0.2 : 0.12),
+        color: color.withOpacity(isDark ? 0.2 : 0.12),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: color.withValues(alpha: 0.3),
+          color: color.withOpacity(0.3),
           width: 1,
         ),
       ),

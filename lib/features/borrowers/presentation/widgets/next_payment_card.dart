@@ -30,7 +30,7 @@ class NextPaymentCard extends StatelessWidget {
                   : isUrgent
                       ? ColorTokens.lightWarning
                       : ColorTokens.lightBorder)
-              .withValues(alpha: 0.5),
+              .withOpacity(0.5),
           width: 1,
         ),
       ),
@@ -126,7 +126,7 @@ class NextPaymentCard extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ColorTokens.lightError.withValues(alpha: 0.05),
+                  color: ColorTokens.lightError.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -182,7 +182,7 @@ class _DueBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

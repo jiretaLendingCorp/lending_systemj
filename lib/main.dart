@@ -61,11 +61,12 @@ Future<void> _initializeSupabase() async {
   await Supabase.initialize(
     url: const String.fromEnvironment(
       'SUPABASE_URL',
-      defaultValue: 'http://localhost:54321',
+      defaultValue: 'https://lcelzrvpqwlbeccrwpkp.supabase.co',
     ),
     publishableKey: const String.fromEnvironment(
       'SUPABASE_ANON_KEY',
-      defaultValue: '',
+      defaultValue:
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjZWx6cnZwcXdsYmVjY3J3cGtwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjgyMTAsImV4cCI6MjA5OTYwNDIxMH0.kSBD9jB8CFy1Oo5nTwtIslp-112dEP6bo1XszOuiPUU',
     ),
     debug: kDebugMode,
   );

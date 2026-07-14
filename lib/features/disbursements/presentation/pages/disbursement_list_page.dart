@@ -115,7 +115,7 @@ class _DisbursementListPageState
                       ? ColorTokens.darkSurface
                       : ColorTokens.lightSurface,
                   selectedColor:
-                      ColorTokens.accent.withValues(alpha: 0.15),
+                      ColorTokens.accent.withOpacity(0.15),
                   labelStyle: TextStyle(
                     fontSize: 12,
                     fontWeight:
@@ -158,7 +158,7 @@ class _DisbursementListPageState
                       ? ColorTokens.darkSurface
                       : ColorTokens.lightSurface,
                   selectedColor: ColorTokens.secondaryAccent
-                      .withValues(alpha: 0.15),
+                      .withOpacity(0.15),
                   labelStyle: TextStyle(
                     fontSize: 12,
                     fontWeight:

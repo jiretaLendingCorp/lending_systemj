@@ -13,9 +13,7 @@ analyzer:
 linter:
   rules:
     prefer_initializing_formals: false
-    unnecessary_underscores: false
     unnecessary_brace_in_string_interps: false
-    use_null_aware_elements: false
     prefer_const_constructors: false
     avoid_print: true
     always_declare_return_types: true

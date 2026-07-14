@@ -142,7 +142,7 @@ CREATE VIEW v_rider_tasks AS
 SELECT
   'disbursement' AS task_type,
   d.id AS task_id,
-  d.status,
+  d.status::TEXT AS status,
   d.created_at,
   r.id AS rider_id,
   r.user_id AS rider_user_id,
@@ -163,7 +163,7 @@ UNION ALL
 SELECT
   'collection' AS task_type,
   c.id AS task_id,
-  c.status,
+  c.status::TEXT AS status,
   c.created_at,
   r.id AS rider_id,
   r.user_id AS rider_user_id,

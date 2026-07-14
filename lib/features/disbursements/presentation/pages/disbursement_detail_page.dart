@@ -145,7 +145,7 @@ class _DisbursementDetailPageState
                     height: 72,
                     decoration: BoxDecoration(
                       color: _statusColor(disbursement.status)
-                          .withValues(alpha: 0.12),
+                          .withOpacity(0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -574,10 +574,10 @@ class _DetailStatusBadge extends StatelessWidget {
       padding:
           const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: isDark ? 0.2 : 0.12),
+        color: color.withOpacity(isDark ? 0.2 : 0.12),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: color.withValues(alpha: 0.3),
+          color: color.withOpacity(0.3),
           width: 1,
         ),
       ),

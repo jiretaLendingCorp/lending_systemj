@@ -148,7 +148,7 @@ class LoanCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: ColorTokens.lightError.withValues(alpha: 0.1),
+                    color: ColorTokens.lightError.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(

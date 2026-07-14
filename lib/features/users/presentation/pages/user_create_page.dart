@@ -155,10 +155,10 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: ColorTokens.roleHeadManager.withValues(alpha: 0.08),
+                          color: ColorTokens.roleHeadManager.withOpacity(0.08),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                              color: ColorTokens.roleHeadManager.withValues(alpha: 0.3)),
+                              color: ColorTokens.roleHeadManager.withOpacity(0.3)),
                         ),
                         child: Row(
                           children: [

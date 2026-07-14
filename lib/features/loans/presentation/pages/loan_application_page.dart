@@ -220,7 +220,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                               decoration: BoxDecoration(
                                 color: isSelected
                                     ? ColorTokens.accent
-                                        .withValues(alpha: isDark ? 0.15 : 0.08)
+                                        .withOpacity(isDark ? 0.15 : 0.08)
                                     : isDark
                                         ? ColorTokens.darkSurface
                                         : ColorTokens.lightSurface,
@@ -364,7 +364,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    initialValue: _coMakerRelationship,
+                    value: _coMakerRelationship,
                     decoration: InputDecoration(
                       prefixIcon: Icon(
                         Icons.people_outlined,
@@ -498,7 +498,7 @@ class _LoanPreviewCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: ColorTokens.accent.withValues(alpha: 0.3),
+          color: ColorTokens.accent.withOpacity(0.3),
         ),
       ),
       child: Padding(
@@ -548,7 +548,7 @@ class _LoanPreviewCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: ColorTokens.accent.withValues(alpha: isDark ? 0.08 : 0.04),
+                color: ColorTokens.accent.withOpacity(isDark ? 0.08 : 0.04),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

@@ -28,7 +28,7 @@ class PaymentMethodCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? accentColor.withValues(alpha: 0.08)
+              ? accentColor.withOpacity(0.08)
               : isDark
                   ? ColorTokens.darkSurface
                   : ColorTokens.lightSurface,
@@ -48,7 +48,7 @@ class PaymentMethodCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: accentColor.withValues(alpha: 0.12),
+                color: accentColor.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(

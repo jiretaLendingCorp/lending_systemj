@@ -198,10 +198,10 @@ class _PendingApprovalsLink extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: ColorTokens.lightWarning.withValues(alpha: 0.1),
+          color: ColorTokens.lightWarning.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: ColorTokens.lightWarning.withValues(alpha: 0.3),
+            color: ColorTokens.lightWarning.withOpacity(0.3),
           ),
         ),
         child: Row(
@@ -384,8 +384,8 @@ class _BranchPerformanceChart extends StatelessWidget {
                   horizontalInterval: 50000,
                   getDrawingHorizontalLine: (value) => FlLine(
                     color: isLight
-                        ? ColorTokens.lightBorder.withValues(alpha: 0.5)
-                        : ColorTokens.darkBorder.withValues(alpha: 0.5),
+                        ? ColorTokens.lightBorder.withOpacity(0.5)
+                        : ColorTokens.darkBorder.withOpacity(0.5),
                     strokeWidth: 1,
                   ),
                 ),
@@ -564,8 +564,8 @@ class _CollectionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderColor = isLight
-        ? ColorTokens.lightBorder.withValues(alpha: 0.5)
-        : ColorTokens.darkBorder.withValues(alpha: 0.5);
+        ? ColorTokens.lightBorder.withOpacity(0.5)
+        : ColorTokens.darkBorder.withOpacity(0.5);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -580,7 +580,7 @@ class _CollectionTile extends StatelessWidget {
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: ColorTokens.lightSuccess.withValues(alpha: 0.1),
+              color: ColorTokens.lightSuccess.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(

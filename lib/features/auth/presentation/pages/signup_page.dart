@@ -413,7 +413,7 @@ class _RoleOption extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
         decoration: BoxDecoration(
           color: isSelected
-              ? roleColor.withValues(alpha: isDark ? 0.15 : 0.08)
+              ? roleColor.withOpacity(isDark ? 0.15 : 0.08)
               : (isDark ? ColorTokens.darkSurface : ColorTokens.lightSurface),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(

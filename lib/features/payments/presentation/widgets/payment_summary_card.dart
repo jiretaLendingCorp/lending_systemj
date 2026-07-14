@@ -111,7 +111,7 @@ class PaymentSummaryCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFF007BFF).withValues(alpha: 0.08),
+                color: const Color(0xFF007BFF).withOpacity(0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -140,7 +140,7 @@ class PaymentSummaryCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: ColorTokens.secondaryAccent.withValues(alpha: 0.08),
+                color: ColorTokens.secondaryAccent.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -169,7 +169,7 @@ class PaymentSummaryCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: ColorTokens.lightSuccess.withValues(alpha: 0.08),
+                color: ColorTokens.lightSuccess.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

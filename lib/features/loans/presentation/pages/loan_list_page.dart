@@ -140,7 +140,7 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
                   backgroundColor: isDark
                       ? ColorTokens.darkSurface
                       : ColorTokens.lightSurface,
-                  selectedColor: ColorTokens.accent.withValues(alpha: 0.15),
+                  selectedColor: ColorTokens.accent.withOpacity(0.15),
                   labelStyle: TextStyle(
                     fontSize: 12,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,

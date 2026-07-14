@@ -77,7 +77,7 @@ class _InteractiveCardState extends State<InteractiveCard> {
               borderRadius: br,
               border: Border.all(
                 color: _isHovered
-                    ? ColorTokens.accent.withValues(alpha: 0.4)
+                    ? ColorTokens.accent.withOpacity(0.4)
                     : borderColor,
                 width: _isHovered ? 1.5 : 1,
               ),
@@ -85,7 +85,7 @@ class _InteractiveCardState extends State<InteractiveCard> {
                   ? [
                       BoxShadow(
                         color: ColorTokens.accent
-                            .withValues(alpha: _isHovered ? 0.15 : 0.05),
+                            .withOpacity(_isHovered ? 0.15 : 0.05),
                         blurRadius: elevation * 2,
                         offset: Offset(0, elevation),
                       ),
@@ -150,9 +150,7 @@ class _PulseDotState extends State<PulseDot>
                 width: widget.size,
                 height: widget.size,
                 decoration: BoxDecoration(
-                  color: widget.color.withValues(
-                    alpha: (1 - _controller.value) * 0.5,
-                  ),
+                  color: widget.color.withOpacity((1 - _controller.value) * 0.5,),
                   shape: BoxShape.circle,
                 ),
               ),

@@ -235,7 +235,7 @@ class _NavItemTile extends StatelessWidget {
     final theme = Theme.of(context);
     final isLight = theme.brightness == Brightness.light;
 
-    final activeBg = ColorTokens.accent.withValues(alpha: 0.1);
+    final activeBg = ColorTokens.accent.withOpacity(0.1);
     final activeIconColor = ColorTokens.accent;
     final inactiveIconColor = isLight
         ? ColorTokens.lightTextSecondary

@@ -269,7 +269,7 @@ class _StatusRow extends StatelessWidget {
             width: 120,
             child: LinearProgressIndicator(
               value: percentage / 100,
-              backgroundColor: color.withValues(alpha: 0.15),
+              backgroundColor: color.withOpacity(0.15),
               valueColor: AlwaysStoppedAnimation(color),
               borderRadius: BorderRadius.circular(4),
             ),

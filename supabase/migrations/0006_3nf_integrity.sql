@@ -38,10 +38,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE OR REPLACE TRIGGER trg_payments_recompute_balance
-  AFTER INSERT OR UPDATE OR DELETE ON payments
-  FOR EACH ROW EXECUTE FUNCTION public.recompute_final_balance_for_payment();
-
 CREATE OR REPLACE FUNCTION public.recompute_final_balance_for_payment()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -55,11 +51,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE OR REPLACE TRIGGER trg_loans_recompute_on_penalty
-  AFTER UPDATE OF penalty_amount ON loans
-  FOR EACH ROW
-  WHEN (OLD.penalty_amount IS DISTINCT FROM NEW.penalty_amount)
-  EXECUTE FUNCTION public.recompute_final_balance_on_penalty();
+CREATE OR REPLACE TRIGGER trg_payments_recompute_balance
+  AFTER INSERT OR UPDATE OR DELETE ON payments
+  FOR EACH ROW EXECUTE FUNCTION public.recompute_final_balance_for_payment();
 
 CREATE OR REPLACE FUNCTION public.recompute_final_balance_on_penalty()
 RETURNS TRIGGER AS $$
@@ -68,6 +62,12 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER trg_loans_recompute_on_penalty
+  AFTER UPDATE OF penalty_amount ON loans
+  FOR EACH ROW
+  WHEN (OLD.penalty_amount IS DISTINCT FROM NEW.penalty_amount)
+  EXECUTE FUNCTION public.recompute_final_balance_on_penalty();
 
 CREATE OR REPLACE FUNCTION public.assert_payment_lender_matches_loan()
 RETURNS TRIGGER AS $$

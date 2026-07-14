@@ -251,7 +251,7 @@ class _QuickActionButton extends StatelessWidget {
       label: Text(label),
       style: OutlinedButton.styleFrom(
         foregroundColor: color,
-        side: BorderSide(color: color.withValues(alpha: 0.5)),
+        side: BorderSide(color: color.withOpacity(0.5)),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -402,8 +402,8 @@ class _MonthlyBarChart extends StatelessWidget {
                   horizontalInterval: 100000,
                   getDrawingHorizontalLine: (value) => FlLine(
                     color: isLight
-                        ? ColorTokens.lightBorder.withValues(alpha: 0.5)
-                        : ColorTokens.darkBorder.withValues(alpha: 0.5),
+                        ? ColorTokens.lightBorder.withOpacity(0.5)
+                        : ColorTokens.darkBorder.withOpacity(0.5),
                     strokeWidth: 1,
                   ),
                 ),
@@ -671,7 +671,7 @@ class _ActivityTile extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: _activityColor(activity.type).withValues(alpha: 0.1),
+              color: _activityColor(activity.type).withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(

@@ -2,7 +2,12 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'http://localhost:54321/functions/v1';
+  static const String supabaseUrl = String.fromEnvironment(
+    'SUPABASE_URL',
+    defaultValue: 'https://lcelzrvpqwlbeccrwpkp.supabase.co',
+  );
+
+  static const String baseUrl = '$supabaseUrl/functions/v1';
 
   static const String authLogin = '/auth/login';
   static const String authSignup = '/auth/signup';

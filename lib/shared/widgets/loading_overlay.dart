@@ -24,7 +24,7 @@ class LoadingOverlay extends StatelessWidget {
     if (!isLoading) return const SizedBox.shrink();
 
     final effectiveBarrier =
-        barrierColor ?? Colors.black.withValues(alpha: 0.45);
+        barrierColor ?? Colors.black.withOpacity(0.45);
     final effectiveIndicator =
         indicatorColor ?? ColorTokens.accent;
 
