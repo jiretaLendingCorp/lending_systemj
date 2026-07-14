@@ -1,11 +1,8 @@
+// lib/features/lenders/presentation/widgets/kyc_status_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/borrowers/domain/entities/borrower_profile.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
 
-/// Card displaying the borrower's KYC verification status.
-///
-/// Shows the current verification status (pending/verified/rejected)
-/// with an icon, description, and action button when applicable.
 class KycStatusCard extends StatelessWidget {
   final KycStatus kycStatus;
 
@@ -19,7 +16,7 @@ class KycStatusCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: _statusColor.withOpacity(0.3),
+          color: _statusColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -27,12 +24,11 @@ class KycStatusCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            // Status icon
             Container(
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: _statusColor.withOpacity(0.1),
+                color: _statusColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -43,7 +39,6 @@ class KycStatusCard extends StatelessWidget {
             ),
             const SizedBox(width: 14),
 
-            // Status text
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +70,6 @@ class KycStatusCard extends StatelessWidget {
               ),
             ),
 
-            // Action button
             if (kycStatus.isPending || kycStatus.isRejected)
               FilledButton(
                 onPressed: () => _navigateToKycUpload(context),

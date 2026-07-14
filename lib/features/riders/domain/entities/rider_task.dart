@@ -1,6 +1,6 @@
+// lib/features/riders/domain/entities/rider_task.dart
 import 'package:equatable/equatable.dart';
 
-/// Task type: whether the rider is delivering cash or collecting payment.
 enum RiderTaskType {
   disbursement,
   collection;
@@ -26,9 +26,6 @@ enum RiderTaskType {
       };
 }
 
-/// Status lifecycle for a rider task:
-///   pending → assigned → in_transit → completed
-///                                    ↘ failed
 enum RiderTaskStatus {
   pending,
   assigned,
@@ -69,15 +66,11 @@ enum RiderTaskStatus {
       this == RiderTaskStatus.failed;
 }
 
-/// Core entity representing a task assigned to a rider.
-///
-/// A rider task is either a cash disbursement delivery to a borrower
-/// or a payment collection from a borrower at their address.
 class RiderTask extends Equatable {
   final String id;
   final RiderTaskType type;
-  final String borrowerName;
-  final String borrowerAddress;
+  final String lenderName;
+  final String lenderAddress;
   final double amount;
   final RiderTaskStatus status;
   final String loanId;
@@ -89,8 +82,8 @@ class RiderTask extends Equatable {
   const RiderTask({
     required this.id,
     required this.type,
-    required this.borrowerName,
-    required this.borrowerAddress,
+    required this.lenderName,
+    required this.lenderAddress,
     required this.amount,
     this.status = RiderTaskStatus.pending,
     required this.loanId,
@@ -100,21 +93,18 @@ class RiderTask extends Equatable {
     this.photoReceiptUrl,
   });
 
-  /// Whether the task has GPS coordinates.
   bool get hasGpsCoordinates => gpsLatitude != 0.0 && gpsLongitude != 0.0;
 
-  /// Whether the task is a disbursement type.
   bool get isDisbursement => type == RiderTaskType.disbursement;
 
-  /// Whether the task is a collection type.
   bool get isCollection => type == RiderTaskType.collection;
 
   @override
   List<Object?> get props => [
         id,
         type,
-        borrowerName,
-        borrowerAddress,
+        lenderName,
+        lenderAddress,
         amount,
         status,
         loanId,

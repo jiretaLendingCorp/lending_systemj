@@ -1,10 +1,6 @@
-import 'package:lendflow/features/auth/domain/entities/user.dart';
+// lib/features/auth/data/models/user_model.dart
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
 
-/// Data-layer representation of a [User], with JSON serialization.
-///
-/// Extends the domain entity so that it can be used interchangeably
-/// wherever a [User] is expected, while adding `fromJson` / `toJson`
-/// for API communication and local caching.
 class UserModel extends User {
   const UserModel({
     required super.id,
@@ -16,9 +12,6 @@ class UserModel extends User {
     required super.createdAt,
   });
 
-  /// Create a [UserModel] from a Supabase/API JSON map.
-  ///
-  /// Handles both snake_case (API) and camelCase (local) keys.
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] as String,
@@ -31,7 +24,6 @@ class UserModel extends User {
     );
   }
 
-  /// Create a [UserModel] from Supabase auth user metadata.
   factory UserModel.fromSupabaseUser(Map<String, dynamic> userJson) {
     final metadata = userJson['user_metadata'] as Map<String, dynamic>? ??
         <String, dynamic>{};
@@ -51,7 +43,6 @@ class UserModel extends User {
     );
   }
 
-  /// Serialize to a JSON map suitable for API requests.
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -64,7 +55,6 @@ class UserModel extends User {
     };
   }
 
-  /// Create a copy with optional field overrides.
   UserModel copyWith({
     String? id,
     String? email,
@@ -85,7 +75,6 @@ class UserModel extends User {
     );
   }
 
-  /// Parse a DateTime from various possible formats.
   static DateTime _parseDateTime(dynamic value) {
     if (value == null) return DateTime.now();
     if (value is DateTime) return value;

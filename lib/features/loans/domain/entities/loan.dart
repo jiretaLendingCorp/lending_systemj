@@ -1,6 +1,6 @@
+// lib/features/loans/domain/entities/loan.dart
 import 'package:equatable/equatable.dart';
 
-/// Loan schedule type: determines the payment frequency.
 enum ScheduleType {
   daily,
   weekly,
@@ -23,7 +23,6 @@ enum ScheduleType {
         ScheduleType.monthly => 'Monthly',
       };
 
-  /// Number of installments for a given term in days.
   int installmentCount(int termDays) {
     return switch (this) {
       ScheduleType.daily => termDays,
@@ -33,10 +32,6 @@ enum ScheduleType {
   }
 }
 
-/// Loan status lifecycle:
-///   draft → submitted → under_review → approved → disbursed → active → paid → closed
-///                                                                ↘ defaulted → closed
-///                                                                ↗ rejected
 enum LoanStatus {
   draft,
   submitted,
@@ -83,35 +78,26 @@ enum LoanStatus {
         LoanStatus.closed => 'Closed',
       };
 
-  /// Whether this status allows the loan to be edited by the borrower.
   bool get isEditable => this == LoanStatus.draft;
 
-  /// Whether this status can be approved/rejected by a manager.
   bool get isApprovable => this == LoanStatus.underReview;
 
-  /// Whether this status can be disbursed.
   bool get isDisbursable => this == LoanStatus.approved;
 
-  /// Whether the loan is in a terminal (final) state.
   bool get isTerminal =>
       this == LoanStatus.paid ||
       this == LoanStatus.rejected ||
       this == LoanStatus.closed;
 
-  /// Whether the loan is in an active/repayment state.
   bool get isActive =>
       this == LoanStatus.active ||
       this == LoanStatus.disbursed ||
       this == LoanStatus.defaulted;
 }
 
-/// Core loan entity representing a lending application.
-///
-/// This is the domain-level representation. Data-layer concerns
-/// (JSON serialization) live in [LoanModel].
 class Loan extends Equatable {
   final String id;
-  final String borrowerId;
+  final String lenderId;
   final String? coMakerId;
   final double principal;
   final double interestRate;
@@ -129,7 +115,7 @@ class Loan extends Equatable {
 
   const Loan({
     required this.id,
-    required this.borrowerId,
+    required this.lenderId,
     this.coMakerId,
     required this.principal,
     this.interestRate = 0.20,
@@ -146,23 +132,19 @@ class Loan extends Equatable {
     required this.createdAt,
   });
 
-  /// The interest amount for this loan.
   double get interestAmount => principal * interestRate;
 
-  /// The total amount paid so far.
   double get amountPaid => totalPayable + penaltyAmount - finalBalance;
 
-  /// The remaining balance.
   double get outstandingBalance => finalBalance;
 
-  /// Progress ratio (0.0 to 1.0) of repayment.
   double get repaymentProgress =>
       totalPayable > 0 ? (amountPaid / totalPayable).clamp(0.0, 1.0) : 0.0;
 
   @override
   List<Object?> get props => [
         id,
-        borrowerId,
+        lenderId,
         coMakerId,
         principal,
         interestRate,

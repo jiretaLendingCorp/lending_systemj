@@ -1,7 +1,4 @@
-/**
- * GET /reports/overdue
- * Manager/admin — aging buckets for overdue loans.
- */
+// supabase/functions/reports/overdue/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -29,19 +26,18 @@ Deno.serve(async (req: Request) => {
     if ("error" in authResult) return authResult.error;
     const { payload } = authResult;
 
-    if (!hasRole(payload, "manager", "admin")) {
+    if (!hasRole(payload, "employee", "head_manager")) {
       return forbidden("Only managers or admins can access overdue reports");
     }
 
     const supabase = getServiceClient();
 
-    // Fetch all overdue loans (disbursed and past due date)
     const { data: overdueLoans, error: fetchError } = await supabase
       .from("loans")
       .select(
         `id, principal, total_payable, penalty_amount, final_balance, due_at, status,
          disbursed_at, defaulted_at,
-         borrower:borrowers!loans_borrower_id_fkey(id, full_name, phone),
+         lender:lenders!loans_lender_id_fkey(id, full_name, phone),
          payments(id, amount, status)`
       )
       .in("status", ["disbursed", "defaulted"])
@@ -54,7 +50,6 @@ Deno.serve(async (req: Request) => {
 
     const now = new Date();
 
-    // Compute days overdue for each loan
     const processedLoans = (overdueLoans ?? []).map((loan) => {
       const dueDate = new Date(loan.due_at);
       const daysOverdue = Math.floor(
@@ -70,7 +65,7 @@ Deno.serve(async (req: Request) => {
 
       return {
         id: loan.id,
-        borrower: loan.borrower,
+        lender: loan.lender,
         principal: Number(loan.principal),
         total_payable: Number(loan.total_payable),
         penalty_amount: Number(loan.penalty_amount ?? 0),
@@ -81,7 +76,6 @@ Deno.serve(async (req: Request) => {
       };
     });
 
-    // Group into aging buckets
     const agingBuckets = AGING_BUCKETS.map((bucket) => {
       const loans = processedLoans.filter(
         (l) => l.days_overdue >= bucket.min && l.days_overdue <= bucket.max
@@ -96,7 +90,7 @@ Deno.serve(async (req: Request) => {
         total_outstanding: totalOutstanding,
         loans: loans.map((l) => ({
           id: l.id,
-          borrower: l.borrower,
+          lender: l.lender,
           principal: l.principal,
           outstanding_balance: l.outstanding_balance,
           days_overdue: l.days_overdue,
@@ -105,7 +99,6 @@ Deno.serve(async (req: Request) => {
       };
     });
 
-    // Summary
     const totalOverdue = processedLoans.length;
     const totalOutstandingAll = processedLoans.reduce((sum, l) => sum + l.outstanding_balance, 0);
     const totalPrincipalAll = processedLoans.reduce((sum, l) => sum + l.principal, 0);

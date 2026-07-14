@@ -1,33 +1,27 @@
+// lib/features/dashboard/presentation/pages/manager_dashboard_page.dart
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/dashboard/domain/entities/dashboard_stats.dart';
-import 'package:lendflow/features/dashboard/presentation/providers/dashboard_notifier.dart';
-import 'package:lendflow/features/dashboard/presentation/widgets/kpi_card.dart';
-import 'package:lendflow/shared/widgets/empty_state.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/dashboard/domain/entities/dashboard_stats.dart';
+import 'package:jireta_loan/features/dashboard/presentation/providers/dashboard_notifier.dart';
+import 'package:jireta_loan/features/dashboard/presentation/widgets/kpi_card.dart';
+import 'package:jireta_loan/shared/widgets/empty_state.dart';
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
 
-/// Web manager dashboard page scoped to the manager's branch.
-///
-/// Layout:
-/// - Row of 4 KPI cards: My Loans, Active Loans, Overdue Count, Today's Tasks
-/// - BarChart for branch performance
-/// - Pending approval count with link
-/// - Recent collections list
-class ManagerDashboardPage extends ConsumerStatefulWidget {
-  const ManagerDashboardPage({super.key});
+class EmployeeDashboardPage extends ConsumerStatefulWidget {
+  const EmployeeDashboardPage({super.key});
 
   @override
-  ConsumerState<ManagerDashboardPage> createState() =>
+  ConsumerState<EmployeeDashboardPage> createState() =>
       _ManagerDashboardPageState();
 }
 
-class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
+class _ManagerDashboardPageState extends ConsumerState<EmployeeDashboardPage> {
   @override
   void initState() {
     super.initState();
@@ -50,7 +44,6 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ──────────────────────────────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -58,7 +51,7 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Manager Dashboard',
+                      'Employee Dashboard',
                       style: TextStyles.headlineSmall(context).copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -70,7 +63,6 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
                     ),
                   ],
                 ),
-                // ── Pending approvals quick link ─────────────────────
                 if (dashboardState is DashboardLoaded &&
                     dashboardState.stats.pendingApprovals > 0)
                   _PendingApprovalsLink(
@@ -80,7 +72,6 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
             ),
             const SizedBox(height: 24),
 
-            // ── State handling ──────────────────────────────────────
             if (dashboardState is DashboardLoading)
               const Center(
                 child: Padding(
@@ -98,15 +89,12 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
               ),
 
             if (dashboardState is DashboardLoaded) ...[
-              // ── KPI cards row ─────────────────────────────────────
               _buildKpiRow(dashboardState.stats),
               const SizedBox(height: 24),
 
-              // ── Charts row ───────────────────────────────────────
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Branch performance bar chart
                   Expanded(
                     flex: 3,
                     child: _BranchPerformanceChart(
@@ -114,7 +102,6 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
                     ),
                   ),
                   const SizedBox(width: 16),
-                  // Recent collections panel
                   Expanded(
                     flex: 2,
                     child: _RecentCollectionsPanel(
@@ -176,7 +163,7 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
                     ? '${stats.overdueRate.toStringAsFixed(1)}%'
                     : null,
                 trendUp: false,
-                onTap: () => context.go('/manager/collections'),
+                onTap: () => context.go('/employee/collections'),
               ),
             ),
             SizedBox(width: spacing),
@@ -188,7 +175,7 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
                 icon: Icons.task_alt_rounded,
                 iconColor: ColorTokens.lightWarning,
                 subtitle: 'Pending approvals',
-                onTap: () => context.go('/manager/loans'),
+                onTap: () => context.go('/employee/loans'),
               ),
             ),
           ],
@@ -198,9 +185,6 @@ class _ManagerDashboardPageState extends ConsumerState<ManagerDashboardPage> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Pending approvals quick link
-// ─────────────────────────────────────────────────────────────────
 
 class _PendingApprovalsLink extends StatelessWidget {
   final int count;
@@ -210,7 +194,7 @@ class _PendingApprovalsLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.go('/manager/loans'),
+      onTap: () => context.go('/employee/loans'),
       borderRadius: BorderRadius.circular(12),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -250,9 +234,6 @@ class _PendingApprovalsLink extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Branch performance bar chart
-// ─────────────────────────────────────────────────────────────────
 
 class _BranchPerformanceChart extends StatelessWidget {
   final DashboardStats stats;
@@ -266,7 +247,6 @@ class _BranchPerformanceChart extends StatelessWidget {
     final bgColor = isLight ? Colors.white : ColorTokens.darkSurface;
     final borderColor = isLight ? ColorTokens.lightBorder : ColorTokens.darkBorder;
 
-    // Sample branch performance data
     final weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
     final disbursements = [
       stats.todayDisbursements > 0 ? stats.todayDisbursements * 4 : 120000,
@@ -303,7 +283,6 @@ class _BranchPerformanceChart extends StatelessWidget {
             style: TextStyles.bodySmall(context),
           ),
           const SizedBox(height: 8),
-          // Legend
           Row(
             children: [
               Container(
@@ -442,7 +421,6 @@ class _BranchPerformanceChart extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          // Summary row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -505,9 +483,6 @@ class _SummaryMetric extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Recent collections panel
-// ─────────────────────────────────────────────────────────────────
 
 class _RecentCollectionsPanel extends StatelessWidget {
   final List<RecentActivity> activities;
@@ -521,7 +496,6 @@ class _RecentCollectionsPanel extends StatelessWidget {
     final bgColor = isLight ? Colors.white : ColorTokens.darkSurface;
     final borderColor = isLight ? ColorTokens.lightBorder : ColorTokens.darkBorder;
 
-    // Filter collection-related activities
     final collectionActivities = activities
         .where((a) =>
             a.type == 'collection' ||
@@ -548,7 +522,7 @@ class _RecentCollectionsPanel extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => context.go('/manager/collections'),
+                onPressed: () => context.go('/employee/collections'),
                 child: Text(
                   'View All',
                   style: TextStyle(

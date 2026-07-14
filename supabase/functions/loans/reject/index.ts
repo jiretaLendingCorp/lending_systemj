@@ -1,7 +1,4 @@
-/**
- * POST /loans/:id/reject
- * Manager/admin only, reason required, audit log.
- */
+// supabase/functions/loans/reject/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -21,7 +18,7 @@ Deno.serve(async (req: Request) => {
     if ("error" in authResult) return authResult.error;
     const { payload } = authResult;
 
-    if (!hasRole(payload, "manager", "admin")) {
+    if (!hasRole(payload, "employee", "head_manager")) {
       return forbidden("Only managers or admins can reject loans");
     }
 
@@ -41,10 +38,9 @@ Deno.serve(async (req: Request) => {
     const { reason } = parsed.data;
     const supabase = getServiceClient();
 
-    // Fetch current loan
     const { data: loan, error: loanError } = await supabase
       .from("loans")
-      .select("id, status, borrower_id, principal")
+      .select("id, status, lender_id, principal")
       .eq("id", loanId)
       .is("deleted_at", null)
       .single();
@@ -53,7 +49,6 @@ Deno.serve(async (req: Request) => {
       return notFound("Loan");
     }
 
-    // Can only reject from draft or under_review
     if (!["draft", "under_review"].includes(loan.status)) {
       return conflict(
         `Cannot reject loan in '${loan.status}' status. Only draft or under_review loans can be rejected.`
@@ -75,23 +70,21 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to reject loan");
     }
 
-    // Create notification for borrower
-    const { data: borrower } = await supabase
-      .from("borrowers")
+    const { data: lender } = await supabase
+      .from('lenders')
       .select("user_id")
-      .eq("id", loan.borrower_id)
+      .eq("id", loan.lender_id)
       .single();
 
-    if (borrower) {
+    if (lender) {
       await supabase.from("notifications").insert({
-        user_id: borrower.user_id,
+        user_id: lender.user_id,
         type: "loan_rejected",
         title: "Loan Application Rejected",
-        body: `Your loan application for ₱${Number(loan.principal).toLocaleString()} has been rejected. Reason: ${reason}`,
+        body: `Your loan application for ₱${Number(loan.principal).toLocaleString()} has been rejected. Reason: $reason`,
       });
     }
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,

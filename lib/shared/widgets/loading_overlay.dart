@@ -1,31 +1,14 @@
+// lib/shared/widgets/loading_overlay.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Full-screen semi-transparent loading overlay with CircularProgressIndicator.
-///
-/// Use this widget to block interaction while an async operation is
-/// in progress. It paints a barrier over the parent and shows a
-/// centered spinner with an optional message.
-///
-/// ```dart
-/// Stack(
-///   children: [
-///     MyContent(),
-///     if (isLoading) const LoadingOverlay(message: 'Saving...'),
-///   ],
-/// )
-/// ```
 class LoadingOverlay extends StatelessWidget {
-  /// Optional message displayed below the spinner.
   final String? message;
 
-  /// Whether to show the overlay. When `false`, returns [SizedBox.shrink].
   final bool isLoading;
 
-  /// Override the default barrier color.
   final Color? barrierColor;
 
-  /// Override the default spinner color.
   final Color? indicatorColor;
 
   const LoadingOverlay({

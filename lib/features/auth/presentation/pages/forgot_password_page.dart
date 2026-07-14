@@ -1,17 +1,13 @@
+// lib/features/auth/presentation/pages/forgot_password_page.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/validators.dart';
-import 'package:lendflow/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:lendflow/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/validators.dart';
+import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
 
-/// Forgot password page for requesting a password reset email.
-///
-/// After submitting their email, the user receives a Supabase
-/// password reset link. The page shows a success state confirming
-/// the email was sent.
 class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
 
@@ -49,7 +45,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authFeatureProvider);
-    final isLoading = authState is AuthLoading;
+    final isLoading = authState is AuthFeatureLoading;
     final isPasswordResetSent = authState is AuthPasswordResetSent;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -170,7 +166,6 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
             ),
             const SizedBox(height: 32),
 
-            // Email field
             AuthTextField(
               label: 'Email',
               hint: 'Enter your email address',
@@ -190,7 +185,6 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
             ),
             const SizedBox(height: 24),
 
-            // Submit button
             SizedBox(
               height: 48,
               child: ElevatedButton(
@@ -209,7 +203,6 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
             ),
             const SizedBox(height: 24),
 
-            // Back to login link
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

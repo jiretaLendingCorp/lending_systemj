@@ -1,13 +1,10 @@
+// lib/features/disbursements/domain/usecases/assign_rider_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/disbursements/domain/entities/disbursement.dart';
-import 'package:lendflow/features/disbursements/domain/repositories/disbursement_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
+import 'package:jireta_loan/features/disbursements/domain/repositories/disbursement_repository.dart';
 
-/// Assign rider to disbursement use case.
-///
-/// Validates that the disbursement is in a state that allows
-/// rider assignment (pending or assigned) before proceeding.
 class AssignRiderUseCase {
   final DisbursementRepository _repository;
 
@@ -17,7 +14,6 @@ class AssignRiderUseCase {
   Future<Either<Failure, Disbursement>> call(
     AssignRiderParams params,
   ) async {
-    // Validate rider ID
     if (params.riderId.isEmpty) {
       return Future.value(const Left(ValidationFailure(
         message: 'Please select a rider to assign.',
@@ -25,7 +21,6 @@ class AssignRiderUseCase {
       )));
     }
 
-    // Validate disbursement ID
     if (params.disbursementId.isEmpty) {
       return Future.value(const Left(ValidationFailure(
         message: 'Disbursement ID is required.',
@@ -40,7 +35,6 @@ class AssignRiderUseCase {
   }
 }
 
-/// Parameters for the assign rider use case.
 class AssignRiderParams extends Equatable {
   final String disbursementId;
   final String riderId;

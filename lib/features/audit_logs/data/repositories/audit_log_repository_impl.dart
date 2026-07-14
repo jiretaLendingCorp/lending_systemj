@@ -1,16 +1,13 @@
+// lib/features/audit_logs/data/repositories/audit_log_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/audit_logs/data/datasources/audit_log_remote_datasource.dart'
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/audit_logs/data/datasources/audit_log_remote_datasource.dart'
     hide AuditLogListResult;
-import 'package:lendflow/features/audit_logs/domain/entities/audit_log.dart';
-import 'package:lendflow/features/audit_logs/domain/repositories/audit_log_repository.dart'
+import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
+import 'package:jireta_loan/features/audit_logs/domain/repositories/audit_log_repository.dart'
     as domain;
 
-/// Concrete implementation of [AuditLogRepository].
-///
-/// Delegates to [AuditLogRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class AuditLogRepositoryImpl implements domain.AuditLogRepository {
   final AuditLogRemoteDataSource _remoteDataSource;
 
@@ -39,7 +36,7 @@ class AuditLogRepositoryImpl implements domain.AuditLogRepository {
         logs: result.logs,
         total: result.total,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -61,7 +58,7 @@ class AuditLogRepositoryImpl implements domain.AuditLogRepository {
     try {
       final log = await _remoteDataSource.detail(logId);
       return Right(log);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -93,7 +90,7 @@ class AuditLogRepositoryImpl implements domain.AuditLogRepository {
         endDate: endDate,
       );
       return Right(url);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

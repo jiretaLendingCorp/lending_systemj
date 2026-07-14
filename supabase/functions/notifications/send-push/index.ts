@@ -1,7 +1,4 @@
-/**
- * POST /notifications/send-push
- * FCM/APNs push, no sensitive data in payload.
- */
+// supabase/functions/notifications/send-push/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -26,14 +23,13 @@ Deno.serve(async (req: Request) => {
       return badRequest("Method not allowed");
     }
 
-    // Can be called by system or by admin/manager
     const cronSecret = req.headers.get("x-cron-secret");
     const isCron = cronSecret === Deno.env.get("CRON_SECRET");
 
     if (!isCron) {
       const authResult = await authenticateRequest(req);
       if ("error" in authResult) return authResult.error;
-      if (!hasRole(authResult.payload, "admin", "manager", "system")) {
+      if (!hasRole(authResult.payload, "head_manager", "employee", "system")) {
         return forbidden("Insufficient permissions");
       }
     }
@@ -46,7 +42,6 @@ Deno.serve(async (req: Request) => {
 
     const supabase = getServiceClient();
 
-    // Get user's FCM tokens (stored in user metadata or a separate table)
     const { data: user } = await supabase.auth.admin.getUserById(body.user_id);
     if (!user) {
       return badRequest("User not found");
@@ -55,7 +50,6 @@ Deno.serve(async (req: Request) => {
     const fcmTokens: string[] = user.user?.app_metadata?.fcm_tokens ?? [];
 
     if (fcmTokens.length === 0) {
-      // No push tokens registered — skip silently
       return successResponse(
         { message: "No push tokens registered for user", sent: 0 },
         200,
@@ -63,7 +57,6 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Build FCM message — NO sensitive data in payload
     const pushData: Record<string, string> = {
       type: body.type,
       ...(body.data ?? {}),
@@ -77,7 +70,7 @@ Deno.serve(async (req: Request) => {
         const fcmResponse = await fetch("https://fcm.googleapis.com/fcm/send", {
           method: "POST",
           headers: {
-            Authorization: `key=${FCM_SERVER_KEY}`,
+            Authorization: `key=$FCM_SERVER_KEY`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -105,7 +98,6 @@ Deno.serve(async (req: Request) => {
           sentCount++;
         } else {
           const errorData = await fcmResponse.json();
-          // Remove invalid tokens
           if (
             errorData.results?.[0]?.error === "InvalidRegistration" ||
             errorData.results?.[0]?.error === "NotRegistered"
@@ -114,11 +106,9 @@ Deno.serve(async (req: Request) => {
           }
         }
       } catch {
-        // Continue with other tokens
       }
     }
 
-    // Remove invalid tokens from user metadata
     if (invalidTokens.length > 0) {
       const validTokens = fcmTokens.filter((t) => !invalidTokens.includes(t));
       await supabase.auth.admin.updateUserById(body.user_id, {
@@ -126,7 +116,6 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // Also create in-app notification
     await supabase.from("notifications").insert({
       user_id: body.user_id,
       type: body.type,
@@ -134,7 +123,6 @@ Deno.serve(async (req: Request) => {
       body: body.body,
     });
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: body.user_id,
       user_role: "system",

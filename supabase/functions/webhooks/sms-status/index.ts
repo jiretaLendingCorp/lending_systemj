@@ -1,7 +1,4 @@
-/**
- * POST /webhooks/sms-status
- * SMS delivery status callback from SMS provider.
- */
+// supabase/functions/webhooks/sms-status/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
 import { badRequest, successResponse, serverError } from "../_shared/errors.ts";
@@ -15,7 +12,6 @@ Deno.serve(async (req: Request) => {
       return badRequest("Method not allowed");
     }
 
-    // Verify webhook secret (Semaphore uses different auth)
     const webhookSecret = req.headers.get("x-webhook-secret");
     if (SMS_WEBHOOK_SECRET && webhookSecret !== SMS_WEBHOOK_SECRET) {
       return badRequest("Invalid webhook secret");
@@ -30,11 +26,10 @@ Deno.serve(async (req: Request) => {
     const { message_id, status, error_code, timestamp } = parsed.data;
     const supabase = getServiceClient();
 
-    // Log SMS delivery status
     await supabase.from("audit_logs").insert({
       user_id: null,
       user_role: "system",
-      action: `sms_${status}`,
+      action: `sms_$status`,
       new_value: {
         message_id,
         status,
@@ -43,15 +38,13 @@ Deno.serve(async (req: Request) => {
       },
     });
 
-    // If SMS failed, you might want to retry or notify admin
     if (status === "failed" || status === "undelivered") {
-      console.warn(`SMS delivery failed: message_id=${message_id}, error=${error_code}`);
+      console.warn(`SMS delivery failed: message_id=$message_id, error=$error_code`);
 
-      // Optionally create a notification for admins
       const { data: admins } = await supabase
         .from("users")
         .select("id")
-        .eq("role", "admin")
+        .eq("role", "head_manager")
         .eq("is_active", true);
 
       if (admins && admins.length > 0) {
@@ -60,7 +53,7 @@ Deno.serve(async (req: Request) => {
             user_id: admin.id,
             type: "sms_delivery_failed",
             title: "SMS Delivery Failed",
-            body: `SMS message ${message_id} failed to deliver. Error: ${error_code ?? "Unknown"}`,
+            body: `SMS message $message_id failed to deliver. Error: ${error_code ?? "Unknown"}`,
           }))
         );
       }

@@ -1,16 +1,12 @@
+// lib/features/collections/presentation/pages/collection_detail_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/collections/domain/entities/collection.dart';
-import 'package:lendflow/features/collections/presentation/providers/collection_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/collections/domain/entities/collection.dart';
+import 'package:jireta_loan/features/collections/presentation/providers/collection_notifier.dart';
 
-/// Collection detail page with proof, GPS verification.
-///
-/// Shows comprehensive collection details including current status,
-/// rider assignment information, GPS collection proof, photo receipt,
-/// and action buttons for assigning riders or marking as collected.
 class CollectionDetailPage extends ConsumerStatefulWidget {
   final String collectionId;
 
@@ -135,7 +131,6 @@ class _CollectionDetailPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Status header
             Center(
               child: Column(
                 children: [
@@ -183,7 +178,6 @@ class _CollectionDetailPageState
             ),
             const SizedBox(height: 24),
 
-            // Collection info
             _DetailSection(
               title: 'Collection Info',
               children: [
@@ -200,9 +194,9 @@ class _CollectionDetailPageState
                   isDark: isDark,
                 ),
                 _DetailRow(
-                  label: 'Borrower ID',
+                  label: 'Lender ID',
                   value:
-                      '#${collection.borrowerId.length > 8 ? collection.borrowerId.substring(0, 8).toUpperCase() : collection.borrowerId.toUpperCase()}',
+                      '#${collection.lenderId.length > 8 ? collection.lenderId.substring(0, 8).toUpperCase() : collection.lenderId.toUpperCase()}',
                   isDark: isDark,
                 ),
                 _DetailRow(
@@ -231,7 +225,6 @@ class _CollectionDetailPageState
             ),
             const SizedBox(height: 16),
 
-            // Rider assignment info
             _DetailSection(
               title: 'Rider Assignment',
               children: [
@@ -263,7 +256,6 @@ class _CollectionDetailPageState
             ),
             const SizedBox(height: 16),
 
-            // Collection proof (for collected items)
             if (collection.isCollected) ...[
               _DetailSection(
                 title: 'Collection Proof',
@@ -291,7 +283,6 @@ class _CollectionDetailPageState
                       mono: true,
                     ),
                     const SizedBox(height: 8),
-                    // GPS verification badge
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(12),
@@ -338,7 +329,6 @@ class _CollectionDetailPageState
               const SizedBox(height: 16),
             ],
 
-            // Action buttons
             if (collection.status.isActionable ||
                 collection.status == CollectionStatus.inTransit) ...[
               if (collection.status ==
@@ -426,8 +416,6 @@ class _CollectionDetailPageState
   }
 
   void _showAssignRiderSheet(String collectionId) {
-    // Navigate to the collection list page's assign rider dialog
-    // or show a bottom sheet with rider selection
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Opening rider assignment...'),
@@ -437,8 +425,6 @@ class _CollectionDetailPageState
   }
 
   void _markCollected() {
-    // In production, get GPS from Geolocator
-    // Simulate with Quezon City coordinates
     ref.read(collectionFeatureProvider.notifier).markCollected(
           collectionId: widget.collectionId,
           latitude: 14.6760,
@@ -449,7 +435,7 @@ class _CollectionDetailPageState
   void _markFailed() {
     ref.read(collectionFeatureProvider.notifier).markFailed(
           widget.collectionId,
-          reason: 'Unable to collect from borrower.',
+          reason: 'Unable to collect from lender.',
         );
   }
 
@@ -482,7 +468,6 @@ class _CollectionDetailPageState
       };
 }
 
-/// Detail section with title and rows.
 class _DetailSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -526,7 +511,6 @@ class _DetailSection extends StatelessWidget {
   }
 }
 
-/// Single row in the detail section.
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
@@ -587,7 +571,6 @@ class _DetailRow extends StatelessWidget {
   }
 }
 
-/// Status badge for collection detail.
 class _CollectionStatusBadge extends StatelessWidget {
   final CollectionStatus status;
 

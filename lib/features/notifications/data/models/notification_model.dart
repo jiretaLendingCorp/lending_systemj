@@ -1,6 +1,6 @@
-import 'package:lendflow/features/notifications/domain/entities/app_notification.dart';
+// lib/features/notifications/data/models/notification_model.dart
+import 'package:jireta_loan/features/notifications/domain/entities/app_notification.dart';
 
-/// Data-layer representation of an [AppNotification], with JSON serialization.
 class NotificationModel extends AppNotification {
   const NotificationModel({
     required super.id,

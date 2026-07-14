@@ -1,6 +1,7 @@
+// lib/features/documents/domain/entities/kyc_document.dart
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
-/// KYC document type classification.
 enum DocumentType {
   governmentId,
   proofOfBilling,
@@ -50,7 +51,6 @@ enum DocumentType {
       };
 }
 
-/// KYC document verification status.
 enum DocumentStatus {
   pending,
   verified,
@@ -78,13 +78,9 @@ enum DocumentStatus {
   bool get isRejected => this == DocumentStatus.rejected;
 }
 
-/// Core entity representing a KYC document uploaded by a borrower.
-///
-/// Documents are stored in Supabase private storage buckets and
-/// accessed via signed URLs for security.
 class KycDocument extends Equatable {
   final String id;
-  final String borrowerId;
+  final String lenderId;
   final DocumentType documentType;
   final String fileUrl;
   final DocumentStatus status;
@@ -94,7 +90,7 @@ class KycDocument extends Equatable {
 
   const KycDocument({
     required this.id,
-    required this.borrowerId,
+    required this.lenderId,
     required this.documentType,
     required this.fileUrl,
     this.status = DocumentStatus.pending,
@@ -103,16 +99,14 @@ class KycDocument extends Equatable {
     required this.createdAt,
   });
 
-  /// Whether the document needs to be re-uploaded.
   bool get needsReupload => status == DocumentStatus.rejected;
 
-  /// Whether the document is still being reviewed.
   bool get isUnderReview => status == DocumentStatus.pending;
 
   @override
   List<Object?> get props => [
         id,
-        borrowerId,
+        lenderId,
         documentType,
         fileUrl,
         status,

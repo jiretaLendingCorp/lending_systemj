@@ -1,26 +1,21 @@
+// lib/features/auth/domain/usecases/signup_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
-import 'package:lendflow/features/auth/domain/repositories/auth_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/features/auth/domain/repositories/auth_repository.dart';
 
-/// Signup use case: registers a new user account.
-///
-/// Enforces the business rule that self-registration is limited
-/// to borrower and rider roles. Admin and manager accounts must
-/// be created through the admin panel.
 class SignupUseCase {
   final AuthRepository _repository;
 
   SignupUseCase({required AuthRepository repository}) : _repository = repository;
 
   Future<Either<Failure, User>> call(SignupParams params) {
-    // Validate that only self-registrable roles are used
     final role = params.role.toLowerCase();
-    if (role != 'borrower' && role != 'rider') {
+    if (role != 'lender' && role != 'rider') {
       return Future.value(const Left(ValidationFailure(
-        message: 'Self-registration is only available for borrower and rider roles.',
-        fieldErrors: {'role': 'Only borrower and rider roles can self-register.'},
+        message: 'Self-registration is only available for lender and rider roles.',
+        fieldErrors: {'role': 'Only lender and rider roles can self-register.'},
       )));
     }
 
@@ -34,7 +29,6 @@ class SignupUseCase {
   }
 }
 
-/// Parameters for the signup use case.
 class SignupParams extends Equatable {
   final String email;
   final String password;

@@ -1,30 +1,22 @@
+// lib/features/lenders/presentation/pages/borrower_profile_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/constants.dart';
-import 'package:lendflow/features/borrowers/domain/entities/borrower_profile.dart';
-import 'package:lendflow/features/borrowers/presentation/providers/borrower_notifier.dart';
-import 'package:lendflow/features/borrowers/presentation/widgets/kyc_status_card.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
+import 'package:jireta_loan/features/lenders/presentation/providers/borrower_notifier.dart';
+import 'package:jireta_loan/features/lenders/presentation/widgets/kyc_status_card.dart';
 
-/// Mobile page displaying the borrower's profile, KYC status, and settings.
-///
-/// Features:
-/// - Profile header with avatar and name
-/// - KYC verification status with link to upload documents
-/// - Personal information section
-/// - Edit profile option
-/// - Settings (notifications, security)
-/// - Sign out button
-class BorrowerProfilePage extends ConsumerStatefulWidget {
-  const BorrowerProfilePage({super.key});
+class LenderProfilePage extends ConsumerStatefulWidget {
+  const LenderProfilePage({super.key});
 
   @override
-  ConsumerState<BorrowerProfilePage> createState() =>
+  ConsumerState<LenderProfilePage> createState() =>
       _BorrowerProfilePageState();
 }
 
-class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
+class _BorrowerProfilePageState extends ConsumerState<LenderProfilePage> {
   @override
   void initState() {
     super.initState();
@@ -39,7 +31,7 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
     final borrowerState = ref.watch(borrowerFeatureProvider);
     final authState = ref.watch(authProvider);
     final userName =
-        authState is AuthAuthenticated ? authState.user.name : 'Borrower';
+        authState is AppAuthAuthenticated ? (authState.fullName ?? 'Lender') : 'Lender';
 
     return Scaffold(
       appBar: AppBar(
@@ -62,20 +54,19 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Profile header
               Center(
                 child: Column(
                   children: [
                     CircleAvatar(
                       radius: 48,
                       backgroundColor:
-                          ColorTokens.roleBorrower.withOpacity(0.1),
+                          ColorTokens.roleLender.withValues(alpha: 0.1),
                       child: Text(
                         userName.isNotEmpty
                             ? userName.substring(0, 1).toUpperCase()
                             : 'B',
                         style: theme.textTheme.headlineMedium?.copyWith(
-                          color: ColorTokens.roleBorrower,
+                          color: ColorTokens.roleLender,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -94,13 +85,13 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: ColorTokens.roleBorrower.withOpacity(0.1),
+                        color: ColorTokens.roleLender.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        AppConstants.roleBorrower.toUpperCase(),
+                        AppConstants.roleLender.toUpperCase(),
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: ColorTokens.roleBorrower,
+                          color: ColorTokens.roleLender,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 1,
                         ),
@@ -112,12 +103,10 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
 
               const SizedBox(height: 24),
 
-              // KYC Status
               if (borrowerState is BorrowerProfileLoaded) ...[
                 KycStatusCard(kycStatus: borrowerState.profile.kycStatus),
                 const SizedBox(height: 24),
 
-                // Personal Information
                 Text(
                   'Personal Information',
                   style: theme.textTheme.titleSmall?.copyWith(
@@ -150,7 +139,6 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
 
               const SizedBox(height: 24),
 
-              // Settings
               Text(
                 'Settings',
                 style: theme.textTheme.titleSmall?.copyWith(
@@ -179,7 +167,6 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
                     title: const Text('Change Password'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
-                      // Navigate to change password
                     },
                   ),
                 ],
@@ -187,7 +174,6 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
 
               const SizedBox(height: 32),
 
-              // Sign Out
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -199,7 +185,7 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
                   ),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                        color: theme.colorScheme.error.withOpacity(0.3)),
+                        color: theme.colorScheme.error.withValues(alpha: 0.3)),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                 ),
@@ -264,7 +250,7 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
           FilledButton(
             onPressed: () {
               Navigator.pop(context);
-              ref.read(authProvider.notifier).logout();
+              ref.read(authProvider.notifier).signOut();
             },
             style: FilledButton.styleFrom(
               backgroundColor: ColorTokens.lightError,
@@ -277,7 +263,6 @@ class _BorrowerProfilePageState extends ConsumerState<BorrowerProfilePage> {
   }
 }
 
-/// Card widget for grouping related information rows.
 class _InfoCard extends StatelessWidget {
   final List<Widget> children;
 

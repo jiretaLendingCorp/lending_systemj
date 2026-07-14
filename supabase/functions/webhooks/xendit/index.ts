@@ -1,7 +1,4 @@
-/**
- * POST /webhooks/xendit
- * Verify Xendit-Webhook-Token signature.
- */
+// supabase/functions/webhooks/xendit/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
 import { badRequest, successResponse, serverError } from "../_shared/errors.ts";
@@ -10,13 +7,11 @@ import { xenditWebhookSchema } from "../_shared/validation.ts";
 const XENDIT_WEBHOOK_TOKEN = Deno.env.get("XENDIT_WEBHOOK_TOKEN") ?? "";
 
 Deno.serve(async (req: Request) => {
-  // Webhooks don't use CORS preflight
   try {
     if (req.method !== "POST") {
       return badRequest("Method not allowed");
     }
 
-    // Verify Xendit webhook token
     const webhookToken = req.headers.get("x-callback-token");
     if (!webhookToken || webhookToken !== XENDIT_WEBHOOK_TOKEN) {
       return badRequest("Invalid webhook token");
@@ -31,24 +26,21 @@ Deno.serve(async (req: Request) => {
     const { id, external_id, status, amount, payment_method } = parsed.data;
     const supabase = getServiceClient();
 
-    // Find the payment by xendit_payment_id or reference
     const { data: payment, error: paymentError } = await supabase
       .from("payments")
-      .select("id, loan_id, amount, status, borrower_id")
+      .select("id, loan_id, amount, status, lender_id")
       .eq("xendit_payment_id", id)
       .maybeSingle();
 
     if (!payment) {
-      // Try by reference number
       const { data: refPayment } = await supabase
         .from("payments")
-        .select("id, loan_id, amount, status, borrower_id")
+        .select("id, loan_id, amount, status, lender_id")
         .eq("reference_number", external_id)
         .maybeSingle();
 
       if (!refPayment) {
         console.error("Xendit webhook: Payment not found for", { id, external_id });
-        // Return 200 so Xendit doesn't retry
         return new Response(JSON.stringify({ received: true }), {
           status: 200,
           headers: { "Content-Type": "application/json" },
@@ -58,7 +50,7 @@ Deno.serve(async (req: Request) => {
 
     const targetPayment = payment ?? (await supabase
       .from("payments")
-      .select("id, loan_id, amount, status, borrower_id")
+      .select("id, loan_id, amount, status, lender_id")
       .eq("reference_number", external_id)
       .maybeSingle());
 
@@ -69,7 +61,6 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // Map Xendit status to our payment status
     let newStatus: string;
     switch (status) {
       case "PAID":
@@ -91,7 +82,6 @@ Deno.serve(async (req: Request) => {
 
     const oldStatus = targetPayment.status;
 
-    // Update payment status
     const { error: updateError } = await supabase
       .from("payments")
       .update({
@@ -107,7 +97,6 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to update payment");
     }
 
-    // If payment completed, check if loan is fully paid
     if (newStatus === "completed") {
       const { data: allPayments } = await supabase
         .from("payments")
@@ -134,16 +123,15 @@ Deno.serve(async (req: Request) => {
         }
       }
 
-      // Notify borrower
-      const { data: borrower } = await supabase
-        .from("borrowers")
+      const { data: lender } = await supabase
+        .from('lenders')
         .select("user_id")
-        .eq("id", targetPayment.borrower_id)
+        .eq("id", targetPayment.lender_id)
         .single();
 
-      if (borrower) {
+      if (lender) {
         await supabase.from("notifications").insert({
-          user_id: borrower.user_id,
+          user_id: lender.user_id,
           type: "payment_confirmed",
           title: "Payment Confirmed",
           body: `Your payment of ₱${Number(targetPayment.amount).toLocaleString()} via ${payment_method ?? "GCash"} has been confirmed.`,
@@ -151,7 +139,6 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: null,
       user_role: "system",
@@ -166,7 +153,6 @@ Deno.serve(async (req: Request) => {
     });
   } catch (err) {
     console.error("Xendit webhook error:", err);
-    // Return 200 to prevent retries
     return new Response(JSON.stringify({ received: true }), {
       status: 200,
       headers: { "Content-Type": "application/json" },

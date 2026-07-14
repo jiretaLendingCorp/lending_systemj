@@ -1,19 +1,12 @@
+// lib/features/settings/presentation/widgets/reauth_dialog.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/validators.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/validators.dart';
 
-/// Forced re-authentication dialog for sensitive admin operations.
-///
-/// Requires the user to enter their current password and a
-/// one-time password (OTP) sent to their registered device.
-/// Returns a [ReauthResult] with the re-auth token if successful.
 class ReauthDialog extends StatefulWidget {
   const ReauthDialog({super.key});
 
-  /// Show the re-auth dialog and return the re-auth token.
-  ///
-  /// Returns `null` if the user cancels.
   static Future<ReauthResult?> show(BuildContext context) {
     return showDialog<ReauthResult>(
       context: context,
@@ -43,8 +36,6 @@ class _ReauthDialogState extends State<ReauthDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return AlertDialog(
       title: Row(
         children: [
@@ -67,7 +58,6 @@ class _ReauthDialogState extends State<ReauthDialog> {
                 style: TextStyles.bodySmall(context),
               ),
               const SizedBox(height: 20),
-              // Password field
               TextFormField(
                 controller: _passwordController,
                 validator: Validators.password,
@@ -87,7 +77,6 @@ class _ReauthDialogState extends State<ReauthDialog> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Send OTP button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
@@ -97,7 +86,6 @@ class _ReauthDialogState extends State<ReauthDialog> {
               ),
               if (_otpSent) ...[
                 const SizedBox(height: 16),
-                // OTP field
                 TextFormField(
                   controller: _otpController,
                   validator: (value) {
@@ -150,7 +138,6 @@ class _ReauthDialogState extends State<ReauthDialog> {
   }
 
   void _sendOtp() {
-    // In production, this would call an API to send OTP to the user's device
     setState(() => _otpSent = true);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -165,11 +152,8 @@ class _ReauthDialogState extends State<ReauthDialog> {
 
     setState(() => _isVerifying = true);
 
-    // Simulate verification delay
     await Future.delayed(const Duration(seconds: 1));
 
-    // In production, this would call the re-auth API endpoint
-    // For now, we generate a mock re-auth token
     final reAuthToken =
         'reauth_${DateTime.now().millisecondsSinceEpoch}_${_otpController.text}';
 
@@ -183,7 +167,6 @@ class _ReauthDialogState extends State<ReauthDialog> {
   }
 }
 
-/// Result from the re-authentication dialog.
 class ReauthResult {
   final String reAuthToken;
   final String password;

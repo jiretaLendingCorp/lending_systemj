@@ -1,6 +1,6 @@
-import 'package:lendflow/features/dashboard/domain/entities/dashboard_stats.dart';
+// lib/features/dashboard/data/models/dashboard_stats_model.dart
+import 'package:jireta_loan/features/dashboard/domain/entities/dashboard_stats.dart';
 
-/// Data-layer representation of [DashboardStats], with JSON serialization.
 class DashboardStatsModel extends DashboardStats {
   const DashboardStatsModel({
     super.totalLoans = 0,
@@ -48,7 +48,6 @@ class DashboardStatsModel extends DashboardStats {
   }
 }
 
-/// Data-layer representation of [RecentActivity], with JSON serialization.
 class RecentActivityModel extends RecentActivity {
   const RecentActivityModel({
     required super.id,

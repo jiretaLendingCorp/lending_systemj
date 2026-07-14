@@ -1,20 +1,17 @@
+// lib/features/audit_logs/presentation/pages/audit_log_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/features/audit_logs/domain/entities/audit_log.dart';
-import 'package:lendflow/features/audit_logs/presentation/providers/audit_log_notifier.dart';
-import 'package:lendflow/features/audit_logs/presentation/widgets/audit_log_row.dart';
-import 'package:lendflow/features/audit_logs/presentation/widgets/log_detail_dialog.dart';
-import 'package:lendflow/shared/widgets/empty_state.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
-import 'package:lendflow/shared/widgets/loading_overlay.dart';
-import 'package:lendflow/shared/widgets/search_bar_widget.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// Web: Audit log page with filters, search, and export.
-///
-/// Displays a filterable, searchable table of audit logs.
-/// Audit logs are read-only (admin only).
+import 'package:jireta_loan/features/audit_logs/presentation/providers/audit_log_notifier.dart';
+import 'package:jireta_loan/features/audit_logs/presentation/widgets/audit_log_row.dart';
+import 'package:jireta_loan/features/audit_logs/presentation/widgets/log_detail_dialog.dart';
+import 'package:jireta_loan/shared/widgets/empty_state.dart';
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
+import 'package:jireta_loan/shared/widgets/search_bar_widget.dart';
+
 class AuditLogPage extends ConsumerStatefulWidget {
   const AuditLogPage({super.key});
 
@@ -55,7 +52,6 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
               Padding(
                 padding: const EdgeInsets.fromLTRB(32, 24, 32, 0),
                 child: Row(
@@ -68,7 +64,7 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                               style: TextStyles.headlineSmall(context)),
                           const SizedBox(height: 4),
                           Text(
-                            'Read-only record of all system actions. Admin access only.',
+                            'Read-only record of all system actions. HeadManager access only.',
                             style: TextStyles.bodySmall(context),
                           ),
                         ],
@@ -87,7 +83,6 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Filter bar
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Row(
@@ -96,7 +91,12 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                       child: SearchBarWidget(
                         hintText: 'Search by user ID or action...',
                         onChanged: (value) {
-                          _searchQuery = value;
+                          setState(() {
+                            _searchQuery = value;
+                          });
+                          ref
+                              .read(auditLogFeatureProvider.notifier)
+                              .loadLogs(userId: value.isEmpty ? null : value);
                         },
                       ),
                     ),
@@ -122,7 +122,6 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Table header
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Container(
@@ -148,7 +147,6 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                   ),
                 ),
               ),
-              // Table body
               Expanded(
                 child: switch (state) {
                   AuditLogsLoading() => const Center(child: CircularProgressIndicator()),
@@ -228,7 +226,6 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
   }
 }
 
-/// Action filter dropdown for the audit log page.
 class _ActionFilterDropdown extends StatelessWidget {
   final String? currentFilter;
   final ValueChanged<String?> onChanged;

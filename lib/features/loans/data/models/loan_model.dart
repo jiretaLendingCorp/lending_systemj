@@ -1,10 +1,10 @@
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
+// lib/features/loans/data/models/loan_model.dart
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 
-/// Data-layer representation of a [Loan], with JSON serialization.
 class LoanModel extends Loan {
   const LoanModel({
     required super.id,
-    required super.borrowerId,
+    required super.lenderId,
     super.coMakerId,
     required super.principal,
     super.interestRate = 0.20,
@@ -24,7 +24,7 @@ class LoanModel extends Loan {
   factory LoanModel.fromJson(Map<String, dynamic> json) {
     return LoanModel(
       id: json['id'] as String,
-      borrowerId: json['borrower_id'] as String? ?? json['borrowerId'] as String? ?? '',
+      lenderId: json['lender_id'] as String? ?? json['lenderId'] as String? ?? '',
       coMakerId: json['co_maker_id'] as String? ?? json['coMakerId'] as String?,
       principal: _parseDouble(json['principal']),
       interestRate: _parseDouble(json['interest_rate'] ?? json['interestRate'], fallback: 0.20),
@@ -49,7 +49,7 @@ class LoanModel extends Loan {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'borrower_id': borrowerId,
+      'lender_id': lenderId,
       'co_maker_id': coMakerId,
       'principal': principal,
       'interest_rate': interestRate,
@@ -69,7 +69,7 @@ class LoanModel extends Loan {
 
   LoanModel copyWith({
     String? id,
-    String? borrowerId,
+    String? lenderId,
     String? coMakerId,
     double? principal,
     double? interestRate,
@@ -87,7 +87,7 @@ class LoanModel extends Loan {
   }) {
     return LoanModel(
       id: id ?? this.id,
-      borrowerId: borrowerId ?? this.borrowerId,
+      lenderId: lenderId ?? this.lenderId,
       coMakerId: coMakerId ?? this.coMakerId,
       principal: principal ?? this.principal,
       interestRate: interestRate ?? this.interestRate,

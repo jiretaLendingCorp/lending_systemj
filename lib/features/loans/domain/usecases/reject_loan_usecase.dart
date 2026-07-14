@@ -1,13 +1,10 @@
+// lib/features/loans/domain/usecases/reject_loan_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/loans/domain/repositories/loan_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/features/loans/domain/repositories/loan_repository.dart';
 
-/// Reject loan use case (manager/admin only).
-///
-/// Transitions a loan from [underReview] to [rejected] status.
-/// An optional reason can be provided to explain the rejection.
 class RejectLoanUseCase {
   final LoanRepository _repository;
 
@@ -19,7 +16,6 @@ class RejectLoanUseCase {
   }
 }
 
-/// Parameters for the reject loan use case.
 class RejectLoanParams extends Equatable {
   final String loanId;
   final String? reason;

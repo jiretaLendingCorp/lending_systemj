@@ -1,19 +1,15 @@
+// lib/features/settings/presentation/pages/settings_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/features/settings/domain/entities/system_settings.dart';
-import 'package:lendflow/features/settings/presentation/providers/settings_notifier.dart';
-import 'package:lendflow/features/settings/presentation/widgets/reauth_dialog.dart';
-import 'package:lendflow/features/settings/presentation/widgets/settings_section.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
-import 'package:lendflow/shared/widgets/loading_overlay.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/features/settings/domain/entities/system_settings.dart';
+import 'package:jireta_loan/features/settings/presentation/providers/settings_notifier.dart';
+import 'package:jireta_loan/features/settings/presentation/widgets/reauth_dialog.dart';
+import 'package:jireta_loan/features/settings/presentation/widgets/settings_section.dart';
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
 
-/// Web: Settings page with all system configuration.
-///
-/// Organized into sections: Interest Rate, Penalty Settings,
-/// SMS Templates, Notification Configuration, and System Flags.
-/// Sensitive changes require forced re-authentication.
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
@@ -68,7 +64,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     } else if (state is SettingsUpdateSuccess) {
       currentSettings = state.settings;
       _updateControllers(currentSettings);
-      // Show success snackbar once
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -91,7 +86,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header
                     Text('System Settings', style: TextStyles.headlineSmall(context)),
                     const SizedBox(height: 4),
                     Text(
@@ -104,7 +98,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     if (state is SettingsError) const SizedBox(height: 16),
 
                     if (currentSettings != null) ...[
-                      // Interest Rate Section
                       SettingsSection(
                         title: 'Interest Rate',
                         subtitle: 'Applied to all new loan applications',
@@ -152,7 +145,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ],
                       ),
 
-                      // Penalty Settings Section
                       SettingsSection(
                         title: 'Penalty Settings',
                         subtitle: 'Configure overdue payment penalties',
@@ -223,7 +215,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ],
                       ),
 
-                      // SMS Template Section
                       SettingsSection(
                         title: 'SMS Template',
                         subtitle: 'Template for payment reminder SMS',
@@ -234,12 +225,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             maxLines: 4,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              hintText: 'Hi {borrower_name}, ...',
+                              hintText: 'Hi {lender_name}, ...',
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Available variables: {borrower_name}, {amount}, {due_date}, {loan_id}',
+                            'Available variables: {lender_name}, {amount}, {due_date}, {loan_id}',
                             style: TextStyles.bodySmall(context),
                           ),
                           const SizedBox(height: 12),
@@ -257,7 +248,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ],
                       ),
 
-                      // Notification Preferences Section
                       SettingsSection(
                         title: 'Notification Preferences',
                         subtitle: 'Configure how and when notifications are sent',
@@ -313,7 +303,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           ),
                           SettingsRow(
                             label: 'Payment Reminders',
-                            description: 'Remind borrowers of upcoming payments',
+                            description: 'Remind lenders of upcoming payments',
                             control: Switch(
                               value: currentSettings
                                   .notificationPreferences.paymentReminders,
@@ -338,7 +328,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         ],
                       ),
 
-                      // System Flags Section
                       SettingsSection(
                         title: 'System Flags',
                         subtitle: 'Feature toggles and maintenance controls',
@@ -384,7 +373,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           SettingsRow(
                             label: 'Auto-Approve Loans',
                             description:
-                                'Automatically approve loans without manager review',
+                                'Automatically approve loans without employee review',
                             control: Switch(
                               value: currentSettings
                                   .systemFlags.autoApproveLoans,

@@ -1,7 +1,4 @@
-/**
- * GET /payments
- * Borrower sees own, manager/admin see all.
- */
+// supabase/functions/payments/list/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -35,28 +32,26 @@ Deno.serve(async (req: Request) => {
       .from("payments")
       .select(
         `id, amount, method, status, reference_number, collected_at, created_at,
-         loan:loans!payments_loan_id_fkey(id, principal, status, borrower_id),
-         borrower:borrowers!payments_borrower_id_fkey(id, full_name, phone)`,
+         loan:loans!payments_loan_id_fkey(id, principal, status, lender_id),
+         lender:lenders!payments_lender_id_fkey(id, full_name, phone)`,
         { count: "exact" }
       )
       .is("deleted_at", null);
 
-    // Role-based filtering
-    if (hasRole(payload, "borrower")) {
-      const { data: borrower } = await supabase
-        .from("borrowers")
+    if (hasRole(payload, "lender")) {
+      const { data: lender } = await supabase
+        .from('lenders')
         .select("id")
         .eq("user_id", payload.sub)
         .is("deleted_at", null)
         .single();
 
-      if (!borrower) {
-        return forbidden("Borrower profile not found");
+      if (!lender) {
+        return forbidden("Lender profile not found");
       }
-      query = query.eq("borrower_id", borrower.id);
+      query = query.eq("lender_id", lender.id);
     }
 
-    // Apply filters
     if (loan_id) {
       query = query.eq("loan_id", loan_id);
     }
@@ -64,10 +59,8 @@ Deno.serve(async (req: Request) => {
       query = query.eq("status", status);
     }
 
-    // Sort by most recent
     query = query.order("created_at", { ascending: false });
 
-    // Paginate
     const offset = (page - 1) * page_size;
     query = query.range(offset, offset + page_size - 1);
 

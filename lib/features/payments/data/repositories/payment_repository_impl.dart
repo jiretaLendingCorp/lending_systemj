@@ -1,15 +1,12 @@
+// lib/features/payments/data/repositories/payment_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/payments/data/datasources/payment_remote_datasource.dart'
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/payments/data/datasources/payment_remote_datasource.dart'
     hide PaymentListResult;
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
-import 'package:lendflow/features/payments/domain/repositories/payment_repository.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/features/payments/domain/repositories/payment_repository.dart';
 
-/// Concrete implementation of [PaymentRepository].
-///
-/// Delegates to [PaymentRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class PaymentRepositoryImpl implements PaymentRepository {
   final PaymentRemoteDataSource _remoteDataSource;
 
@@ -29,7 +26,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
         method: method.toApiString(),
       );
       return Right(payment);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -54,7 +51,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
   @override
   Future<Either<Failure, PaymentListResult>> list({
     String? loanId,
-    String? borrowerId,
+    String? lenderId,
     String? status,
     String? method,
     int page = 1,
@@ -63,7 +60,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
     try {
       final result = await _remoteDataSource.list(
         loanId: loanId,
-        borrowerId: borrowerId,
+        lenderId: lenderId,
         status: status,
         method: method,
         page: page,
@@ -73,7 +70,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
         payments: result.payments,
         total: result.total,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -108,7 +105,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
         payments: result.payments,
         total: result.total,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -130,7 +127,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
     try {
       final payment = await _remoteDataSource.detail(paymentId);
       return Right(payment);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -152,7 +149,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
     try {
       final payment = await _remoteDataSource.verify(paymentId);
       return Right(payment);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -174,7 +171,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
     try {
       final payment = await _remoteDataSource.reject(paymentId, reason: reason);
       return Right(payment);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

@@ -1,10 +1,7 @@
+// lib/features/riders/presentation/widgets/task_stats_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Card displaying today's task statistics for the rider.
-///
-/// Shows the total number of tasks, completed count, pending count,
-/// and in-transit count in a horizontal row of stat items.
 class TaskStatsCard extends StatelessWidget {
   final int total;
   final int completed;
@@ -91,7 +88,6 @@ class TaskStatsCard extends StatelessWidget {
   }
 }
 
-/// Individual stat item within the stats card.
 class _StatItem extends StatelessWidget {
   final String label;
   final String value;

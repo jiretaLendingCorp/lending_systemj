@@ -1,13 +1,8 @@
+// lib/features/auth/domain/usecases/logout_usecase.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/auth/domain/repositories/auth_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/auth/domain/repositories/auth_repository.dart';
 
-/// Logout use case: signs out the current user and clears session data.
-///
-/// Always succeeds from the domain perspective. Even if the server-side
-/// logout call fails, the local session is cleared by the auth state
-/// management layer. This ensures the user is always fully logged out
-/// regardless of network conditions.
 class LogoutUseCase {
   final AuthRepository _repository;
 

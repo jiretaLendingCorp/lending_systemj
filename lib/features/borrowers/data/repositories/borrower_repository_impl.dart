@@ -1,28 +1,25 @@
+// lib/features/lenders/data/repositories/borrower_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/borrowers/data/datasources/borrower_remote_datasource.dart';
-import 'package:lendflow/features/borrowers/domain/entities/borrower_profile.dart';
-import 'package:lendflow/features/borrowers/domain/repositories/borrower_repository.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/lenders/data/datasources/borrower_remote_datasource.dart';
+import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
+import 'package:jireta_loan/features/lenders/domain/repositories/borrower_repository.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 
-/// Concrete implementation of [BorrowerRepository].
-///
-/// Delegates to [BorrowerRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
-class BorrowerRepositoryImpl implements BorrowerRepository {
+class BorrowerRepositoryImpl implements LenderRepository {
   final BorrowerRemoteDataSource _remoteDataSource;
 
   BorrowerRepositoryImpl({required BorrowerRemoteDataSource remoteDataSource})
       : _remoteDataSource = remoteDataSource;
 
   @override
-  Future<Either<Failure, BorrowerProfile>> getProfile() async {
+  Future<Either<Failure, LenderProfile>> getProfile() async {
     try {
       final profile = await _remoteDataSource.getProfile();
       return Right(profile);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -45,12 +42,12 @@ class BorrowerRepositoryImpl implements BorrowerRepository {
   }
 
   @override
-  Future<Either<Failure, BorrowerProfile>> updateProfile(
+  Future<Either<Failure, LenderProfile>> updateProfile(
       Map<String, dynamic> data) async {
     try {
       final profile = await _remoteDataSource.updateProfile(data);
       return Right(profile);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -85,7 +82,7 @@ class BorrowerRepositoryImpl implements BorrowerRepository {
         pageSize: pageSize,
       );
       return Right(loans);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -115,7 +112,7 @@ class BorrowerRepositoryImpl implements BorrowerRepository {
         pageSize: pageSize,
       );
       return Right(payments);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

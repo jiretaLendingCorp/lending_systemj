@@ -1,20 +1,14 @@
+// lib/features/users/data/datasources/user_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/users/data/models/user_management_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/users/data/models/user_management_model.dart';
 
-/// Remote data source for admin user management operations using Dio.
-///
-/// All user CRUD and admin actions go through the backend API.
-/// The Dio instance includes auth and error interceptors.
 class UserRemoteDataSource {
   final Dio _dio;
 
   UserRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// List users with optional role filter, search, and pagination.
-  ///
-  /// Returns a paginated list of [UserManagementModel]s.
   Future<UserListResult> list({
     String? role,
     String? search,
@@ -54,9 +48,6 @@ class UserRemoteDataSource {
     }
   }
 
-  /// Create a new user (admin only).
-  ///
-  /// Requires email, password, full name, and role assignment.
   Future<UserManagementModel> create({
     required String email,
     required String password,
@@ -83,14 +74,10 @@ class UserRemoteDataSource {
     }
   }
 
-  /// Deactivate a user account (admin only).
-  ///
-  /// Sets the user's `is_active` flag to `false`.
-  /// Requires forced re-authentication before execution.
   Future<UserManagementModel> deactivate(String userId) async {
     try {
       final response = await _dio.patch(
-        '${ApiEndpoints.users}/${userId}/deactivate',
+        '${ApiEndpoints.users}/$userId/deactivate',
       );
       return UserManagementModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
@@ -98,11 +85,10 @@ class UserRemoteDataSource {
     }
   }
 
-  /// Reactivate a deactivated user account (admin only).
   Future<UserManagementModel> reactivate(String userId) async {
     try {
       final response = await _dio.patch(
-        '${ApiEndpoints.users}/${userId}/reactivate',
+        '${ApiEndpoints.users}/$userId/reactivate',
       );
       return UserManagementModel.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
@@ -110,43 +96,33 @@ class UserRemoteDataSource {
     }
   }
 
-  /// Reset a user's password (admin only).
-  ///
-  /// Sends a password reset link to the user's email.
-  /// Requires forced re-authentication before execution.
   Future<void> resetPassword(String userId) async {
     try {
       await _dio.post(
-        '${ApiEndpoints.users}/${userId}/reset-password',
+        '${ApiEndpoints.users}/$userId/reset-password',
       );
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
   }
 
-  /// Force logout a user from all sessions (admin only).
-  ///
-  /// Revokes all refresh tokens for the given user.
   Future<void> forceLogout(String userId) async {
     try {
       await _dio.post(
-        '${ApiEndpoints.users}/${userId}/force-logout',
+        '${ApiEndpoints.users}/$userId/force-logout',
       );
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
   }
 
-  /// Update a user's role (admin only).
-  ///
-  /// Requires forced re-authentication for role elevation.
   Future<UserManagementModel> updateRole({
     required String userId,
     required String newRole,
   }) async {
     try {
       final response = await _dio.patch(
-        '${ApiEndpoints.users}/${userId}/role',
+        '${ApiEndpoints.users}/$userId/role',
         data: {'role': newRole},
       );
       return UserManagementModel.fromJson(response.data as Map<String, dynamic>);
@@ -155,9 +131,7 @@ class UserRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
-  /// Map a [DioException] to the appropriate [AppException] subtype.
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -176,14 +150,14 @@ class UserRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'You do not have permission to manage users.',
           );
         }
@@ -229,7 +203,6 @@ class UserRemoteDataSource {
   }
 }
 
-/// Paginated result for user list queries.
 class UserListResult {
   final List<UserManagementModel> users;
   final int total;

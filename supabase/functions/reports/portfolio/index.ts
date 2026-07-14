@@ -1,7 +1,4 @@
-/**
- * GET /reports/portfolio
- * Admin only — portfolio summary with key metrics.
- */
+// supabase/functions/reports/portfolio/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -20,13 +17,12 @@ Deno.serve(async (req: Request) => {
     if ("error" in authResult) return authResult.error;
     const { payload } = authResult;
 
-    if (!hasRole(payload, "admin")) {
+    if (!hasRole(payload, "head_manager")) {
       return forbidden("Only admins can access portfolio reports");
     }
 
     const supabase = getServiceClient();
 
-    // Total loans by status
     const { data: loanStatusCounts } = await supabase
       .from("loans")
       .select("status")
@@ -37,7 +33,6 @@ Deno.serve(async (req: Request) => {
       statusBreakdown[loan.status] = (statusBreakdown[loan.status] ?? 0) + 1;
     }
 
-    // Total portfolio value
     const { data: activeLoans } = await supabase
       .from("loans")
       .select("principal, total_payable, penalty_amount, final_balance")
@@ -57,7 +52,6 @@ Deno.serve(async (req: Request) => {
       0
     );
 
-    // Total collected
     const { data: completedPayments } = await supabase
       .from("payments")
       .select("amount, method")
@@ -75,19 +69,16 @@ Deno.serve(async (req: Request) => {
         (collectionByMethod[payment.method] ?? 0) + Number(payment.amount);
     }
 
-    // Borrower count
     const { count: totalBorrowers } = await supabase
-      .from("borrowers")
+      .from('lenders')
       .select("*", { count: "exact", head: true })
       .is("deleted_at", null);
 
-    // Rider count
     const { count: totalRiders } = await supabase
       .from("riders")
       .select("*", { count: "exact", head: true })
       .is("deleted_at", null);
 
-    // Disbursement stats
     const { data: disbursementStats } = await supabase
       .from("disbursements")
       .select("status")
@@ -98,7 +89,6 @@ Deno.serve(async (req: Request) => {
       disbursementBreakdown[d.status] = (disbursementBreakdown[d.status] ?? 0) + 1;
     }
 
-    // Compute key ratios
     const outstandingBalance = totalPayable + totalPenalties - totalCollected;
     const collectionRate = totalPayable > 0 ? (totalCollected / totalPayable) * 100 : 0;
     const defaultRate =
@@ -111,7 +101,7 @@ Deno.serve(async (req: Request) => {
         generated_at: new Date().toISOString(),
         portfolio: {
           total_loans: loanStatusCounts?.length ?? 0,
-          total_borrowers: totalBorrowers ?? 0,
+          total_lenders: totalBorrowers ?? 0,
           total_riders: totalRiders ?? 0,
           total_principal: totalPrincipal,
           total_payable: totalPayable,

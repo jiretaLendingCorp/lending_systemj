@@ -1,16 +1,12 @@
+// lib/features/disbursements/presentation/pages/disbursement_list_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/disbursements/domain/entities/disbursement.dart';
-import 'package:lendflow/features/disbursements/presentation/providers/disbursement_notifier.dart';
-import 'package:lendflow/features/disbursements/presentation/widgets/disbursement_card.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
+import 'package:jireta_loan/features/disbursements/presentation/providers/disbursement_notifier.dart';
+import 'package:jireta_loan/features/disbursements/presentation/widgets/disbursement_card.dart';
 
-/// Web: list all disbursements with status filters, assign rider button.
-///
-/// This page is primarily used by managers/admins to manage disbursements.
-/// It shows status filter chips and each disbursement card has an
-/// "Assign Rider" button for pending/assigned items.
 class DisbursementListPage extends ConsumerStatefulWidget {
   const DisbursementListPage({super.key});
 
@@ -89,7 +85,6 @@ class _DisbursementListPageState
               backgroundColor: ColorTokens.lightSuccess,
             ),
           );
-          // Reload list after operation
           _loadDisbursements();
         }
       },
@@ -101,7 +96,6 @@ class _DisbursementListPageState
       ),
       body: Column(
         children: [
-          // Status filter chips
           SizedBox(
             height: 44,
             child: ListView.separated(
@@ -145,7 +139,6 @@ class _DisbursementListPageState
             ),
           ),
 
-          // Method filter chips
           SizedBox(
             height: 44,
             child: ListView.separated(
@@ -189,11 +182,9 @@ class _DisbursementListPageState
             ),
           ),
 
-          // Summary stats
           if (disbursementState is DisbursementsLoaded)
             _buildSummaryBar(disbursementState, isDark),
 
-          // Disbursement list
           Expanded(
             child: _buildBody(disbursementState, isDark),
           ),
@@ -370,7 +361,6 @@ class _DisbursementListPageState
   }
 }
 
-/// Summary chip for the stats bar.
 class _SummaryChip extends StatelessWidget {
   final String label;
   final int count;

@@ -1,16 +1,11 @@
+// lib/features/loans/presentation/pages/loan_list_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/loans/presentation/providers/loan_notifier.dart';
-import 'package:lendflow/features/loans/presentation/widgets/loan_card.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/loans/presentation/providers/loan_notifier.dart';
+import 'package:jireta_loan/features/loans/presentation/widgets/loan_card.dart';
 
-/// Loan list page with status filters, search, and role-based views.
-///
-/// - Admin/manager: sees all loans across borrowers
-/// - Borrower: sees only their own loans
-/// - Status filter chips allow filtering by loan status
-/// - Search bar enables text-based search
 class LoanListPage extends ConsumerStatefulWidget {
   const LoanListPage({super.key});
 
@@ -36,7 +31,6 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
   @override
   void initState() {
     super.initState();
-    // Initial load
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(loanFeatureProvider.notifier).loadLoans();
     });
@@ -129,7 +123,6 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
       ),
       body: Column(
         children: [
-          // Status filter chips
           SizedBox(
             height: 48,
             child: ListView.separated(
@@ -170,14 +163,13 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
             ),
           ),
 
-          // Loan list
           Expanded(
             child: _buildBody(loanState, isDark),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/borrower/loan/apply'),
+        onPressed: () => context.push('/lender/loan/apply'),
         tooltip: 'Apply for Loan',
         child: const Icon(Icons.add_rounded),
       ),
@@ -285,7 +277,6 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
               return LoanCard(
                 loan: loan,
                 onTap: () {
-                  // Navigate to loan detail based on the route structure
                   context.push('/loans/${loan.id}');
                 },
               );
@@ -295,7 +286,6 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
       );
     }
 
-    // LoanOperationSuccess or LoanDetailLoaded — reload the list
     if (state is LoanOperationSuccess) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(loanFeatureProvider.notifier).loadLoans(status: _activeFilter);

@@ -1,15 +1,10 @@
+// lib/core/theme/text_styles.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Complete text style system for LendFlow.
-///
-/// Styles are derived from the design tokens and are theme-aware.
-/// Use [TextStyle.copyWith] for one-off overrides — never create
-/// styles from scratch in feature code.
 class TextStyles {
   TextStyles._();
 
-  // ── Display ────────────────────────────────────────────────────
   static TextStyle displayLarge(BuildContext context) => TextStyle(
         fontSize: 57,
         fontWeight: FontWeight.w400,
@@ -40,7 +35,6 @@ class TextStyles {
             : ColorTokens.darkText,
       );
 
-  // ── Headline ───────────────────────────────────────────────────
   static TextStyle headlineLarge(BuildContext context) => TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.w600,
@@ -71,7 +65,6 @@ class TextStyles {
             : ColorTokens.darkText,
       );
 
-  // ── Title ──────────────────────────────────────────────────────
   static TextStyle titleLarge(BuildContext context) => TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.w500,
@@ -102,7 +95,6 @@ class TextStyles {
             : ColorTokens.darkText,
       );
 
-  // ── Body ───────────────────────────────────────────────────────
   static TextStyle bodyLarge(BuildContext context) => TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w400,
@@ -133,7 +125,6 @@ class TextStyles {
             : ColorTokens.darkTextSecondary,
       );
 
-  // ── Label ──────────────────────────────────────────────────────
   static TextStyle labelLarge(BuildContext context) => TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w500,
@@ -164,7 +155,6 @@ class TextStyles {
             : ColorTokens.darkTextSecondary,
       );
 
-  // ── Accent overrides ───────────────────────────────────────────
   static TextStyle accentLabel(BuildContext context) => labelLarge(context).copyWith(
         color: ColorTokens.accent,
       );
@@ -174,7 +164,6 @@ class TextStyles {
         color: ColorTokens.secondaryAccent,
       );
 
-  // ── Utility styles ─────────────────────────────────────────────
   static TextStyle caption(BuildContext context) => TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w400,

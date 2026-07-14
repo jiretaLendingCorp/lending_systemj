@@ -1,22 +1,20 @@
+// lib/features/users/presentation/pages/user_list_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/features/users/domain/entities/user_management.dart';
-import 'package:lendflow/features/users/presentation/providers/user_notifier.dart';
-import 'package:lendflow/features/users/presentation/widgets/user_table_row.dart';
-import 'package:lendflow/shared/widgets/confirm_dialog.dart';
-import 'package:lendflow/shared/widgets/empty_state.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
-import 'package:lendflow/shared/widgets/loading_overlay.dart';
-import 'package:lendflow/shared/widgets/search_bar_widget.dart';
-import 'package:lendflow/shared/widgets/status_chip.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:jireta_loan/features/users/domain/entities/user_management.dart';
+import 'package:jireta_loan/features/users/presentation/providers/user_notifier.dart';
+import 'package:jireta_loan/features/users/presentation/widgets/user_table_row.dart';
+import 'package:jireta_loan/shared/widgets/confirm_dialog.dart';
+import 'package:jireta_loan/shared/widgets/empty_state.dart';
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
+import 'package:jireta_loan/shared/widgets/search_bar_widget.dart';
+import 'package:jireta_loan/shared/widgets/status_chip.dart';
 
-/// Web: User management table page.
-///
-/// Displays a searchable, filterable table of all users with
-/// role filter, create user button, and deactivate toggle.
 class UserListPage extends ConsumerStatefulWidget {
   const UserListPage({super.key});
 
@@ -55,7 +53,6 @@ class _UserListPageState extends ConsumerState<UserListPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
               Padding(
                 padding: const EdgeInsets.fromLTRB(32, 24, 32, 0),
                 child: Row(
@@ -77,7 +74,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                       ),
                     ),
                     ElevatedButton.icon(
-                      onPressed: () => context.push('/admin/users/create'),
+                      onPressed: () => context.push('/head-employee/users/create'),
                       icon: const Icon(Icons.person_add_outlined, size: 18),
                       label: const Text('Create User'),
                       style: ElevatedButton.styleFrom(
@@ -94,7 +91,6 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Search + Filter bar
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Row(
@@ -120,7 +116,6 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Table header
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Container(
@@ -165,7 +160,6 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                   ),
                 ),
               ),
-              // Table body
               Expanded(
                 child: switch (state) {
                   UsersLoading() => const Center(
@@ -190,7 +184,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                             return UserTableRow(
                               user: user,
                               onTap: () => context
-                                  .push('/admin/users/${user.id}'),
+                                  .push('/head-employee/users/${user.id}'),
                               onRoleChanged: (newRole) =>
                                   _handleRoleChange(user, newRole),
                               onDeactivate: () =>
@@ -312,7 +306,6 @@ class _UserListPageState extends ConsumerState<UserListPage> {
   }
 }
 
-/// Role filter dropdown for the user list.
 class _RoleFilterDropdown extends StatelessWidget {
   final String? currentFilter;
   final ValueChanged<String?> onChanged;

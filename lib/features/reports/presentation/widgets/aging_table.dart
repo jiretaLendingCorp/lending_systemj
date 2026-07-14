@@ -1,18 +1,10 @@
+// lib/features/reports/presentation/widgets/aging_table.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/features/reports/domain/entities/report_data.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
 
-/// Overdue aging table widget.
-///
-/// Displays overdue loans grouped by aging buckets with columns:
-/// - Aging Bucket
-/// - Count
-/// - Total Amount
-/// - % of Portfolio
-///
-/// Rows: 1-7 days, 8-30 days, 30+ days, Total
 class AgingTable extends StatelessWidget {
   final OverdueReport report;
 
@@ -42,7 +34,6 @@ class AgingTable extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Title row ────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               child: Row(
@@ -64,7 +55,6 @@ class AgingTable extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // ── Header row ───────────────────────────────────────────
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               color: headerBg,
@@ -78,7 +68,6 @@ class AgingTable extends StatelessWidget {
               ),
             ),
 
-            // ── Data rows ────────────────────────────────────────────
             _AgingRow(
               bucket: '1-7 Days',
               count: report.days1to7,
@@ -104,7 +93,6 @@ class AgingTable extends StatelessWidget {
               isLight: isLight,
             ),
 
-            // ── Total row ────────────────────────────────────────────
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               decoration: BoxDecoration(
@@ -165,9 +153,6 @@ class AgingTable extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Individual aging row
-// ─────────────────────────────────────────────────────────────────
 
 class _AgingRow extends StatelessWidget {
   final String bucket;
@@ -257,7 +242,6 @@ class _AgingRow extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 6),
-                // Mini progress bar
                 SizedBox(
                   width: 32,
                   height: 6,

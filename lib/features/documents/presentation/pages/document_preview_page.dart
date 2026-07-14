@@ -1,14 +1,11 @@
+// lib/features/documents/presentation/pages/document_preview_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/documents/domain/entities/kyc_document.dart';
-import 'package:lendflow/features/documents/presentation/providers/document_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
+import 'package:jireta_loan/features/documents/presentation/providers/document_notifier.dart';
 
-/// Mobile page for viewing an uploaded KYC document.
-///
-/// Uses a signed URL from Supabase private storage to display the
-/// document securely. The signed URL has a time-limited expiry.
 class DocumentPreviewPage extends ConsumerStatefulWidget {
   final KycDocument document;
 
@@ -27,7 +24,6 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Request a signed URL for the document
       ref.read(documentFeatureProvider.notifier).getSignedUrl(
             filePath: widget.document.fileUrl,
           );
@@ -49,7 +45,6 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
-                // Navigate back to upload page for re-upload
                 Navigator.pop(context);
               },
               tooltip: 'Re-upload',
@@ -61,14 +56,12 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Document info card
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Status badge
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -95,7 +88,6 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
 
             const SizedBox(height: 16),
 
-            // Document preview area
             if (docState is SignedUrlLoaded)
               Card(
                 clipBehavior: Clip.antiAlias,
@@ -170,16 +162,15 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
 
             const SizedBox(height: 16),
 
-            // Rejection reason (if applicable)
             if (doc.status.isRejected)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: ColorTokens.lightError.withOpacity(0.05),
+                  color: ColorTokens.lightError.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: ColorTokens.lightError.withOpacity(0.2),
+                    color: ColorTokens.lightError.withValues(alpha: 0.2),
                   ),
                 ),
                 child: Row(
@@ -214,7 +205,6 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
                 ),
               ),
 
-            // Re-upload button
             if (doc.needsReupload)
               Padding(
                 padding: const EdgeInsets.only(top: 16),
@@ -269,7 +259,6 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
   }
 
   Widget _buildDocumentPreview(String url) {
-    // Determine if the file is an image based on extension
     final isImage = _isImageUrl(url);
 
     if (isImage) {
@@ -303,7 +292,6 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
       );
     }
 
-    // For PDFs and other non-image documents
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -320,7 +308,6 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
           const SizedBox(height: 8),
           FilledButton.tonal(
             onPressed: () {
-              // Open PDF in external viewer or browser
             },
             child: const Text('Open Document'),
           ),
@@ -339,7 +326,6 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
   }
 }
 
-/// Status badge widget for document verification status.
 class _StatusBadge extends StatelessWidget {
   final DocumentStatus status;
 
@@ -351,7 +337,7 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

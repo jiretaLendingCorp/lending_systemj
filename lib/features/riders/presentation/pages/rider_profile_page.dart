@@ -1,17 +1,10 @@
+// lib/features/riders/presentation/pages/rider_profile_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/constants.dart';
-import 'package:lendflow/features/riders/presentation/providers/rider_notifier.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
 
-/// Mobile page displaying the rider's profile, stats, and settings.
-///
-/// Features:
-/// - Rider avatar and name
-/// - Performance statistics (total completed, success rate)
-/// - App settings (notifications, location)
-/// - Logout button
 class RiderProfilePage extends ConsumerWidget {
   const RiderProfilePage({super.key});
 
@@ -19,7 +12,7 @@ class RiderProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final authState = ref.watch(authProvider);
-    final userName = authState is AuthAuthenticated ? authState.user.name : 'Rider';
+    final userName = authState is AppAuthAuthenticated ? (authState.fullName ?? 'Rider') : 'Rider';
 
     return Scaffold(
       appBar: AppBar(
@@ -31,13 +24,12 @@ class RiderProfilePage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile header
             Center(
               child: Column(
                 children: [
                   CircleAvatar(
                     radius: 48,
-                    backgroundColor: ColorTokens.roleRider.withOpacity(0.1),
+                    backgroundColor: ColorTokens.roleRider.withValues(alpha: 0.1),
                     child: Text(
                       userName.isNotEmpty
                           ? userName.substring(0, 1).toUpperCase()
@@ -62,7 +54,7 @@ class RiderProfilePage extends ConsumerWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: ColorTokens.roleRider.withOpacity(0.1),
+                      color: ColorTokens.roleRider.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -80,7 +72,6 @@ class RiderProfilePage extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            // Performance stats
             Text(
               'Performance',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -115,7 +106,6 @@ class RiderProfilePage extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            // Settings
             Text(
               'Settings',
               style: theme.textTheme.titleMedium?.copyWith(
@@ -131,7 +121,6 @@ class RiderProfilePage extends ConsumerWidget {
                   secondary: const Icon(Icons.notifications_outlined),
                   value: true,
                   onChanged: (value) {
-                    // Handle notification toggle
                   },
                 ),
                 SwitchListTile.adaptive(
@@ -140,7 +129,6 @@ class RiderProfilePage extends ConsumerWidget {
                   secondary: const Icon(Icons.location_on_outlined),
                   value: true,
                   onChanged: (value) {
-                    // Handle location toggle
                   },
                 ),
               ],
@@ -155,15 +143,13 @@ class RiderProfilePage extends ConsumerWidget {
                   title: const Text('Help & Support'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    // Navigate to help
                   },
                 ),
                 ListTile(
                   leading: const Icon(Icons.info_outline),
-                  title: const Text('About LendFlow'),
+                  title: const Text('About Jireta Loan'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
-                    // Navigate to about
                   },
                 ),
               ],
@@ -171,7 +157,6 @@ class RiderProfilePage extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            // Logout
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
@@ -190,7 +175,7 @@ class RiderProfilePage extends ConsumerWidget {
                         FilledButton(
                           onPressed: () {
                             Navigator.pop(context);
-                            ref.read(authProvider.notifier).logout();
+                            ref.read(authProvider.notifier).signOut();
                           },
                           style: FilledButton.styleFrom(
                             backgroundColor: ColorTokens.lightError,
@@ -208,7 +193,7 @@ class RiderProfilePage extends ConsumerWidget {
                   style: TextStyle(color: theme.colorScheme.error),
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: theme.colorScheme.error.withOpacity(0.3)),
+                  side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.3)),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
@@ -222,7 +207,6 @@ class RiderProfilePage extends ConsumerWidget {
   }
 }
 
-/// Small stat card for displaying performance metrics.
 class _StatCard extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -269,7 +253,6 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-/// Reusable settings section card.
 class _SettingsSection extends StatelessWidget {
   final List<Widget> children;
 

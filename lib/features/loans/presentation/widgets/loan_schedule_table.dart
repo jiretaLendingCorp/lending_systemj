@@ -1,14 +1,10 @@
+// lib/features/loans/presentation/widgets/loan_schedule_table.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/loans/domain/entities/loan_schedule.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan_schedule.dart';
 
-/// Loan repayment schedule table widget.
-///
-/// Displays all installments with their number, amount due,
-/// due date, and current status. Overdue installments are
-/// highlighted in red.
 class LoanScheduleTable extends StatelessWidget {
   final List<LoanSchedule> schedule;
   final bool compact;
@@ -52,7 +48,6 @@ class LoanScheduleTable extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Summary row
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
@@ -80,7 +75,6 @@ class LoanScheduleTable extends StatelessWidget {
         ),
         const SizedBox(height: 8),
 
-        // Table header
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
@@ -110,7 +104,6 @@ class LoanScheduleTable extends StatelessWidget {
           ),
         ),
 
-        // Schedule rows
         ...schedule.map((item) => _ScheduleRow(
               item: item,
               isDark: isDark,
@@ -130,7 +123,6 @@ class LoanScheduleTable extends StatelessWidget {
   }
 }
 
-/// Single row in the schedule table.
 class _ScheduleRow extends StatelessWidget {
   final LoanSchedule item;
   final bool isDark;
@@ -161,7 +153,6 @@ class _ScheduleRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Installment number
           SizedBox(
             width: compact ? 32 : 48,
             child: Text(
@@ -173,7 +164,6 @@ class _ScheduleRow extends StatelessWidget {
               ),
             ),
           ),
-          // Amount due
           Expanded(
             flex: 2,
             child: Text(
@@ -191,7 +181,6 @@ class _ScheduleRow extends StatelessWidget {
               ),
             ),
           ),
-          // Due date
           Expanded(
             flex: 2,
             child: Text(
@@ -206,7 +195,6 @@ class _ScheduleRow extends StatelessWidget {
               ),
             ),
           ),
-          // Status
           SizedBox(
             width: compact ? 70 : 90,
             child: _StatusChip(status: item.status, isDark: isDark),
@@ -217,7 +205,6 @@ class _ScheduleRow extends StatelessWidget {
   }
 }
 
-/// Small status chip for installment status.
 class _StatusChip extends StatelessWidget {
   final InstallmentStatus status;
   final bool isDark;
@@ -255,7 +242,6 @@ class _StatusChip extends StatelessWidget {
   }
 }
 
-/// Summary chip for schedule stats.
 class _SummaryChip extends StatelessWidget {
   final String label;
   final String value;

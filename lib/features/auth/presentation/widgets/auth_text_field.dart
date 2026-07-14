@@ -1,11 +1,7 @@
+// lib/features/auth/presentation/widgets/auth_text_field.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Reusable auth text field with built-in validation support.
-///
-/// Provides a consistent appearance across all auth screens with
-/// support for obscured text, prefix/suffix icons, validators,
-/// and error display.
 class AuthTextField extends StatefulWidget {
   final String? label;
   final String? hint;

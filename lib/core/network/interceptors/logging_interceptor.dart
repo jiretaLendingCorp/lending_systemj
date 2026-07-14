@@ -1,10 +1,7 @@
+// lib/core/network/interceptors/logging_interceptor.dart
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-/// Structured logging interceptor for debug builds only.
-///
-/// Logs request method, URL, headers, body, and response
-/// status / data in a readable format. Stripped in release builds.
 class LoggingInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -55,11 +52,9 @@ class LoggingInterceptor extends Interceptor {
     handler.next(err);
   }
 
-  /// Format headers map into a readable string.
   String _formatHeaders(dynamic headers) {
     if (headers is Map<String, dynamic>) {
       final sanitized = Map<String, dynamic>.from(headers);
-      // Mask sensitive headers
       if (sanitized.containsKey('Authorization')) {
         sanitized['Authorization'] = 'Bearer ****';
       }
@@ -75,7 +70,6 @@ class LoggingInterceptor extends Interceptor {
     return headers.toString();
   }
 
-  /// Truncate long strings for readability.
   String _truncate(String value, int maxLength) {
     if (value.length <= maxLength) return value;
     return '${value.substring(0, maxLength)}... [truncated]';

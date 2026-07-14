@@ -1,9 +1,8 @@
-# LendFlow Supabase Project Configuration
-# https://supabase.com/docs/reference/cli/config
+# supabase/config.toml
 
 [project]
-id = "lendflow"
-name = "LendFlow Lending Management System"
+id = "jireta_loan"
+name = "Jireta Loan Lending Management System"
 
 [api]
 port = 54321
@@ -70,7 +69,6 @@ client_id = "env(GOOGLE_CLIENT_ID)"
 secret = "env(GOOGLE_CLIENT_SECRET)"
 redirect_uri = "http://localhost:54321/auth/v1/callback"
 
-# ─── Edge Functions ────────────────────────────────────────────
 
 [functions.auth-otp-send]
 verify_jwt = true
@@ -172,17 +170,6 @@ import_map = "./functions/import_map.json"
 verify_jwt = false
 import_map = "./functions/import_map.json"
 
-# ─── Cron Jobs ────────────────────────────────────────────────
 
-# [cron]
-# enabled = true
 
-# Penalty computation — runs daily at 1:00 AM
-# [cron.penalty-computation]
-# schedule = "0 1 * * *"
-# command = "SELECT net.http_post(url := 'http://localhost:54321/functions/v1/loans-compute-penalty', headers := jsonb_build_object('x-cron-secret', current_setting('app.cron_secret')), body := '{}'::jsonb);"
 
-# SMS reminders — runs daily at 9:00 AM
-# [cron.sms-reminders]
-# schedule = "0 9 * * *"
-# command = "SELECT net.http_post(url := 'http://localhost:54321/functions/v1/notifications-send-sms', headers := jsonb_build_object('x-cron-secret', current_setting('app.cron_secret')), body := '{}'::jsonb);"

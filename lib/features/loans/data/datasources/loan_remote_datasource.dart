@@ -1,23 +1,16 @@
+// lib/features/loans/data/datasources/loan_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/loans/data/models/loan_model.dart';
-import 'package:lendflow/features/loans/data/models/loan_schedule_model.dart';
-import 'package:lendflow/features/loans/data/models/create_loan_request.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/loans/data/models/loan_model.dart';
+import 'package:jireta_loan/features/loans/data/models/loan_schedule_model.dart';
+import 'package:jireta_loan/features/loans/data/models/create_loan_request.dart';
 
-/// Remote data source for loan operations using Dio.
-///
-/// All loan CRUD operations go through the backend API.
-/// The Dio instance includes auth and error interceptors.
 class LoanRemoteDataSource {
   final Dio _dio;
 
   LoanRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// List loans with optional status filter and pagination.
-  ///
-  /// Returns a paginated list of [LoanModel]s. Admin/manager users
-  /// see all loans; borrower users see only their own.
   Future<LoanListResult> list({
     String? status,
     int page = 1,
@@ -53,10 +46,6 @@ class LoanRemoteDataSource {
     }
   }
 
-  /// Create a new loan application.
-  ///
-  /// The loan is created in [draft] status and can be submitted
-  /// for review after creation.
   Future<LoanModel> create(CreateLoanRequest request) async {
     try {
       final response = await _dio.post(
@@ -69,7 +58,6 @@ class LoanRemoteDataSource {
     }
   }
 
-  /// Get detailed information about a specific loan.
   Future<LoanModel> detail(String loanId) async {
     try {
       final response = await _dio.get(
@@ -81,7 +69,6 @@ class LoanRemoteDataSource {
     }
   }
 
-  /// Get the repayment schedule for a specific loan.
   Future<List<LoanScheduleModel>> schedule(String loanId) async {
     try {
       final response = await _dio.get(
@@ -104,9 +91,6 @@ class LoanRemoteDataSource {
     }
   }
 
-  /// Approve a loan (manager/admin only).
-  ///
-  /// Transitions the loan from [under_review] to [approved].
   Future<LoanModel> approve(String loanId) async {
     try {
       final response = await _dio.post(
@@ -118,10 +102,6 @@ class LoanRemoteDataSource {
     }
   }
 
-  /// Reject a loan (manager/admin only).
-  ///
-  /// Transitions the loan from [under_review] to [rejected].
-  /// An optional [reason] can be provided.
   Future<LoanModel> reject(String loanId, {String? reason}) async {
     try {
       final response = await _dio.post(
@@ -134,10 +114,6 @@ class LoanRemoteDataSource {
     }
   }
 
-  /// Compute the penalty for an overdue loan.
-  ///
-  /// Returns the updated loan with penalty calculated at 20% of
-  /// the total payable amount.
   Future<LoanModel> computePenalty(String loanId) async {
     try {
       final response = await _dio.get(
@@ -150,9 +126,7 @@ class LoanRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
-  /// Map a [DioException] to the appropriate [AppException] subtype.
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -171,14 +145,14 @@ class LoanRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'You do not have permission to manage loans.',
           );
         }
@@ -224,7 +198,6 @@ class LoanRemoteDataSource {
   }
 }
 
-/// Paginated result for loan list queries.
 class LoanListResult {
   final List<LoanModel> loans;
   final int total;

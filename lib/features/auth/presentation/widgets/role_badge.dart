@@ -1,11 +1,8 @@
+// lib/features/auth/presentation/widgets/role_badge.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
 
-/// Color-coded role badge widget.
-///
-/// Displays the user's role with a distinctive color and icon,
-/// suitable for use in headers, list tiles, and profile screens.
 class RoleBadge extends StatelessWidget {
   final UserRole role;
   final double fontSize;
@@ -63,16 +60,16 @@ class RoleBadge extends StatelessWidget {
   }
 
   Color get _roleColor => switch (role) {
-        UserRole.admin => ColorTokens.roleAdmin,
-        UserRole.manager => ColorTokens.roleManager,
+        UserRole.headManager => ColorTokens.roleHeadManager,
+        UserRole.employee => ColorTokens.roleEmployee,
         UserRole.rider => ColorTokens.roleRider,
-        UserRole.borrower => ColorTokens.roleBorrower,
+        UserRole.lender => ColorTokens.roleLender,
       };
 
   IconData get _roleIcon => switch (role) {
-        UserRole.admin => Icons.admin_panel_settings_rounded,
-        UserRole.manager => Icons.manage_accounts_rounded,
+        UserRole.headManager => Icons.admin_panel_settings_rounded,
+        UserRole.employee => Icons.manage_accounts_rounded,
         UserRole.rider => Icons.two_wheeler_rounded,
-        UserRole.borrower => Icons.person_rounded,
+        UserRole.lender => Icons.person_rounded,
       };
 }

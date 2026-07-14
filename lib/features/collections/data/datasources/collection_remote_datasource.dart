@@ -1,23 +1,19 @@
+// lib/features/collections/data/datasources/collection_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/collections/data/models/collection_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/collections/data/models/collection_model.dart';
 
-/// Remote data source for collection operations using Dio.
-///
-/// All collection CRUD operations go through the backend API.
-/// The Dio instance includes auth, idempotency, and error interceptors.
 class CollectionRemoteDataSource {
   final Dio _dio;
 
   CollectionRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// List collections with optional filters and pagination.
   Future<CollectionListResult> list({
     String? status,
     String? method,
     String? riderId,
-    String? borrowerId,
+    String? lenderId,
     String? date,
     int page = 1,
     int pageSize = 20,
@@ -36,8 +32,8 @@ class CollectionRemoteDataSource {
       if (riderId != null && riderId.isNotEmpty) {
         queryParams['rider_id'] = riderId;
       }
-      if (borrowerId != null && borrowerId.isNotEmpty) {
-        queryParams['borrower_id'] = borrowerId;
+      if (lenderId != null && lenderId.isNotEmpty) {
+        queryParams['lender_id'] = lenderId;
       }
       if (date != null && date.isNotEmpty) {
         queryParams['date'] = date;
@@ -64,7 +60,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  /// Get detailed information about a specific collection.
   Future<CollectionModel> detail(String collectionId) async {
     try {
       final response = await _dio.get(
@@ -78,9 +73,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  /// Assign a rider to a collection (manager/admin).
-  ///
-  /// Transitions the collection from [pending] to [assigned].
   Future<CollectionModel> assignRider({
     required String collectionId,
     required String riderId,
@@ -100,10 +92,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  /// Mark a collection as collected (rider action).
-  ///
-  /// Requires GPS coordinates from the rider's device.
-  /// Transitions the collection from [in_transit] to [collected].
   Future<CollectionModel> markCollected({
     required String collectionId,
     required double latitude,
@@ -131,7 +119,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  /// Mark a collection as partially collected.
   Future<CollectionModel> markPartial({
     required String collectionId,
     required double collectedAmount,
@@ -155,7 +142,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  /// Mark a collection as failed.
   Future<CollectionModel> markFailed(
     String collectionId, {
     String? reason,
@@ -173,7 +159,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  /// Get today's collections for a rider.
   Future<CollectionListResult> getTodayCollections(
     String riderId,
   ) async {
@@ -199,7 +184,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  /// Get collections for a specific rider.
   Future<CollectionListResult> getByRider(
     String riderId, {
     int page = 1,
@@ -231,7 +215,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  /// Get available riders for assignment.
   Future<List<RiderBrief>> getAvailableRiders() async {
     try {
       final response = await _dio.get(
@@ -253,7 +236,6 @@ class CollectionRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
   AppException _mapDioException(DioException e) {
     switch (e.type) {
@@ -273,14 +255,14 @@ class CollectionRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message:
                 'You do not have permission to manage collections.',
           );
@@ -328,7 +310,6 @@ class CollectionRemoteDataSource {
   }
 }
 
-/// Paginated result for collection list queries.
 class CollectionListResult {
   final List<CollectionModel> collections;
   final int total;
@@ -339,7 +320,6 @@ class CollectionListResult {
   });
 }
 
-/// Simplified rider info for collection assignment.
 class RiderBrief {
   final String id;
   final String name;

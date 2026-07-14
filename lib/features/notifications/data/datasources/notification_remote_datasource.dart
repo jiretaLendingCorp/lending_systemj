@@ -1,13 +1,10 @@
+// lib/features/notifications/data/datasources/notification_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/notifications/data/models/notification_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/notifications/data/models/notification_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Remote data source for notification operations using Dio and Supabase realtime.
-///
-/// Uses Dio for REST API calls (list, mark read, mark all read)
-/// and Supabase realtime for push notification subscriptions.
 class NotificationRemoteDataSource {
   final Dio _dio;
   final SupabaseClient _supabaseClient;
@@ -18,7 +15,6 @@ class NotificationRemoteDataSource {
   })  : _dio = dio,
         _supabaseClient = supabaseClient;
 
-  /// List notifications with optional type filter and pagination.
   Future<List<NotificationModel>> list({
     String? type,
     int page = 1,
@@ -57,7 +53,6 @@ class NotificationRemoteDataSource {
     }
   }
 
-  /// Mark a specific notification as read.
   Future<NotificationModel> markRead(String notificationId) async {
     try {
       final response = await _dio.post(
@@ -71,7 +66,6 @@ class NotificationRemoteDataSource {
     }
   }
 
-  /// Mark all notifications as read for the authenticated user.
   Future<void> markAllRead() async {
     try {
       await _dio.post(ApiEndpoints.notificationsMarkAllRead);
@@ -80,11 +74,6 @@ class NotificationRemoteDataSource {
     }
   }
 
-  /// Subscribe to realtime notification updates via Supabase.
-  ///
-  /// Returns a [RealtimeChannel] that the caller is responsible for
-  /// subscribing and unsubscribing. The [onNewNotification] callback
-  /// is invoked whenever a new notification is inserted.
   RealtimeChannel subscribeToRealtime({
     required String userId,
     required void Function(NotificationModel) onNewNotification,
@@ -108,16 +97,13 @@ class NotificationRemoteDataSource {
         );
   }
 
-  /// Unsubscribe from the realtime notification channel.
   Future<void> unsubscribeFromRealtime(String userId) async {
     await _supabaseClient
         .channel('notifications:$userId')
         .unsubscribe();
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
-  /// Map a [DioException] to the appropriate [AppException] subtype.
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -136,7 +122,7 @@ class NotificationRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,

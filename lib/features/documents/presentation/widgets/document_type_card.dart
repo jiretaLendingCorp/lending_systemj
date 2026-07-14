@@ -1,15 +1,9 @@
+// lib/features/documents/presentation/widgets/document_type_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/documents/domain/entities/kyc_document.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
 
-/// Upload card per document type with status indicator.
-///
-/// Displays:
-/// - Document type icon and name
-/// - Description of the required document
-/// - Current status (not uploaded, pending, verified, rejected)
-/// - Upload/replace/view actions
 class DocumentTypeCard extends StatelessWidget {
   final DocumentType documentType;
   final KycDocument? existingDocument;
@@ -36,7 +30,7 @@ class DocumentTypeCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: _borderColor.withOpacity(0.3),
+          color: _borderColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -45,14 +39,13 @@ class DocumentTypeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row: icon, title, status
             Row(
               children: [
                 Container(
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: _iconBackgroundColor.withOpacity(0.1),
+                    color: _iconBackgroundColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -90,7 +83,6 @@ class DocumentTypeCard extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // Status detail row
             if (hasDocument) ...[
               Container(
                 width: double.infinity,
@@ -99,7 +91,7 @@ class DocumentTypeCard extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: _statusBackgroundColor.withOpacity(0.05),
+                  color: _statusBackgroundColor.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -128,7 +120,6 @@ class DocumentTypeCard extends StatelessWidget {
               ),
             ],
 
-            // Action buttons
             if (!hasDocument && onUpload != null)
               SizedBox(
                 width: double.infinity,
@@ -221,7 +212,6 @@ class DocumentTypeCard extends StatelessWidget {
       };
 }
 
-/// Small circular status indicator for the card header.
 class _StatusIndicator extends StatelessWidget {
   final DocumentStatus status;
 
@@ -245,7 +235,7 @@ class _StatusIndicator extends StatelessWidget {
       width: 28,
       height: 28,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(icon, size: 16, color: color),

@@ -1,24 +1,15 @@
+// lib/features/loans/presentation/pages/loan_application_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/constants.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/validators.dart';
-import 'package:lendflow/features/auth/presentation/widgets/auth_text_field.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/loans/presentation/providers/loan_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/validators.dart';
+import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/features/loans/presentation/providers/loan_notifier.dart';
 
-/// Borrower loan application form.
-///
-/// Allows borrowers to apply for a new loan with:
-/// - Principal amount (₱3,000–₱500,000)
-/// - Term in days
-/// - Schedule type (daily/weekly/monthly)
-/// - Co-maker information
-///
-/// Shows a real-time preview of the loan terms including
-/// interest, total payable, and estimated installment amounts.
 class LoanApplicationPage extends ConsumerStatefulWidget {
   const LoanApplicationPage({super.key});
 
@@ -129,7 +120,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Loan Amount Section ─────────────────────────────
               _SectionHeader(
                 title: 'Loan Amount',
                 icon: Icons.payments_outlined,
@@ -164,7 +154,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
               ),
               const SizedBox(height: 24),
 
-              // ── Term and Schedule Section ───────────────────────
               _SectionHeader(
                 title: 'Term & Schedule',
                 icon: Icons.calendar_today_outlined,
@@ -204,7 +193,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
               ),
               const SizedBox(height: 16),
 
-              // Schedule type selector
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -284,7 +272,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
               ),
               const SizedBox(height: 24),
 
-              // ── Loan Preview Card ───────────────────────────────
               if (_principal > 0 && _termDays > 0) ...[
                 _LoanPreviewCard(
                   principal: _principal,
@@ -299,7 +286,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                 const SizedBox(height: 24),
               ],
 
-              // ── Co-Maker Section ────────────────────────────────
               _SectionHeader(
                 title: 'Co-Maker Information',
                 icon: Icons.person_add_outlined,
@@ -307,7 +293,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
               ),
               const SizedBox(height: 4),
               Text(
-                'A co-maker guarantees the loan repayment if the borrower defaults.',
+                'A co-maker guarantees the loan repayment if the lender defaults.',
                 style: TextStyle(
                   fontSize: 12,
                   color: isDark
@@ -365,7 +351,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
               ),
               const SizedBox(height: 16),
 
-              // Relationship dropdown
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -411,7 +396,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
               ),
               const SizedBox(height: 32),
 
-              // ── Submit Button ───────────────────────────────────
               SizedBox(
                 height: 48,
                 child: ElevatedButton(
@@ -430,7 +414,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
               ),
               const SizedBox(height: 16),
 
-              // Disclaimer
               Text(
                 'By submitting, you agree to the terms and conditions of the loan. Interest rate is fixed at 20% per term. Late payments incur a 20% penalty on the overdue amount.',
                 style: TextStyle(
@@ -455,7 +438,6 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
       };
 }
 
-/// Section header with icon and title.
 class _SectionHeader extends StatelessWidget {
   final String title;
   final IconData icon;
@@ -488,7 +470,6 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-/// Loan preview card showing computed loan terms.
 class _LoanPreviewCard extends StatelessWidget {
   final double principal;
   final double interestRate;
@@ -630,7 +611,6 @@ class _LoanPreviewCard extends StatelessWidget {
   }
 }
 
-/// Preview row with label and value.
 class _PreviewRow extends StatelessWidget {
   final String label;
   final String value;

@@ -1,35 +1,29 @@
+// lib/features/documents/presentation/providers/document_notifier.dart
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/core/network/dio_client.dart';
-import 'package:lendflow/features/documents/data/datasources/document_remote_datasource.dart';
-import 'package:lendflow/features/documents/data/repositories/document_repository_impl.dart';
-import 'package:lendflow/features/documents/domain/entities/kyc_document.dart';
-import 'package:lendflow/features/documents/domain/repositories/document_repository.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/features/documents/data/datasources/document_remote_datasource.dart';
+import 'package:jireta_loan/features/documents/data/repositories/document_repository_impl.dart';
+import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
+import 'package:jireta_loan/features/documents/domain/repositories/document_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-// ─────────────────────────────────────────────────────────────────
-// Document state model
-// ─────────────────────────────────────────────────────────────────
 
-/// Represents the feature-level document state managed by [DocumentNotifier].
 sealed class DocumentFeatureState {
   const DocumentFeatureState();
 }
 
-/// Initial state.
 class DocumentInitial extends DocumentFeatureState {
   const DocumentInitial();
 }
 
-/// Loading state.
 class DocumentLoading extends DocumentFeatureState {
   const DocumentLoading();
 }
 
-/// Upload in progress state.
 class DocumentUploading extends DocumentFeatureState {
   final double progress;
   final DocumentType documentType;
@@ -40,13 +34,11 @@ class DocumentUploading extends DocumentFeatureState {
   });
 }
 
-/// Documents loaded successfully.
 class DocumentsLoaded extends DocumentFeatureState {
   final List<KycDocument> documents;
 
   const DocumentsLoaded({required this.documents});
 
-  /// Find a document by type.
   KycDocument? findByType(DocumentType type) {
     try {
       return documents.firstWhere((d) => d.documentType == type);
@@ -55,39 +47,33 @@ class DocumentsLoaded extends DocumentFeatureState {
     }
   }
 
-  /// Whether all required documents are uploaded.
   bool get hasAllDocuments =>
       findByType(DocumentType.governmentId) != null &&
       findByType(DocumentType.proofOfBilling) != null &&
       findByType(DocumentType.selfie) != null &&
       findByType(DocumentType.proofOfIncome) != null;
 
-  /// Whether all documents are verified.
   bool get allVerified =>
       documents.isNotEmpty &&
       documents.every((d) => d.status.isVerified);
 }
 
-/// Upload completed state.
 class DocumentUploaded extends DocumentFeatureState {
   final KycDocument document;
 
   const DocumentUploaded({required this.document});
 }
 
-/// Signed URL generated.
 class SignedUrlLoaded extends DocumentFeatureState {
   final String url;
 
   const SignedUrlLoaded({required this.url});
 }
 
-/// Document deleted.
 class DocumentDeleted extends DocumentFeatureState {
   const DocumentDeleted();
 }
 
-/// An error occurred.
 class DocumentError extends DocumentFeatureState {
   final String message;
   final Failure? failure;
@@ -95,16 +81,11 @@ class DocumentError extends DocumentFeatureState {
   const DocumentError(this.message, {this.failure});
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Providers
-// ─────────────────────────────────────────────────────────────────
 
-/// Provides the [SupabaseClient] instance.
 final documentSupabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
 });
 
-/// Provides the [DocumentRemoteDataSource].
 final documentRemoteDataSourceProvider =
     Provider<DocumentRemoteDataSource>((ref) {
   return DocumentRemoteDataSource(
@@ -113,14 +94,12 @@ final documentRemoteDataSourceProvider =
   );
 });
 
-/// Provides the [DocumentRepository] implementation.
 final documentRepositoryProvider = Provider<DocumentRepository>((ref) {
   return DocumentRepositoryImpl(
     remoteDataSource: ref.watch(documentRemoteDataSourceProvider),
   );
 });
 
-/// Provides the [DocumentNotifier] for document feature screens.
 final documentFeatureProvider =
     StateNotifierProvider<DocumentNotifier, DocumentFeatureState>((ref) {
   return DocumentNotifier(
@@ -129,41 +108,35 @@ final documentFeatureProvider =
   );
 });
 
-// ─────────────────────────────────────────────────────────────────
-// Document notifier
-// ─────────────────────────────────────────────────────────────────
 
-/// Riverpod [StateNotifier] managing document feature UI state.
 class DocumentNotifier extends StateNotifier<DocumentFeatureState> {
   final DocumentRepository _repository;
-  final AuthState _authState;
+  final AppAuthState _authState;
 
   DocumentNotifier({
     required DocumentRepository repository,
-    required AuthState authProvider,
+    required AppAuthState authProvider,
   })  : _repository = repository,
         _authState = authProvider,
         super(const DocumentInitial());
 
-  /// Get the current borrower's ID from auth state.
   String? get _currentBorrowerId {
-    if (_authState is AuthAuthenticated) {
-      return (_authState as AuthAuthenticated).user.id;
+    if (_authState is AppAuthAuthenticated) {
+      return (_authState as AppAuthAuthenticated).userId;
     }
     return null;
   }
 
-  /// Load all KYC documents for the current borrower.
   Future<void> loadDocuments() async {
-    final borrowerId = _currentBorrowerId;
-    if (borrowerId == null) {
+    final lenderId = _currentBorrowerId;
+    if (lenderId == null) {
       state = const DocumentError('Not authenticated.');
       return;
     }
 
     state = const DocumentLoading();
 
-    final result = await _repository.list(borrowerId: borrowerId);
+    final result = await _repository.list(lenderId: lenderId);
 
     state = result.fold(
       (failure) => DocumentError(failure.message, failure: failure),
@@ -171,14 +144,13 @@ class DocumentNotifier extends StateNotifier<DocumentFeatureState> {
     );
   }
 
-  /// Upload a KYC document.
   Future<void> uploadDocument({
     required DocumentType documentType,
     required String filePath,
     required String fileName,
   }) async {
-    final borrowerId = _currentBorrowerId;
-    if (borrowerId == null) {
+    final lenderId = _currentBorrowerId;
+    if (lenderId == null) {
       state = const DocumentError('Not authenticated.');
       return;
     }
@@ -189,7 +161,7 @@ class DocumentNotifier extends StateNotifier<DocumentFeatureState> {
     );
 
     final result = await _repository.upload(
-      borrowerId: borrowerId,
+      lenderId: lenderId,
       documentType: documentType.toApiString(),
       filePath: filePath,
       fileName: fileName,
@@ -208,7 +180,6 @@ class DocumentNotifier extends StateNotifier<DocumentFeatureState> {
     );
   }
 
-  /// Generate a signed URL for a document.
   Future<void> getSignedUrl({required String filePath}) async {
     final result = await _repository.getSignedUrl(filePath: filePath);
 
@@ -218,7 +189,6 @@ class DocumentNotifier extends StateNotifier<DocumentFeatureState> {
     );
   }
 
-  /// Delete a document.
   Future<void> deleteDocument({
     required String documentId,
     required String filePath,
@@ -234,7 +204,6 @@ class DocumentNotifier extends StateNotifier<DocumentFeatureState> {
     );
   }
 
-  /// Reset state to initial.
   void resetState() {
     state = const DocumentInitial();
   }

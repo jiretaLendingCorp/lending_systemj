@@ -1,13 +1,10 @@
+// lib/features/payments/domain/usecases/create_payment_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
-import 'package:lendflow/features/payments/domain/repositories/payment_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/features/payments/domain/repositories/payment_repository.dart';
 
-/// Create payment use case.
-///
-/// Validates the payment amount meets the minimum (₱100) and
-/// that the selected method is valid before creating the payment.
 class CreatePaymentUseCase {
   final PaymentRepository _repository;
 
@@ -15,7 +12,6 @@ class CreatePaymentUseCase {
       : _repository = repository;
 
   Future<Either<Failure, Payment>> call(CreatePaymentParams params) {
-    // Validate payment amount
     if (params.amount < 100) {
       return Future.value(const Left(ValidationFailure(
         message: 'Minimum payment amount is ₱100.',
@@ -38,7 +34,6 @@ class CreatePaymentUseCase {
   }
 }
 
-/// Parameters for the create payment use case.
 class CreatePaymentParams extends Equatable {
   final String loanId;
   final double amount;

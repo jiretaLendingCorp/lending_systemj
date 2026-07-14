@@ -1,14 +1,8 @@
+// lib/features/auth/presentation/widgets/google_sign_in_button.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Google Sign-In button widget.
-///
-/// Renders a platform-appropriate Google OAuth button:
-/// - On web: uses a standard "Sign in with Google" button style
-/// - On mobile: uses the Google icon + label layout
-///
-/// The button handles its own loading state when [isLoading] is true.
 class GoogleSignInButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
@@ -32,7 +26,6 @@ class GoogleSignInButton extends StatelessWidget {
     return _buildMobileButton(context, isDark);
   }
 
-  /// Web-style Google Sign-In button with Google's branded colors.
   Widget _buildWebButton(BuildContext context, bool isDark) {
     return SizedBox(
       width: double.infinity,
@@ -61,7 +54,6 @@ class GoogleSignInButton extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Google "G" logo
                   _GoogleLogo(size: 20),
                   const SizedBox(width: 12),
                   Text(
@@ -80,7 +72,6 @@ class GoogleSignInButton extends StatelessWidget {
     );
   }
 
-  /// Mobile-style Google Sign-In button.
   Widget _buildMobileButton(BuildContext context, bool isDark) {
     return SizedBox(
       width: double.infinity,
@@ -119,11 +110,6 @@ class GoogleSignInButton extends StatelessWidget {
   }
 }
 
-/// Simplified Google "G" logo widget.
-///
-/// Uses a custom painter to draw a recognizable "G" icon
-/// that matches Google's brand colors, avoiding the need
-/// for an external SVG asset.
 class _GoogleLogo extends StatelessWidget {
   final double size;
 
@@ -144,10 +130,8 @@ class _GoogleLogoPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
 
-    // Draw the colored segments of the Google G
     final strokeWidth = size.width * 0.12;
 
-    // Blue segment (top-right)
     final bluePaint = Paint()
       ..color = const Color(0xFF4285F4)
       ..style = PaintingStyle.stroke
@@ -161,7 +145,6 @@ class _GoogleLogoPainter extends CustomPainter {
       bluePaint,
     );
 
-    // Red segment (top)
     final redPaint = Paint()
       ..color = const Color(0xFFEA4335)
       ..style = PaintingStyle.stroke
@@ -175,7 +158,6 @@ class _GoogleLogoPainter extends CustomPainter {
       redPaint,
     );
 
-    // Yellow segment (bottom-left)
     final yellowPaint = Paint()
       ..color = const Color(0xFFFBBC05)
       ..style = PaintingStyle.stroke
@@ -189,7 +171,6 @@ class _GoogleLogoPainter extends CustomPainter {
       yellowPaint,
     );
 
-    // Green segment (bottom)
     final greenPaint = Paint()
       ..color = const Color(0xFF34A853)
       ..style = PaintingStyle.stroke
@@ -203,7 +184,6 @@ class _GoogleLogoPainter extends CustomPainter {
       greenPaint,
     );
 
-    // Draw the horizontal bar of the G
     final barPaint = Paint()
       ..color = const Color(0xFF4285F4)
       ..style = PaintingStyle.stroke

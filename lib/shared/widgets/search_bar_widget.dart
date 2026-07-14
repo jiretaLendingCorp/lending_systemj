@@ -1,38 +1,21 @@
+// lib/shared/widgets/search_bar_widget.dart
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// Reusable search bar with debounce.
-///
-/// Wraps a [TextField] styled as a search input and emits
-/// debounced search queries through the [onChanged] callback.
-/// The default debounce duration is 300ms.
-///
-/// ```dart
-/// SearchBarWidget(
-///   hintText: 'Search loans...',
-///   onChanged: (query) => ref.read(provider.notifier).search(query),
-/// )
-/// ```
 class SearchBarWidget extends StatefulWidget {
-  /// Hint text displayed when the field is empty.
   final String hintText;
 
-  /// Debounced callback fired when the user stops typing.
   final ValueChanged<String> onChanged;
 
-  /// Debounce duration. Defaults to 300ms.
   final Duration debounceDuration;
 
-  /// Optional controller for external access.
   final TextEditingController? controller;
 
-  /// Whether the search bar is enabled.
   final bool enabled;
 
-  /// Optional callback when the clear button is pressed.
   final VoidCallback? onCleared;
 
   const SearchBarWidget({

@@ -1,21 +1,17 @@
+// lib/features/users/presentation/pages/user_create_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/constants.dart';
-import 'package:lendflow/core/utils/validators.dart';
-import 'package:lendflow/features/users/presentation/providers/user_notifier.dart';
-import 'package:lendflow/features/users/presentation/widgets/role_dropdown.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
-import 'package:lendflow/shared/widgets/loading_overlay.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// Web: Create user form page with role assignment.
-///
-/// Allows admins to create new users by providing email, password,
-/// full name, phone, branch, and role. Sensitive operations
-/// require forced re-authentication.
+import 'package:jireta_loan/core/utils/validators.dart';
+import 'package:jireta_loan/features/users/presentation/providers/user_notifier.dart';
+import 'package:jireta_loan/features/users/presentation/widgets/role_dropdown.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
+
 class UserCreatePage extends ConsumerStatefulWidget {
   const UserCreatePage({super.key});
 
@@ -30,7 +26,7 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
   final _fullNameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _branchIdController = TextEditingController();
-  UserRole _selectedRole = UserRole.borrower;
+  UserRole _selectedRole = UserRole.lender;
   bool _obscurePassword = true;
 
   @override
@@ -80,7 +76,6 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       style: TextStyles.bodySmall(context),
                     ),
                     const SizedBox(height: 32),
-                    // Full Name
                     TextFormField(
                       controller: _fullNameController,
                       validator: Validators.required,
@@ -91,7 +86,6 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Email
                     TextFormField(
                       controller: _emailController,
                       validator: Validators.email,
@@ -103,7 +97,6 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Password
                     TextFormField(
                       controller: _passwordController,
                       validator: Validators.password,
@@ -123,7 +116,6 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Phone
                     TextFormField(
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
@@ -134,7 +126,6 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Branch ID
                     TextFormField(
                       controller: _branchIdController,
                       decoration: const InputDecoration(
@@ -144,7 +135,6 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Role
                     Row(
                       children: [
                         Text('Role: ', style: TextStyles.labelLarge(context)),
@@ -161,25 +151,25 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    if (_selectedRole == UserRole.admin)
+                    if (_selectedRole == UserRole.headManager)
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: ColorTokens.roleAdmin.withOpacity(0.08),
+                          color: ColorTokens.roleHeadManager.withValues(alpha: 0.08),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                              color: ColorTokens.roleAdmin.withOpacity(0.3)),
+                              color: ColorTokens.roleHeadManager.withValues(alpha: 0.3)),
                         ),
                         child: Row(
                           children: [
                             Icon(Icons.warning_amber_outlined,
-                                size: 18, color: ColorTokens.roleAdmin),
+                                size: 18, color: ColorTokens.roleHeadManager),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                'Admin role grants full system access. This action requires re-authentication.',
+                                'HeadManager role grants full system access. This action requires re-authentication.',
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: ColorTokens.roleAdmin,
+                                  color: ColorTokens.roleHeadManager,
                                 ),
                               ),
                             ),
@@ -187,7 +177,6 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                         ),
                       ),
                     const SizedBox(height: 32),
-                    // Submit
                     SizedBox(
                       width: double.infinity,
                       height: 48,

@@ -1,18 +1,13 @@
+// lib/features/riders/presentation/pages/rider_today_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
-import 'package:lendflow/features/riders/presentation/providers/rider_notifier.dart';
-import 'package:lendflow/features/riders/presentation/widgets/task_card.dart';
-import 'package:lendflow/features/riders/presentation/widgets/task_stats_card.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
+import 'package:jireta_loan/features/riders/presentation/providers/rider_notifier.dart';
+import 'package:jireta_loan/features/riders/presentation/widgets/task_card.dart';
+import 'package:jireta_loan/features/riders/presentation/widgets/task_stats_card.dart';
 
-/// Mobile page displaying the rider's tasks for today.
-///
-/// Features:
-/// - Filter chips to toggle between disbursement/collection tasks
-/// - Swipe-to-complete gesture on each task card
-/// - Task statistics summary at the top
 class RiderTodayPage extends ConsumerStatefulWidget {
   const RiderTodayPage({super.key});
 
@@ -57,7 +52,6 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
             .loadTodayTasks(type: _activeFilter),
         child: CustomScrollView(
           slivers: [
-            // Stats card
             if (riderState is RiderTasksLoaded)
               SliverToBoxAdapter(
                 child: Padding(
@@ -71,7 +65,6 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
                 ),
               ),
 
-            // Filter chips
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -114,7 +107,6 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
               ),
             ),
 
-            // Content
             if (riderState is RiderLoading)
               const SliverFillRemaining(
                 child: Center(child: CircularProgressIndicator()),
@@ -249,7 +241,7 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
         content: Text(
           'Are you sure you want to mark this ${task.type.label.toLowerCase()} '
           'of ${CurrencyFormatter.formatPhp(task.amount)} for '
-          '${task.borrowerName} as ${task.isDisbursement ? "delivered" : "collected"}?',
+          '${task.lenderName} as ${task.isDisbursement ? "delivered" : "collected"}?',
         ),
         actions: [
           TextButton(
@@ -267,7 +259,6 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
   }
 
   void _handleComplete(RiderTask task) {
-    // In a real app, GPS coordinates would come from the device location
     if (task.isDisbursement) {
       ref.read(riderFeatureProvider.notifier).markDelivered(
             taskId: task.id,

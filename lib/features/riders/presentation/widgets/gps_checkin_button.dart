@@ -1,12 +1,8 @@
+// lib/features/riders/presentation/widgets/gps_checkin_button.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
 
-/// GPS check-in button with a status indicator.
-///
-/// Displays a large, tappable button that shows the current GPS
-/// check-in state for a task. The button changes appearance based
-/// on whether the check-in was successful, is in progress, or failed.
 class GpsCheckinButton extends StatefulWidget {
   final RiderTask task;
   final Future<void> Function(double latitude, double longitude) onCheckin;
@@ -36,7 +32,6 @@ class _GpsCheckinButtonState extends State<GpsCheckinButton> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Status indicator row
             Row(
               children: [
                 _StatusDot(status: _status),
@@ -62,7 +57,7 @@ class _GpsCheckinButtonState extends State<GpsCheckinButton> {
                         ),
                       if (_status == GpsCheckinStatus.idle)
                         Text(
-                          '${widget.task.borrowerName} – ${widget.task.type.label}',
+                          '${widget.task.lenderName} – ${widget.task.type.label}',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.outline,
                           ),
@@ -75,7 +70,6 @@ class _GpsCheckinButtonState extends State<GpsCheckinButton> {
 
             const SizedBox(height: 12),
 
-            // Check-in button
             SizedBox(
               width: double.infinity,
               height: 52,
@@ -118,7 +112,7 @@ class _GpsCheckinButtonState extends State<GpsCheckinButton> {
       ),
       label: const Text('Checking in...'),
       style: FilledButton.styleFrom(
-        backgroundColor: ColorTokens.accent.withOpacity(0.7),
+        backgroundColor: ColorTokens.accent.withValues(alpha: 0.7),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -147,8 +141,6 @@ class _GpsCheckinButtonState extends State<GpsCheckinButton> {
     });
 
     try {
-      // In a real app, GPS coordinates come from the device location service.
-      // Here we use the task's coordinates as a placeholder.
       await widget.onCheckin(
         widget.task.gpsLatitude,
         widget.task.gpsLongitude,
@@ -175,7 +167,6 @@ class _GpsCheckinButtonState extends State<GpsCheckinButton> {
       };
 }
 
-/// Status of the GPS check-in operation.
 enum GpsCheckinStatus {
   idle,
   loading,
@@ -183,7 +174,6 @@ enum GpsCheckinStatus {
   error;
 }
 
-/// Animated status dot that changes color based on check-in state.
 class _StatusDot extends StatelessWidget {
   final GpsCheckinStatus status;
 
@@ -206,7 +196,7 @@ class _StatusDot extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.4),
+            color: color.withValues(alpha: 0.4),
             blurRadius: 6,
             spreadRadius: 2,
           ),

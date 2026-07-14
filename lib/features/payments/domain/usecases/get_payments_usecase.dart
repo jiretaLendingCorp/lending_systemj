@@ -1,11 +1,9 @@
+// lib/features/payments/domain/usecases/get_payments_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/payments/domain/repositories/payment_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/payments/domain/repositories/payment_repository.dart';
 
-/// Get payment history for a loan use case.
-///
-/// Returns a paginated list of payments for the specified loan.
 class GetPaymentsUseCase {
   final PaymentRepository _repository;
 
@@ -24,7 +22,7 @@ class GetPaymentsUseCase {
     }
 
     return _repository.list(
-      borrowerId: params.borrowerId,
+      lenderId: params.lenderId,
       status: params.status,
       method: params.method,
       page: params.page,
@@ -33,10 +31,9 @@ class GetPaymentsUseCase {
   }
 }
 
-/// Parameters for the get payments use case.
 class GetPaymentsParams extends Equatable {
   final String? loanId;
-  final String? borrowerId;
+  final String? lenderId;
   final String? status;
   final String? method;
   final int page;
@@ -44,7 +41,7 @@ class GetPaymentsParams extends Equatable {
 
   const GetPaymentsParams({
     this.loanId,
-    this.borrowerId,
+    this.lenderId,
     this.status,
     this.method,
     this.page = 1,
@@ -54,7 +51,7 @@ class GetPaymentsParams extends Equatable {
   @override
   List<Object?> get props => [
         loanId,
-        borrowerId,
+        lenderId,
         status,
         method,
         page,

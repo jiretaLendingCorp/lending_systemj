@@ -1,33 +1,14 @@
+// lib/shared/widgets/avatar_widget.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Circle avatar with initials fallback and role color.
-///
-/// Displays a user avatar image when [avatarUrl] is provided, or
-/// falls back to showing coloured initials derived from [fullName].
-/// The background colour is determined by the user's role, making it
-/// easy to identify roles at a glance.
-///
-/// ```dart
-/// AvatarWidget(
-///   fullName: 'Juan Dela Cruz',
-///   role: 'admin',
-///   avatarUrl: 'https://...',
-///   radius: 24,
-/// )
-/// ```
 class AvatarWidget extends StatelessWidget {
-  /// Full name used to generate initials when no avatar URL is available.
   final String fullName;
 
-  /// Remote avatar image URL. When `null`, initials are shown.
   final String? avatarUrl;
 
-  /// User role string that determines the fallback colour.
-  /// Accepted values: 'admin', 'manager', 'rider', 'borrower'.
   final String? role;
 
-  /// Radius of the circular avatar. Defaults to 20.
   final double radius;
 
   const AvatarWidget({
@@ -66,11 +47,6 @@ class AvatarWidget extends StatelessWidget {
     );
   }
 
-  /// Extract up to two initials from a full name.
-  ///
-  /// - "Juan Dela Cruz" → "JD"
-  /// - "Maria" → "MA"
-  /// - "" → "?"
   String _initials(String name) {
     if (name.trim().isEmpty) return '?';
 
@@ -78,20 +54,18 @@ class AvatarWidget extends StatelessWidget {
     if (parts.length >= 2) {
       return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
     }
-    // Single-word name: take first two characters
     final single = parts[0];
     return single.length >= 2
         ? single.substring(0, 2).toUpperCase()
         : single.toUpperCase();
   }
 
-  /// Map a role string to its design colour.
   Color _roleColor(String? role) {
     return switch (role?.toLowerCase()) {
-      'admin' => ColorTokens.roleAdmin,
-      'manager' => ColorTokens.roleManager,
+      'head_manager' => ColorTokens.roleHeadManager,
+      'employee' => ColorTokens.roleEmployee,
       'rider' => ColorTokens.roleRider,
-      'borrower' => ColorTokens.roleBorrower,
+      'lender' => ColorTokens.roleLender,
       _ => ColorTokens.accent,
     };
   }

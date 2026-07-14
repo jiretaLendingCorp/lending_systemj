@@ -1,11 +1,8 @@
+// lib/features/settings/presentation/widgets/settings_section.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// A reusable settings section card widget.
-///
-/// Displays a titled, bordered card containing a group of related
-/// settings. Used to organize the settings page into logical sections.
 class SettingsSection extends StatelessWidget {
   final String title;
   final String? subtitle;
@@ -74,7 +71,6 @@ class SettingsSection extends StatelessWidget {
   }
 }
 
-/// A single settings row with a label and a control widget.
 class SettingsRow extends StatelessWidget {
   final String label;
   final String? description;

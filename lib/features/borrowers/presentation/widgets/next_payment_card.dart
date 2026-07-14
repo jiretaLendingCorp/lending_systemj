@@ -1,16 +1,10 @@
+// lib/features/lenders/presentation/widgets/next_payment_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 
-/// Card displaying the borrower's next due payment.
-///
-/// Shows:
-/// - Next payment due date
-/// - Amount due
-/// - Days remaining or overdue indicator
-/// - Quick "Pay Now" action button
 class NextPaymentCard extends StatelessWidget {
   final Loan loan;
 
@@ -36,7 +30,7 @@ class NextPaymentCard extends StatelessWidget {
                   : isUrgent
                       ? ColorTokens.lightWarning
                       : ColorTokens.lightBorder)
-              .withOpacity(0.5),
+              .withValues(alpha: 0.5),
           width: 1,
         ),
       ),
@@ -45,7 +39,6 @@ class NextPaymentCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -66,7 +59,6 @@ class NextPaymentCard extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // Due date
             Row(
               children: [
                 Icon(
@@ -90,7 +82,6 @@ class NextPaymentCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // Amount due
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -117,7 +108,6 @@ class NextPaymentCard extends StatelessWidget {
                 ),
                 FilledButton(
                   onPressed: () {
-                    // Navigate to payment page
                   },
                   style: FilledButton.styleFrom(
                     backgroundColor: isOverdue
@@ -130,14 +120,13 @@ class NextPaymentCard extends StatelessWidget {
               ],
             ),
 
-            // Penalty info if overdue
             if (isOverdue && loan.penaltyAmount > 0) ...[
               const SizedBox(height: 12),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ColorTokens.lightError.withOpacity(0.05),
+                  color: ColorTokens.lightError.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -163,7 +152,6 @@ class NextPaymentCard extends StatelessWidget {
   }
 }
 
-/// Badge indicating the urgency of the next payment.
 class _DueBadge extends StatelessWidget {
   final bool isOverdue;
   final bool isUrgent;
@@ -194,7 +182,7 @@ class _DueBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

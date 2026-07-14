@@ -1,30 +1,22 @@
+// lib/features/lenders/presentation/pages/borrower_loan_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/borrowers/domain/entities/borrower_profile.dart';
-import 'package:lendflow/features/borrowers/presentation/providers/borrower_notifier.dart';
-import 'package:lendflow/features/borrowers/presentation/widgets/kyc_status_card.dart';
-import 'package:lendflow/features/borrowers/presentation/widgets/loan_balance_card.dart';
-import 'package:lendflow/features/borrowers/presentation/widgets/next_payment_card.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/loans/presentation/providers/loan_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Mobile page displaying the borrower's loan information.
-///
-/// Features:
-/// - Current loan balance card with repayment progress
-/// - KYC verification status card
-/// - Next payment due card
-/// - Apply for new loan button
-/// - Loan schedule link
-class BorrowerLoanPage extends ConsumerStatefulWidget {
-  const BorrowerLoanPage({super.key});
+import 'package:jireta_loan/features/lenders/presentation/providers/borrower_notifier.dart';
+import 'package:jireta_loan/features/lenders/presentation/widgets/kyc_status_card.dart';
+import 'package:jireta_loan/features/lenders/presentation/widgets/loan_balance_card.dart';
+import 'package:jireta_loan/features/lenders/presentation/widgets/next_payment_card.dart';
+
+
+class LenderLoanPage extends ConsumerStatefulWidget {
+  const LenderLoanPage({super.key});
 
   @override
-  ConsumerState<BorrowerLoanPage> createState() => _BorrowerLoanPageState();
+  ConsumerState<LenderLoanPage> createState() => _BorrowerLoanPageState();
 }
 
-class _BorrowerLoanPageState extends ConsumerState<BorrowerLoanPage> {
+class _BorrowerLoanPageState extends ConsumerState<LenderLoanPage> {
   @override
   void initState() {
     super.initState();
@@ -68,7 +60,6 @@ class _BorrowerLoanPageState extends ConsumerState<BorrowerLoanPage> {
                 ),
               )
             else if (borrowerState is BorrowerProfileLoaded) ...[
-              // KYC Status Card
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -77,7 +68,6 @@ class _BorrowerLoanPageState extends ConsumerState<BorrowerLoanPage> {
                 ),
               ),
 
-              // Loan Balance Card or No Loan Card
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -92,7 +82,6 @@ class _BorrowerLoanPageState extends ConsumerState<BorrowerLoanPage> {
                 ),
               ),
 
-              // Next Payment Card (only if active loan)
               if (borrowerState.hasActiveLoan &&
                   borrowerState.currentLoan!.dueAt != null)
                 SliverToBoxAdapter(
@@ -104,7 +93,6 @@ class _BorrowerLoanPageState extends ConsumerState<BorrowerLoanPage> {
                   ),
                 ),
 
-              // Recent Payments Section
               if (borrowerState.recentPayments.isNotEmpty) ...[
                 SliverToBoxAdapter(
                   child: Padding(
@@ -136,7 +124,6 @@ class _BorrowerLoanPageState extends ConsumerState<BorrowerLoanPage> {
                 ),
               ],
 
-              // Apply for Loan Button (when no active loan)
               if (!borrowerState.hasActiveLoan &&
                   borrowerState.profile.canApplyForLoan)
                 SliverToBoxAdapter(
@@ -156,7 +143,7 @@ class _BorrowerLoanPageState extends ConsumerState<BorrowerLoanPage> {
             ]
             else
               const SliverFillRemaining(
-                child: Center(child: Text('Welcome to LendFlow')),
+                child: Center(child: Text('Welcome to Jireta Loan')),
               ),
           ],
         ),
@@ -174,7 +161,6 @@ class _BorrowerLoanPageState extends ConsumerState<BorrowerLoanPage> {
   }
 }
 
-/// Error view widget.
 class _ErrorView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
@@ -199,7 +185,6 @@ class _ErrorView extends StatelessWidget {
   }
 }
 
-/// Card shown when the borrower has no active loan.
 class _NoActiveLoanCard extends StatelessWidget {
   final bool canApply;
   final VoidCallback onApply;
@@ -247,20 +232,17 @@ class _NoActiveLoanCard extends StatelessWidget {
   }
 }
 
-/// Wrapper page for loan application.
 class _LoanApplicationWrapper extends ConsumerWidget {
   const _LoanApplicationWrapper();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Delegate to the existing loan application page
     return const Scaffold(
       body: Center(child: Text('Loan Application')),
     );
   }
 }
 
-/// Wrapper page for payments.
 class _BorrowerPaymentsPageWrapper extends ConsumerWidget {
   const _BorrowerPaymentsPageWrapper();
 

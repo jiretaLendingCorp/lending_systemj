@@ -1,38 +1,31 @@
+// lib/features/settings/presentation/providers/settings_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/core/network/dio_client.dart';
-import 'package:lendflow/features/settings/data/datasources/settings_remote_datasource.dart';
-import 'package:lendflow/features/settings/data/repositories/settings_repository_impl.dart';
-import 'package:lendflow/features/settings/domain/entities/system_settings.dart';
-import 'package:lendflow/features/settings/domain/repositories/settings_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/features/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:jireta_loan/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:jireta_loan/features/settings/domain/entities/system_settings.dart';
+import 'package:jireta_loan/features/settings/domain/repositories/settings_repository.dart';
 
-// ─────────────────────────────────────────────────────────────────
-// Settings state model
-// ─────────────────────────────────────────────────────────────────
 
-/// Represents the feature-level settings state.
 sealed class SettingsFeatureState {
   const SettingsFeatureState();
 }
 
-/// Initial state.
 class SettingsInitial extends SettingsFeatureState {
   const SettingsInitial();
 }
 
-/// Settings are being loaded.
 class SettingsLoading extends SettingsFeatureState {
   const SettingsLoading();
 }
 
-/// Settings loaded successfully.
 class SettingsLoaded extends SettingsFeatureState {
   final SystemSettings settings;
 
   const SettingsLoaded({required this.settings});
 }
 
-/// Settings update succeeded.
 class SettingsUpdateSuccess extends SettingsFeatureState {
   final SystemSettings settings;
   final String message;
@@ -43,7 +36,6 @@ class SettingsUpdateSuccess extends SettingsFeatureState {
   });
 }
 
-/// An error occurred.
 class SettingsError extends SettingsFeatureState {
   final String message;
   final Failure? failure;
@@ -51,24 +43,18 @@ class SettingsError extends SettingsFeatureState {
   const SettingsError(this.message, {this.failure});
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Providers
-// ─────────────────────────────────────────────────────────────────
 
-/// Provides the [SettingsRemoteDataSource].
 final settingsRemoteDataSourceProvider =
     Provider<SettingsRemoteDataSource>((ref) {
   return SettingsRemoteDataSource(dio: ref.watch(dioProvider));
 });
 
-/// Provides the [SettingsRepository] implementation.
 final settingsRepositoryProvider = Provider<SettingsRepository>((ref) {
   return SettingsRepositoryImpl(
     remoteDataSource: ref.watch(settingsRemoteDataSourceProvider),
   );
 });
 
-/// Provides the [SettingsNotifier] for settings screens.
 final settingsFeatureProvider =
     StateNotifierProvider<SettingsNotifier, SettingsFeatureState>((ref) {
   return SettingsNotifier(
@@ -76,11 +62,7 @@ final settingsFeatureProvider =
   );
 });
 
-// ─────────────────────────────────────────────────────────────────
-// Settings notifier
-// ─────────────────────────────────────────────────────────────────
 
-/// Riverpod [StateNotifier] managing settings UI state.
 class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
   final SettingsRepository _repository;
 
@@ -89,7 +71,6 @@ class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
   })  : _repository = repository,
         super(const SettingsInitial());
 
-  /// Load the current system settings.
   Future<void> loadSettings() async {
     state = const SettingsLoading();
 
@@ -101,7 +82,6 @@ class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
     );
   }
 
-  /// Update interest rate (requires re-auth token).
   Future<void> updateInterestRate({
     required double interestRate,
     required String reAuthToken,
@@ -120,7 +100,6 @@ class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
     );
   }
 
-  /// Update penalty rate (requires re-auth token).
   Future<void> updatePenaltyRate({
     required double penaltyRate,
     required int penaltyThresholdDays,
@@ -141,7 +120,6 @@ class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
     );
   }
 
-  /// Update SMS template (no re-auth required).
   Future<void> updateSmsTemplate({required String smsTemplate}) async {
     final result = await _repository.updateSmsTemplate(
       smsTemplate: smsTemplate,
@@ -156,7 +134,6 @@ class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
     );
   }
 
-  /// Update notification preferences (no re-auth required).
   Future<void> updateNotificationPreferences({
     required Map<String, dynamic> preferences,
   }) async {
@@ -173,7 +150,6 @@ class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
     );
   }
 
-  /// Update system flags (re-auth required for maintenance mode).
   Future<void> updateSystemFlags({
     required Map<String, dynamic> flags,
     String? reAuthToken,
@@ -192,7 +168,6 @@ class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
     );
   }
 
-  /// Reset state to initial.
   void resetState() {
     state = const SettingsInitial();
   }

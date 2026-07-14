@@ -1,12 +1,9 @@
+// lib/features/loans/domain/usecases/get_loans_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/loans/domain/repositories/loan_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/loans/domain/repositories/loan_repository.dart';
 
-/// Get loans use case: retrieves a paginated list of loans.
-///
-/// Supports optional status filtering. Admin/manager users see
-/// all loans; borrower users see only their own (enforced server-side).
 class GetLoansUseCase {
   final LoanRepository _repository;
 
@@ -23,7 +20,6 @@ class GetLoansUseCase {
   }
 }
 
-/// Parameters for the get loans use case.
 class GetLoansParams extends Equatable {
   final String? status;
   final int page;

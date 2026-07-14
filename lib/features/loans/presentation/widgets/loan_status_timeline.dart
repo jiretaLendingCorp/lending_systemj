@@ -1,13 +1,9 @@
+// lib/features/loans/presentation/widgets/loan_status_timeline.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 
-/// Loan status progress timeline widget.
-///
-/// Visualizes the loan lifecycle as a horizontal or vertical timeline,
-/// showing the progression through status stages with dates.
-/// Current status is highlighted; future statuses are dimmed.
 class LoanStatusTimeline extends StatelessWidget {
   final Loan loan;
   final Axis direction;
@@ -20,7 +16,6 @@ class LoanStatusTimeline extends StatelessWidget {
     this.showDates = true,
   });
 
-  /// Ordered list of statuses in the normal loan lifecycle.
   static const _lifecycle = [
     LoanStatus.draft,
     LoanStatus.submitted,
@@ -84,7 +79,6 @@ class LoanStatusTimeline extends StatelessWidget {
   Widget _buildVertical(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // For vertical, include rejected and defaulted if applicable
     final statuses = _getVerticalStatuses();
 
     return Padding(
@@ -102,7 +96,6 @@ class LoanStatusTimeline extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Timeline dot + connector
                 Column(
                   children: [
                     _TimelineDot(
@@ -126,7 +119,6 @@ class LoanStatusTimeline extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(width: 12),
-                // Status label and date
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 16),
@@ -181,12 +173,10 @@ class LoanStatusTimeline extends StatelessWidget {
     );
   }
 
-  /// Get the index of the current loan status in the lifecycle.
   int _getCurrentIndex() {
     final statusIndex = _lifecycle.indexOf(loan.status);
     if (statusIndex >= 0) return statusIndex;
 
-    // Handle rejected/defaulted by mapping to the nearest lifecycle point
     if (loan.status == LoanStatus.rejected) {
       return 2; // After under_review
     }
@@ -196,7 +186,6 @@ class LoanStatusTimeline extends StatelessWidget {
     return 0;
   }
 
-  /// Whether a lifecycle status was skipped for this loan.
   bool _isSkipped(LoanStatus status) {
     if (loan.status == LoanStatus.rejected) {
       return status == LoanStatus.approved ||
@@ -211,7 +200,6 @@ class LoanStatusTimeline extends StatelessWidget {
     return false;
   }
 
-  /// Get the date associated with a particular status.
   DateTime? _getDateForStatus(LoanStatus status) {
     return switch (status) {
       LoanStatus.draft || LoanStatus.submitted => loan.createdAt,
@@ -223,7 +211,6 @@ class LoanStatusTimeline extends StatelessWidget {
     };
   }
 
-  /// Build the vertical status list, including rejected/defaulted branches.
   List<_StatusItem> _getVerticalStatuses() {
     final currentIndex = _getCurrentIndex();
     final items = <_StatusItem>[];
@@ -240,7 +227,6 @@ class LoanStatusTimeline extends StatelessWidget {
       ));
     }
 
-    // Add rejected branch if applicable
     if (loan.status == LoanStatus.rejected) {
       items.add(_StatusItem(
         status: LoanStatus.rejected,
@@ -250,7 +236,6 @@ class LoanStatusTimeline extends StatelessWidget {
       ));
     }
 
-    // Add defaulted branch if applicable
     if (loan.status == LoanStatus.defaulted) {
       items.add(_StatusItem(
         status: LoanStatus.defaulted,
@@ -264,7 +249,6 @@ class LoanStatusTimeline extends StatelessWidget {
   }
 }
 
-/// A single node in the horizontal timeline.
 class _TimelineNode extends StatelessWidget {
   final LoanStatus status;
   final bool isCompleted;
@@ -350,7 +334,6 @@ class _TimelineNode extends StatelessWidget {
   }
 }
 
-/// Connector line between timeline nodes.
 class _TimelineConnector extends StatelessWidget {
   final bool isCompleted;
   final bool isCurrent;
@@ -379,7 +362,6 @@ class _TimelineConnector extends StatelessWidget {
   }
 }
 
-/// Timeline dot for vertical layout.
 class _TimelineDot extends StatelessWidget {
   final bool isCompleted;
   final bool isCurrent;
@@ -433,7 +415,6 @@ class _TimelineDot extends StatelessWidget {
   }
 }
 
-/// Helper class for vertical timeline status items.
 class _StatusItem {
   final LoanStatus status;
   final bool isCompleted;

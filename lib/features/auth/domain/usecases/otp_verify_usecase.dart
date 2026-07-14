@@ -1,14 +1,10 @@
+// lib/features/auth/domain/usecases/otp_verify_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
-import 'package:lendflow/features/auth/domain/repositories/auth_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/features/auth/domain/repositories/auth_repository.dart';
 
-/// OTP verification use case: verifies a one-time passcode sent to the user's email.
-///
-/// This completes the signup flow by confirming the user's email
-/// address. After successful verification, the user's account
-/// is fully activated and they can sign in.
 class OtpVerifyUseCase {
   final AuthRepository _repository;
 
@@ -23,7 +19,6 @@ class OtpVerifyUseCase {
   }
 }
 
-/// Parameters for the OTP verification use case.
 class OtpVerifyParams extends Equatable {
   final String email;
   final String otp;

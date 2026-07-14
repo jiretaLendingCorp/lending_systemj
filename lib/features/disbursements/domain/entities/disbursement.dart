@@ -1,7 +1,7 @@
+// lib/features/disbursements/domain/entities/disbursement.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-/// Disbursement method: how the loan funds are delivered.
 enum DisbursementMethod {
   gcash,
   office,
@@ -27,7 +27,7 @@ enum DisbursementMethod {
   String get description => switch (this) {
         DisbursementMethod.gcash => 'Disbursed via GCash through Xendit',
         DisbursementMethod.office => 'Pickup at the branch office',
-        DisbursementMethod.cash => 'Rider delivers cash to borrower',
+        DisbursementMethod.cash => 'Rider delivers cash to lender',
       };
 
   IconData get iconData => switch (this) {
@@ -37,10 +37,6 @@ enum DisbursementMethod {
       };
 }
 
-/// Disbursement status lifecycle:
-///   pending → assigned → in_transit → delivered
-///   pending → assigned → in_transit → failed
-///   pending → failed (unassignable)
 enum DisbursementStatus {
   pending,
   assigned,
@@ -89,10 +85,6 @@ enum DisbursementStatus {
       };
 }
 
-/// Core disbursement entity representing loan fund delivery.
-///
-/// This is the domain-level representation. Data-layer concerns
-/// (JSON serialization) live in [DisbursementModel].
 class Disbursement extends Equatable {
   final String id;
   final String loanId;
@@ -122,17 +114,13 @@ class Disbursement extends Equatable {
     required this.createdAt,
   });
 
-  /// Whether a rider has been assigned.
   bool get hasRiderAssigned => assignedRiderId != null;
 
-  /// Whether GPS coordinates are available.
   bool get hasGpsCoordinates =>
       gpsLatitude != null && gpsLongitude != null;
 
-  /// Whether the disbursement was delivered.
   bool get isDelivered => status == DisbursementStatus.delivered;
 
-  /// Whether this requires a rider (cash or office method).
   bool get requiresRider =>
       method == DisbursementMethod.cash ||
       method == DisbursementMethod.office;

@@ -1,37 +1,23 @@
+// lib/features/documents/presentation/widgets/document_upload_button.dart
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Camera/gallery pick + upload button with progress indicator.
-///
-/// Provides a reusable button that:
-/// 1. Opens a camera or gallery picker
-/// 2. Shows upload progress while the file is being uploaded
-/// 3. Displays success/failure state after upload
 class DocumentUploadButton extends StatefulWidget {
-  /// Label text for the button.
   final String label;
 
-  /// Icon to display alongside the label.
   final IconData icon;
 
-  /// Whether an upload is currently in progress.
   final bool isUploading;
 
-  /// Upload progress (0.0 to 1.0). Only shown when [isUploading] is true.
   final double progress;
 
-  /// Whether the last upload was successful.
   final bool isSuccess;
 
-  /// Whether the last upload failed.
   final bool isError;
 
-  /// Callback when a file is selected and should be uploaded.
-  /// The [filePath] and [fileName] are provided from the picker.
   final void Function(String filePath, String fileName) onFileSelected;
 
-  /// Whether the button is enabled.
   final bool enabled;
 
   const DocumentUploadButton({
@@ -102,7 +88,7 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
         ),
         label: Text('Uploading... ${(widget.progress * 100).toStringAsFixed(0)}%'),
         style: FilledButton.styleFrom(
-          backgroundColor: ColorTokens.accent.withOpacity(0.7),
+          backgroundColor: ColorTokens.accent.withValues(alpha: 0.7),
           padding: const EdgeInsets.symmetric(vertical: 12),
         ),
       ),
@@ -140,7 +126,6 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
   }
 
   Future<void> _pickImage() async {
-    // Show source selection
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
       isScrollControlled: true,
@@ -215,7 +200,6 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
   }
 }
 
-/// Source selection button for camera/gallery picker.
 class _SourceButton extends StatelessWidget {
   final IconData icon;
   final String label;

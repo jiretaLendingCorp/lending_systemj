@@ -1,20 +1,15 @@
+// lib/features/loans/presentation/pages/loan_detail_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/loans/presentation/providers/loan_notifier.dart';
-import 'package:lendflow/features/loans/presentation/widgets/loan_schedule_table.dart';
-import 'package:lendflow/features/loans/presentation/widgets/loan_status_badge.dart';
-import 'package:lendflow/features/loans/presentation/widgets/loan_status_timeline.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/features/loans/presentation/providers/loan_notifier.dart';
+import 'package:jireta_loan/features/loans/presentation/widgets/loan_schedule_table.dart';
+import 'package:jireta_loan/features/loans/presentation/widgets/loan_status_badge.dart';
+import 'package:jireta_loan/features/loans/presentation/widgets/loan_status_timeline.dart';
 
-/// Loan detail page with status timeline, approve/reject buttons,
-/// payment history, and schedule view.
-///
-/// Shows comprehensive information about a single loan.
-/// Admin/manager users see approve/reject action buttons
-/// for loans that are under review.
 class LoanDetailPage extends ConsumerStatefulWidget {
   final String loanId;
 
@@ -54,7 +49,7 @@ class _LoanDetailPageState extends ConsumerState<LoanDetailPage>
       builder: (context) => AlertDialog(
         title: const Text('Approve Loan'),
         content: const Text(
-          'Are you sure you want to approve this loan? The borrower will be notified and the loan will proceed to disbursement.',
+          'Are you sure you want to approve this loan? The lender will be notified and the loan will proceed to disbursement.',
         ),
         actions: [
           TextButton(
@@ -83,7 +78,7 @@ class _LoanDetailPageState extends ConsumerState<LoanDetailPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Please provide a reason for rejecting this loan. The borrower will be notified.',
+              'Please provide a reason for rejecting this loan. The lender will be notified.',
             ),
             const SizedBox(height: 16),
             TextField(
@@ -146,7 +141,6 @@ class _LoanDetailPageState extends ConsumerState<LoanDetailPage>
             backgroundColor: ColorTokens.lightSuccess,
           ),
         );
-        // Reload the loan detail after an operation
         ref.read(loanFeatureProvider.notifier).loadLoanDetail(widget.loanId);
       }
     });
@@ -216,18 +210,15 @@ class _LoanDetailPageState extends ConsumerState<LoanDetailPage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                // ── Overview Tab ──────────────────────────────────
                 _OverviewTab(
                   loan: loan,
                   isDark: isDark,
                 ),
 
-                // ── Schedule Tab ──────────────────────────────────
                 SingleChildScrollView(
                   child: LoanScheduleTable(schedule: schedule),
                 ),
 
-                // ── Timeline Tab ──────────────────────────────────
                 SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: LoanStatusTimeline(
@@ -239,7 +230,6 @@ class _LoanDetailPageState extends ConsumerState<LoanDetailPage>
             ),
           ),
 
-          // ── Action Buttons ──────────────────────────────────────
           if (canApprove && loan.status.isApprovable)
             _buildActionButtons(isDark),
         ],
@@ -289,7 +279,6 @@ class _LoanDetailPageState extends ConsumerState<LoanDetailPage>
   }
 }
 
-/// Overview tab content showing loan details.
 class _OverviewTab extends StatelessWidget {
   final Loan loan;
   final bool isDark;
@@ -303,7 +292,6 @@ class _OverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Status badge and loan ID
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -320,7 +308,6 @@ class _OverviewTab extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Financial details card
           _SectionCard(
             title: 'Loan Details',
             isDark: isDark,
@@ -361,7 +348,6 @@ class _OverviewTab extends StatelessWidget {
           ),
           const SizedBox(height: 16),
 
-          // Payment progress (for active loans)
           if (loan.status.isActive) ...[
             _SectionCard(
               title: 'Payment Progress',
@@ -424,7 +410,6 @@ class _OverviewTab extends StatelessWidget {
             const SizedBox(height: 16),
           ],
 
-          // Dates card
           _SectionCard(
             title: 'Key Dates',
             isDark: isDark,
@@ -463,7 +448,6 @@ class _OverviewTab extends StatelessWidget {
   }
 }
 
-/// Section card with title and child rows.
 class _SectionCard extends StatelessWidget {
   final String title;
   final bool isDark;
@@ -499,7 +483,6 @@ class _SectionCard extends StatelessWidget {
   }
 }
 
-/// Detail row with label and value.
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;

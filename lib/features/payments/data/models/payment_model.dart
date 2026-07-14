@@ -1,11 +1,11 @@
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
+// lib/features/payments/data/models/payment_model.dart
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 
-/// Data-layer representation of a [Payment], with JSON serialization.
 class PaymentModel extends Payment {
   const PaymentModel({
     required super.id,
     required super.loanId,
-    required super.borrowerId,
+    required super.lenderId,
     required super.amount,
     super.method = PaymentMethod.cash,
     super.status = PaymentStatus.pending,
@@ -21,8 +21,8 @@ class PaymentModel extends Payment {
     return PaymentModel(
       id: json['id'] as String,
       loanId: json['loan_id'] as String? ?? json['loanId'] as String? ?? '',
-      borrowerId:
-          json['borrower_id'] as String? ?? json['borrowerId'] as String? ?? '',
+      lenderId:
+          json['lender_id'] as String? ?? json['lenderId'] as String? ?? '',
       amount: _parseDouble(json['amount']),
       method: PaymentMethod.fromString(
         json['method'] as String? ?? json['payment_method'] as String?,
@@ -47,7 +47,7 @@ class PaymentModel extends Payment {
     return {
       'id': id,
       'loan_id': loanId,
-      'borrower_id': borrowerId,
+      'lender_id': lenderId,
       'amount': amount,
       'method': method.toApiString(),
       'status': status.toApiString(),
@@ -63,7 +63,7 @@ class PaymentModel extends Payment {
   PaymentModel copyWith({
     String? id,
     String? loanId,
-    String? borrowerId,
+    String? lenderId,
     double? amount,
     PaymentMethod? method,
     PaymentStatus? status,
@@ -77,7 +77,7 @@ class PaymentModel extends Payment {
     return PaymentModel(
       id: id ?? this.id,
       loanId: loanId ?? this.loanId,
-      borrowerId: borrowerId ?? this.borrowerId,
+      lenderId: lenderId ?? this.lenderId,
       amount: amount ?? this.amount,
       method: method ?? this.method,
       status: status ?? this.status,

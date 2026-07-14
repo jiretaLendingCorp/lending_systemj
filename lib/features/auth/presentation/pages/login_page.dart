@@ -1,17 +1,16 @@
+// lib/features/auth/presentation/pages/login_page.dart
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/validators.dart';
-import 'package:lendflow/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:lendflow/features/auth/presentation/widgets/auth_text_field.dart';
-import 'package:lendflow/features/auth/presentation/widgets/google_sign_in_button.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/validators.dart';
+import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:jireta_loan/features/auth/presentation/widgets/google_sign_in_button.dart';
 
-/// Login page with email/password fields, Google Sign-In, and forgot password.
-///
-/// Platform-aware: on web shows a centered card layout, on mobile
-/// shows a full-screen scrollable layout.
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -19,18 +18,25 @@ class LoginPage extends ConsumerStatefulWidget {
   ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
+  late final AnimationController _shakeController;
   bool _isWeb = false;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
     super.initState();
     _isWeb = kIsWeb;
+    _shakeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
   }
 
   @override
@@ -39,11 +45,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     _passwordController.dispose();
     _emailFocus.dispose();
     _passwordFocus.dispose();
+    _shakeController.dispose();
     super.dispose();
   }
 
   void _handleLogin() {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      _shakeController.forward(from: 0);
+      return;
+    }
     ref.read(authFeatureProvider.notifier).login(
           email: _emailController.text.trim(),
           password: _passwordController.text,
@@ -57,20 +67,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authFeatureProvider);
-    final isLoading = authState is AuthLoading;
+    final isLoading = authState is AuthFeatureLoading;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
 
     ref.listen<AuthFeatureState>(authFeatureProvider, (prev, next) {
       if (next is AuthError) {
+        _shakeController.forward(from: 0);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next.message),
+            content: Row(
+              children: [
+                const Icon(Icons.error_outline, color: Colors.white, size: 20),
+                const SizedBox(width: 12),
+                Expanded(child: Text(next.message)),
+              ],
+            ),
             backgroundColor: ColorTokens.lightError,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(16),
           ),
         );
-      } else if (next is AuthAuthenticated) {
-        // Auth state change will be handled by the core auth provider
-        // which triggers the router redirect.
       }
     });
 
@@ -79,33 +99,36 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Logo and welcome text
-          Icon(
-            Icons.account_balance_rounded,
-            size: 48,
-            color: ColorTokens.accent,
-          ),
+          _AnimatedLogo(isDark: isDark)
+              .animate()
+              .fadeIn(duration: 600.ms)
+              .slideY(begin: -0.2, end: 0, duration: 600.ms),
           const SizedBox(height: 16),
           Text(
             'Welcome Back',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
             textAlign: TextAlign.center,
-          ),
+          )
+              .animate()
+              .fadeIn(delay: 100.ms, duration: 400.ms)
+              .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 4),
           Text(
-            'Sign in to your LendFlow account',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isDark
-                      ? ColorTokens.darkTextSecondary
-                      : ColorTokens.lightTextSecondary,
-                ),
+            'Sign in to your Jireta Loan account',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: isDark
+                  ? ColorTokens.darkTextSecondary
+                  : ColorTokens.lightTextSecondary,
+            ),
             textAlign: TextAlign.center,
-          ),
+          )
+              .animate()
+              .fadeIn(delay: 200.ms, duration: 400.ms)
+              .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 32),
 
-          // Email field
           AuthTextField(
             label: 'Email',
             hint: 'Enter your email',
@@ -122,16 +145,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   : ColorTokens.lightTextSecondary,
             ),
             onEditingComplete: () => _passwordFocus.requestFocus(),
-          ),
+          )
+              .animate()
+              .fadeIn(delay: 300.ms, duration: 400.ms)
+              .slideX(begin: -0.05, end: 0),
           const SizedBox(height: 16),
 
-          // Password field
           AuthTextField(
             label: 'Password',
             hint: 'Enter your password',
             controller: _passwordController,
             focusNode: _passwordFocus,
-            obscureText: true,
+            obscureText: _obscurePassword,
             textInputAction: TextInputAction.done,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -146,11 +171,29 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ? ColorTokens.darkTextSecondary
                   : ColorTokens.lightTextSecondary,
             ),
+            suffixIcon: IconButton(
+              icon: Icon(
+                _obscurePassword
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                size: 20,
+                color: isDark
+                    ? ColorTokens.darkTextSecondary
+                    : ColorTokens.lightTextSecondary,
+              ),
+              onPressed: () {
+                setState(() {
+                  _obscurePassword = !_obscurePassword;
+                });
+              },
+            ),
             onEditingComplete: _handleLogin,
-          ),
+          )
+              .animate()
+              .fadeIn(delay: 400.ms, duration: 400.ms)
+              .slideX(begin: 0.05, end: 0),
           const SizedBox(height: 8),
 
-          // Forgot password link
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
@@ -166,29 +209,60 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
             ),
-          ),
+          ).animate().fadeIn(delay: 500.ms, duration: 300.ms),
           const SizedBox(height: 16),
 
-          // Login button
-          SizedBox(
-            height: 48,
-            child: ElevatedButton(
-              onPressed: isLoading ? null : _handleLogin,
-              child: isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Text('Sign In'),
+          AnimatedBuilder(
+            animation: _shakeController,
+            builder: (context, child) {
+              final sineValue = sin(_shakeController.value * 3 * pi) * 8;
+              return Transform.translate(
+                offset: Offset(_shakeController.isAnimating ? sineValue : 0, 0),
+                child: child,
+              );
+            },
+            child: SizedBox(
+              height: 48,
+              child: ElevatedButton(
+                onPressed: isLoading ? null : _handleLogin,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorTokens.accent,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: isLoading
+                      ? const SizedBox(
+                          key: ValueKey('loading'),
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Row(
+                          key: ValueKey('idle'),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.login_rounded, size: 18),
+                            SizedBox(width: 8),
+                            Text('Sign In'),
+                          ],
+                        ),
+                ),
+              ),
             ),
-          ),
+          )
+              .animate()
+              .fadeIn(delay: 600.ms, duration: 400.ms)
+              .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 24),
 
-          // Divider
           Row(
             children: [
               Expanded(
@@ -219,27 +293,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
             ],
-          ),
+          ).animate().fadeIn(delay: 700.ms, duration: 300.ms),
           const SizedBox(height: 24),
 
-          // Google Sign-In
           GoogleSignInButton(
             onPressed: _handleGoogleSignIn,
             isLoading: isLoading,
-          ),
+          )
+              .animate()
+              .fadeIn(delay: 800.ms, duration: 400.ms)
+              .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 32),
 
-          // Sign up link
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "Don't have an account? ",
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isDark
-                          ? ColorTokens.darkTextSecondary
-                          : ColorTokens.lightTextSecondary,
-                    ),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: isDark
+                      ? ColorTokens.darkTextSecondary
+                      : ColorTokens.lightTextSecondary,
+                ),
               ),
               TextButton(
                 onPressed: isLoading
@@ -260,31 +335,38 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
               ),
             ],
-          ),
+          ).animate().fadeIn(delay: 900.ms, duration: 400.ms),
         ],
       ),
     );
 
     if (_isWeb) {
       return Scaffold(
-        body: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Card(
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: BorderSide(
-                    color: isDark
-                        ? ColorTokens.darkBorder
-                        : ColorTokens.lightBorder,
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isDark
+                  ? [ColorTokens.darkCanvas, ColorTokens.darkSurface]
+                  : [ColorTokens.accent.withValues(alpha: 0.05), Colors.white],
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Card(
+                  elevation: 8,
+                  shadowColor: ColorTokens.accent.withValues(alpha: 0.2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: formContent,
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: formContent,
+                  ),
                 ),
               ),
             ),
@@ -298,6 +380,41 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
           child: formContent,
+        ),
+      ),
+    );
+  }
+}
+
+class _AnimatedLogo extends StatelessWidget {
+  final bool isDark;
+  const _AnimatedLogo({required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 72,
+        height: 72,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [ColorTokens.accent, ColorTokens.accentDark],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: ColorTokens.accent.withValues(alpha: 0.3),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: const Icon(
+          Icons.account_balance_rounded,
+          size: 36,
+          color: Colors.white,
         ),
       ),
     );

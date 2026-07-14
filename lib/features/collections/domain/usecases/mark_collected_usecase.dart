@@ -1,13 +1,9 @@
+// lib/features/collections/domain/usecases/mark_collected_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/collections/domain/repositories/collection_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/collections/domain/repositories/collection_repository.dart';
 
-/// Mark collected use case (rider action).
-///
-/// Validates that GPS coordinates are provided before marking
-/// the collection as collected. GPS proof is required for
-/// audit and compliance purposes, same as disbursement delivery.
 class MarkCollectedUseCase {
   final CollectionRepository _repository;
 
@@ -17,7 +13,6 @@ class MarkCollectedUseCase {
   Future<Either<Failure, dynamic>> call(
     MarkCollectedParams params,
   ) async {
-    // Validate GPS coordinates
     if (params.latitude == 0.0 && params.longitude == 0.0) {
       return Future.value(const Left(ValidationFailure(
         message: 'GPS coordinates are required to mark as collected.',
@@ -27,7 +22,6 @@ class MarkCollectedUseCase {
       )));
     }
 
-    // Validate latitude range
     if (params.latitude < -90 || params.latitude > 90) {
       return Future.value(const Left(ValidationFailure(
         message: 'Invalid GPS latitude.',
@@ -35,7 +29,6 @@ class MarkCollectedUseCase {
       )));
     }
 
-    // Validate longitude range
     if (params.longitude < -180 || params.longitude > 180) {
       return Future.value(const Left(ValidationFailure(
         message: 'Invalid GPS longitude.',
@@ -43,7 +36,6 @@ class MarkCollectedUseCase {
       )));
     }
 
-    // Validate collection ID
     if (params.collectionId.isEmpty) {
       return Future.value(const Left(ValidationFailure(
         message: 'Collection ID is required.',
@@ -59,7 +51,6 @@ class MarkCollectedUseCase {
   }
 }
 
-/// Parameters for the mark collected use case.
 class MarkCollectedParams extends Equatable {
   final String collectionId;
   final double latitude;

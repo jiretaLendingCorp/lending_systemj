@@ -1,14 +1,10 @@
+// lib/core/app/app_theme.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Complete [ThemeData] for light and dark modes.
-///
-/// All colour values are sourced from [ColorTokens] — no hex literals
-/// appear in feature code.
 class AppTheme {
   AppTheme._();
 
-  // ── Light theme ────────────────────────────────────────────────
   static ThemeData light() {
     return ThemeData(
       useMaterial3: true,
@@ -203,7 +199,6 @@ class AppTheme {
     );
   }
 
-  // ── Dark theme ─────────────────────────────────────────────────
   static ThemeData dark() {
     return ThemeData(
       useMaterial3: true,
@@ -400,7 +395,6 @@ class AppTheme {
     );
   }
 
-  // ── Shared helpers ─────────────────────────────────────────────
 
   static TextTheme _buildTextTheme(Color mainColor, Color secondaryColor) {
     return TextTheme(

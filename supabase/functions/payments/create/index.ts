@@ -1,7 +1,4 @@
-/**
- * POST /payments
- * Idempotency key, method (gcash/office/cash), validate amount.
- */
+// supabase/functions/payments/create/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -30,7 +27,6 @@ Deno.serve(async (req: Request) => {
     const { loan_id, amount, method, reference_number, idempotency_key } = parsed.data;
     const supabase = getServiceClient();
 
-    // 1. Check idempotency — return cached response if duplicate
     const { data: existingKey } = await supabase
       .from("idempotency_keys")
       .select("response_body")
@@ -44,10 +40,9 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    // 2. Fetch the loan
     const { data: loan, error: loanError } = await supabase
       .from("loans")
-      .select("id, borrower_id, principal, total_payable, penalty_amount, final_balance, status, due_at")
+      .select("id, lender_id, principal, total_payable, penalty_amount, final_balance, status, due_at")
       .eq("id", loan_id)
       .is("deleted_at", null)
       .single();
@@ -56,32 +51,28 @@ Deno.serve(async (req: Request) => {
       return badRequest("Loan not found");
     }
 
-    // 3. Verify the borrower owns this loan
-    if (hasRole(payload, "borrower")) {
-      const { data: borrower } = await supabase
-        .from("borrowers")
+    if (hasRole(payload, "lender")) {
+      const { data: lender } = await supabase
+        .from('lenders')
         .select("id")
         .eq("user_id", payload.sub)
         .is("deleted_at", null)
         .single();
 
-      if (!borrower || borrower.id !== loan.borrower_id) {
+      if (!lender || lender.id !== loan.lender_id) {
         return forbidden("You do not have access to this loan");
       }
     }
 
-    // 4. Validate loan is in payable state
     if (!["disbursed", "defaulted"].includes(loan.status)) {
       return unprocessable(
         `Cannot make payment on loan with status '${loan.status}'`
       );
     }
 
-    // 5. Validate payment amount
     const totalPayable = Number(loan.final_balance ?? loan.total_payable);
     const penaltyAmount = Number(loan.penalty_amount ?? 0);
 
-    // Get existing payments
     const { data: existingPayments } = await supabase
       .from("payments")
       .select("amount, status")
@@ -106,12 +97,11 @@ Deno.serve(async (req: Request) => {
       return badRequest("Payment amount must be greater than zero");
     }
 
-    // 6. Create the payment
     const { data: payment, error: paymentError } = await supabase
       .from("payments")
       .insert({
         loan_id,
-        borrower_id: loan.borrower_id,
+        lender_id: loan.lender_id,
         amount,
         method,
         status: method === "gcash" ? "pending" : "completed",
@@ -124,14 +114,12 @@ Deno.serve(async (req: Request) => {
       .single();
 
     if (paymentError) {
-      // Check for unique constraint violation on idempotency_key
       if (paymentError.code === "23505") {
         return conflict("Duplicate payment request");
       }
       return serverError("Failed to create payment");
     }
 
-    // 7. For GCash payments, create Xendit invoice
     if (method === "gcash") {
       const xenditApiKey = Deno.env.get("XENDIT_SECRET_KEY");
       if (xenditApiKey) {
@@ -145,7 +133,7 @@ Deno.serve(async (req: Request) => {
             body: JSON.stringify({
               external_id: payment.id,
               amount,
-              description: `Loan payment - ${loan_id}`,
+              description: `Loan payment - $loan_id`,
               payment_methods: ["GCASH"],
               success_redirect_url: `${Deno.env.get("FRONTEND_URL")}/payment/success`,
               failure_redirect_url: `${Deno.env.get("FRONTEND_URL")}/payment/failed`,
@@ -159,12 +147,10 @@ Deno.serve(async (req: Request) => {
             .eq("id", payment.id);
         } catch (xenditErr) {
           console.error("Xendit invoice creation failed:", xenditErr);
-          // Don't fail the payment record — can be retried
         }
       }
     }
 
-    // 8. Check if loan is fully paid
     const newTotalPaid = totalPaid + amount;
     if (newTotalPaid >= totalPayable) {
       await supabase
@@ -173,7 +159,6 @@ Deno.serve(async (req: Request) => {
         .eq("id", loan_id);
     }
 
-    // 9. Store idempotency response
     const responseBody = { data: payment };
     await supabase.from("idempotency_keys").insert({
       key: idempotency_key,
@@ -181,7 +166,6 @@ Deno.serve(async (req: Request) => {
       expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24h TTL
     });
 
-    // 10. Audit log
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,
@@ -190,19 +174,18 @@ Deno.serve(async (req: Request) => {
       ip_address: req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? null,
     });
 
-    // 11. Notify borrower
-    const { data: borrower } = await supabase
-      .from("borrowers")
+    const { data: lender } = await supabase
+      .from('lenders')
       .select("user_id")
-      .eq("id", loan.borrower_id)
+      .eq("id", loan.lender_id)
       .single();
 
-    if (borrower) {
+    if (lender) {
       await supabase.from("notifications").insert({
-        user_id: borrower.user_id,
+        user_id: lender.user_id,
         type: "payment_received",
         title: "Payment Received",
-        body: `Your payment of ₱${amount.toLocaleString()} via ${method} has been recorded.`,
+        body: `Your payment of ₱${amount.toLocaleString()} via $method has been recorded.`,
       });
     }
 

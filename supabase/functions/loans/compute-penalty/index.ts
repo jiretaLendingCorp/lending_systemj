@@ -1,8 +1,4 @@
-/**
- * POST /loans/:id/penalty
- * Cron-only, 30+ days overdue, 20% of total_payable, status→defaulted.
- * Called by pg_cron or authorized service account.
- */
+// supabase/functions/loans/compute-penalty/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -21,7 +17,6 @@ Deno.serve(async (req: Request) => {
       return badRequest("Method not allowed");
     }
 
-    // Authenticate: either cron secret header or admin JWT
     const cronSecret = req.headers.get("x-cron-secret");
     let isCron = false;
 
@@ -30,7 +25,7 @@ Deno.serve(async (req: Request) => {
     } else {
       const authResult = await authenticateRequest(req);
       if ("error" in authResult) return authResult.error;
-      if (!hasRole(authResult.payload, "admin")) {
+      if (!hasRole(authResult.payload, "head_manager")) {
         return forbidden("Only admin or cron can compute penalties");
       }
     }
@@ -40,18 +35,15 @@ Deno.serve(async (req: Request) => {
 
     const supabase = getServiceClient();
 
-    // If specific loan ID provided, process just that loan
     if (loanId) {
       const result = await processLoanPenalty(supabase, loanId);
       return successResponse(result, 200, corsHeaders(req));
     }
 
-    // Otherwise, process all overdue loans (cron mode)
     if (!isCron) {
       return badRequest("Bulk penalty computation requires cron authentication");
     }
 
-    // Find all disbursed loans that are 30+ days past due
     const thresholdDate = new Date(
       Date.now() - PENALTY_THRESHOLD_DAYS * 24 * 60 * 60 * 1000
     ).toISOString();
@@ -82,7 +74,6 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Audit log for bulk operation
     await supabase.from("audit_logs").insert({
       user_id: null,
       user_role: "system",
@@ -113,24 +104,21 @@ async function processLoanPenalty(
   supabase: ReturnType<typeof getServiceClient>,
   loanId: string
 ) {
-  // Fetch the loan
   const { data: loan, error: loanError } = await supabase
     .from("loans")
-    .select("id, status, total_payable, due_at, penalty_amount, borrower_id")
+    .select("id, status, total_payable, due_at, penalty_amount, lender_id")
     .eq("id", loanId)
     .is("deleted_at", null)
     .single();
 
   if (loanError || !loan) {
-    throw new Error(`Loan ${loanId} not found`);
+    throw new Error(`Loan $loanId not found`);
   }
 
-  // Can only penalize disbursed loans
   if (loan.status !== "disbursed") {
     return { loan_id: loanId, skipped: true, reason: `Loan status is '${loan.status}', not 'disbursed'` };
   }
 
-  // Check if 30+ days overdue
   const dueDate = new Date(loan.due_at);
   const now = new Date();
   const daysOverdue = Math.floor(
@@ -138,10 +126,9 @@ async function processLoanPenalty(
   );
 
   if (daysOverdue < PENALTY_THRESHOLD_DAYS) {
-    return { loan_id: loanId, skipped: true, reason: `Only ${daysOverdue} days overdue (threshold: ${PENALTY_THRESHOLD_DAYS})` };
+    return { loan_id: loanId, skipped: true, reason: `Only $daysOverdue days overdue (threshold: $PENALTY_THRESHOLD_DAYS)` };
   }
 
-  // Check if penalty already applied
   if (loan.penalty_amount && Number(loan.penalty_amount) > 0) {
     return { loan_id: loanId, skipped: true, reason: "Penalty already applied" };
   }
@@ -162,26 +149,24 @@ async function processLoanPenalty(
     .eq("status", "disbursed"); // Optimistic lock
 
   if (updateError) {
-    throw new Error(`Failed to update loan ${loanId}: ${updateError.message}`);
+    throw new Error(`Failed to update loan $loanId: ${updateError.message}`);
   }
 
-  // Notify borrower
-  const { data: borrower } = await supabase
-    .from("borrowers")
+  const { data: lender } = await supabase
+    .from('lenders')
     .select("user_id")
-    .eq("id", loan.borrower_id)
+    .eq("id", loan.lender_id)
     .single();
 
-  if (borrower) {
+  if (lender) {
     await supabase.from("notifications").insert({
-      user_id: borrower.user_id,
+      user_id: lender.user_id,
       type: "loan_defaulted",
       title: "Loan Defaulted",
-      body: `Your loan has been marked as defaulted due to ${daysOverdue} days overdue. A penalty of ₱${penaltyAmount.toLocaleString()} has been applied.`,
+      body: `Your loan has been marked as defaulted due to $daysOverdue days overdue. A penalty of ₱${penaltyAmount.toLocaleString()} has been applied.`,
     });
   }
 
-  // Audit log
   await supabase.from("audit_logs").insert({
     user_id: null,
     user_role: "system",

@@ -1,20 +1,16 @@
+// lib/features/lenders/data/datasources/borrower_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/borrowers/data/models/borrower_profile_model.dart';
-import 'package:lendflow/features/loans/data/models/loan_model.dart';
-import 'package:lendflow/features/payments/data/models/payment_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/lenders/data/models/borrower_profile_model.dart';
+import 'package:jireta_loan/features/loans/data/models/loan_model.dart';
+import 'package:jireta_loan/features/payments/data/models/payment_model.dart';
 
-/// Remote data source for borrower operations using Dio.
-///
-/// Provides methods for fetching and updating the borrower's profile,
-/// retrieving their loans and payments.
 class BorrowerRemoteDataSource {
   final Dio _dio;
 
   BorrowerRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// Fetch the authenticated borrower's profile.
   Future<BorrowerProfileModel> getProfile() async {
     try {
       final response = await _dio.get(ApiEndpoints.usersMe);
@@ -25,7 +21,6 @@ class BorrowerRemoteDataSource {
     }
   }
 
-  /// Update the borrower's profile information.
   Future<BorrowerProfileModel> updateProfile(
       Map<String, dynamic> data) async {
     try {
@@ -40,7 +35,6 @@ class BorrowerRemoteDataSource {
     }
   }
 
-  /// Fetch the borrower's own loans.
   Future<List<LoanModel>> getOwnLoans({
     String? status,
     int page = 1,
@@ -76,7 +70,6 @@ class BorrowerRemoteDataSource {
     }
   }
 
-  /// Fetch the borrower's own payment history.
   Future<List<PaymentModel>> getOwnPayments({
     String? loanId,
     int page = 1,
@@ -112,9 +105,7 @@ class BorrowerRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
-  /// Map a [DioException] to the appropriate [AppException] subtype.
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -133,14 +124,14 @@ class BorrowerRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'You do not have permission to access this resource.',
           );
         }

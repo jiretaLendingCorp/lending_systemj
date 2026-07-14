@@ -1,6 +1,6 @@
-import 'package:lendflow/features/disbursements/domain/entities/disbursement.dart';
+// lib/features/disbursements/data/models/disbursement_model.dart
+import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
 
-/// Data-layer representation of a [Disbursement], with JSON serialization.
 class DisbursementModel extends Disbursement {
   const DisbursementModel({
     required super.id,

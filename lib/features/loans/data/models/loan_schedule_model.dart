@@ -1,6 +1,6 @@
-import 'package:lendflow/features/loans/domain/entities/loan_schedule.dart';
+// lib/features/loans/data/models/loan_schedule_model.dart
+import 'package:jireta_loan/features/loans/domain/entities/loan_schedule.dart';
 
-/// Data-layer representation of a [LoanSchedule], with JSON serialization.
 class LoanScheduleModel extends LoanSchedule {
   const LoanScheduleModel({
     required super.id,

@@ -1,17 +1,13 @@
+// lib/features/collections/presentation/pages/collection_list_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/collections/domain/entities/collection.dart';
-import 'package:lendflow/features/collections/domain/repositories/collection_repository.dart';
-import 'package:lendflow/features/collections/presentation/providers/collection_notifier.dart';
-import 'package:lendflow/features/collections/presentation/widgets/collection_card.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/collections/domain/entities/collection.dart';
+import 'package:jireta_loan/features/collections/domain/repositories/collection_repository.dart';
+import 'package:jireta_loan/features/collections/presentation/providers/collection_notifier.dart';
+import 'package:jireta_loan/features/collections/presentation/widgets/collection_card.dart';
 
-/// Web: list all collections, assign rider.
-///
-/// This page is primarily used by managers/admins to manage
-/// payment collections. It shows status filter chips and each
-/// collection card has an "Assign Rider" button for pending items.
 class CollectionListPage extends ConsumerStatefulWidget {
   const CollectionListPage({super.key});
 
@@ -90,7 +86,6 @@ class _CollectionListPageState
               backgroundColor: ColorTokens.lightSuccess,
             ),
           );
-          // Reload list after operation
           _loadCollections();
         }
       },
@@ -102,7 +97,6 @@ class _CollectionListPageState
       ),
       body: Column(
         children: [
-          // Status filter chips
           SizedBox(
             height: 44,
             child: ListView.separated(
@@ -146,7 +140,6 @@ class _CollectionListPageState
             ),
           ),
 
-          // Method filter chips
           SizedBox(
             height: 44,
             child: ListView.separated(
@@ -190,11 +183,9 @@ class _CollectionListPageState
             ),
           ),
 
-          // Summary stats
           if (collectionState is CollectionsLoaded)
             _buildSummaryBar(collectionState, isDark),
 
-          // Collection list
           Expanded(
             child: _buildBody(collectionState, isDark),
           ),
@@ -369,7 +360,6 @@ class _CollectionListPageState
   void _showAssignRiderDialog(String collectionId) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Load available riders
     showDialog(
       context: context,
       builder: (dialogContext) => _AssignRiderCollectionDialog(
@@ -380,7 +370,6 @@ class _CollectionListPageState
   }
 }
 
-/// Summary chip for the stats bar.
 class _SummaryChip extends StatelessWidget {
   final String label;
   final int count;
@@ -419,7 +408,6 @@ class _SummaryChip extends StatelessWidget {
   }
 }
 
-/// Assign rider dialog for collections.
 class _AssignRiderCollectionDialog extends ConsumerStatefulWidget {
   final String collectionId;
   final bool isDark;

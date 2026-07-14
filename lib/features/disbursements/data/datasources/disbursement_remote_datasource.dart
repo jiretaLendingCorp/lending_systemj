@@ -1,18 +1,14 @@
+// lib/features/disbursements/data/datasources/disbursement_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/disbursements/data/models/disbursement_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/disbursements/data/models/disbursement_model.dart';
 
-/// Remote data source for disbursement operations using Dio.
-///
-/// All disbursement CRUD operations go through the backend API.
-/// The Dio instance includes auth, idempotency, and error interceptors.
 class DisbursementRemoteDataSource {
   final Dio _dio;
 
   DisbursementRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// List disbursements with optional filters and pagination.
   Future<DisbursementListResult> list({
     String? status,
     String? method,
@@ -56,7 +52,6 @@ class DisbursementRemoteDataSource {
     }
   }
 
-  /// Get detailed information about a specific disbursement.
   Future<DisbursementModel> detail(String disbursementId) async {
     try {
       final response = await _dio.get(
@@ -69,9 +64,6 @@ class DisbursementRemoteDataSource {
     }
   }
 
-  /// Assign a rider to a disbursement (manager/admin).
-  ///
-  /// Transitions the disbursement from [pending] to [assigned].
   Future<DisbursementModel> assignRider({
     required String disbursementId,
     required String riderId,
@@ -88,10 +80,6 @@ class DisbursementRemoteDataSource {
     }
   }
 
-  /// Mark a disbursement as delivered (rider action).
-  ///
-  /// Requires GPS coordinates from the rider's device.
-  /// Transitions the disbursement from [in_transit] to [delivered].
   Future<DisbursementModel> markDelivered({
     required String disbursementId,
     required double latitude,
@@ -118,7 +106,6 @@ class DisbursementRemoteDataSource {
     }
   }
 
-  /// Mark a disbursement as in transit (rider starts delivery).
   Future<DisbursementModel> markInTransit(String disbursementId) async {
     try {
       final response = await _dio.post(
@@ -131,7 +118,6 @@ class DisbursementRemoteDataSource {
     }
   }
 
-  /// Mark a disbursement as failed.
   Future<DisbursementModel> markFailed(
     String disbursementId, {
     String? reason,
@@ -148,7 +134,6 @@ class DisbursementRemoteDataSource {
     }
   }
 
-  /// Get available riders for assignment.
   Future<List<RiderInfo>> getAvailableRiders() async {
     try {
       final response = await _dio.get(
@@ -170,7 +155,6 @@ class DisbursementRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
   AppException _mapDioException(DioException e) {
     switch (e.type) {
@@ -190,14 +174,14 @@ class DisbursementRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message:
                 'You do not have permission to manage disbursements.',
           );
@@ -245,7 +229,6 @@ class DisbursementRemoteDataSource {
   }
 }
 
-/// Paginated result for disbursement list queries.
 class DisbursementListResult {
   final List<DisbursementModel> disbursements;
   final int total;
@@ -256,7 +239,6 @@ class DisbursementListResult {
   });
 }
 
-/// Simplified rider info for assignment dialog.
 class RiderInfo {
   final String id;
   final String name;

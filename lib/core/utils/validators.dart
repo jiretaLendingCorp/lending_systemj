@@ -1,22 +1,16 @@
-import 'package:lendflow/core/utils/constants.dart';
+// lib/core/utils/validators.dart
+import 'package:jireta_loan/core/utils/constants.dart';
 
-/// Form validation utilities for LendFlow.
-///
-/// Every validator returns `null` for valid input, or a localized
-/// error message string for invalid input — the standard Flutter
-/// [FormFieldValidator] contract.
 class Validators {
   Validators._();
 
-  // ── Email ──────────────────────────────────────────────────────
 
-  /// Validates an email address.
   static String? email(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Email is required';
     }
     final regex = RegExp(
-      r'^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$',
+      r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$",
     );
     if (!regex.hasMatch(value.trim())) {
       return 'Please enter a valid email address';
@@ -24,11 +18,7 @@ class Validators {
     return null;
   }
 
-  // ── Phone ──────────────────────────────────────────────────────
 
-  /// Validates a Philippine phone number.
-  ///
-  /// Accepts formats: `09171234567`, `+639171234567`, `9171234567`
   static String? phone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
@@ -41,12 +31,7 @@ class Validators {
     return null;
   }
 
-  // ── Password ───────────────────────────────────────────────────
 
-  /// Validates a password.
-  ///
-  /// Requires at least 8 characters, one uppercase, one lowercase,
-  /// one digit, and one special character.
   static String? password(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -69,7 +54,6 @@ class Validators {
     return null;
   }
 
-  /// Confirms that two passwords match.
   static String? confirmPassword(String? value, String originalPassword) {
     if (value == null || value.isEmpty) {
       return 'Please confirm your password';
@@ -80,9 +64,7 @@ class Validators {
     return null;
   }
 
-  // ── OTP ────────────────────────────────────────────────────────
 
-  /// Validates a one-time passcode.
   static String? otp(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'OTP is required';
@@ -97,11 +79,7 @@ class Validators {
     return null;
   }
 
-  // ── Amount ─────────────────────────────────────────────────────
 
-  /// Validates a loan amount within the allowed range.
-  ///
-  /// Range: PHP 3,000 – PHP 500,000
   static String? loanAmount(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Loan amount is required';
@@ -119,7 +97,6 @@ class Validators {
     return null;
   }
 
-  /// Validates a payment amount.
   static String? paymentAmount(String? value, {double? outstandingBalance}) {
     if (value == null || value.trim().isEmpty) {
       return 'Payment amount is required';
@@ -137,9 +114,7 @@ class Validators {
     return null;
   }
 
-  // ── Name ───────────────────────────────────────────────────────
 
-  /// Validates a person's name.
   static String? name(String? value, {String fieldName = 'Name'}) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
@@ -153,15 +128,11 @@ class Validators {
     return null;
   }
 
-  /// Validates a first name.
   static String? firstName(String? value) => name(value, fieldName: 'First name');
 
-  /// Validates a last name.
   static String? lastName(String? value) => name(value, fieldName: 'Last name');
 
-  // ── Required ───────────────────────────────────────────────────
 
-  /// Validates that a field is not empty.
   static String? required(String? value, {String fieldName = 'This field'}) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
@@ -169,9 +140,7 @@ class Validators {
     return null;
   }
 
-  // ── Date ───────────────────────────────────────────────────────
 
-  /// Validates that a date is not in the past.
   static String? notPastDate(DateTime? date, {String fieldName = 'Date'}) {
     if (date == null) {
       return '$fieldName is required';
@@ -185,7 +154,6 @@ class Validators {
     return null;
   }
 
-  /// Validates that a date is not in the future.
   static String? notFutureDate(DateTime? date, {String fieldName = 'Date'}) {
     if (date == null) {
       return '$fieldName is required';
@@ -199,9 +167,7 @@ class Validators {
     return null;
   }
 
-  // ── Composite ──────────────────────────────────────────────────
 
-  /// Combines multiple validators, returning the first error found.
   static String? combine(String? value, List<String? Function(String?)> validators) {
     for (final validator in validators) {
       final result = validator(value);

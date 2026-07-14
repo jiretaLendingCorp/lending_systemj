@@ -1,6 +1,6 @@
-import 'package:lendflow/features/audit_logs/domain/entities/audit_log.dart';
+// lib/features/audit_logs/data/models/audit_log_model.dart
+import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
 
-/// Data-layer representation of [AuditLog], with JSON serialization.
 class AuditLogModel extends AuditLog {
   const AuditLogModel({
     required super.id,

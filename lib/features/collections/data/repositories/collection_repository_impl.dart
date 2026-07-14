@@ -1,15 +1,12 @@
+// lib/features/collections/data/repositories/collection_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/collections/data/datasources/collection_remote_datasource.dart'
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/collections/data/datasources/collection_remote_datasource.dart'
     hide CollectionListResult, RiderBrief;
-import 'package:lendflow/features/collections/domain/entities/collection.dart';
-import 'package:lendflow/features/collections/domain/repositories/collection_repository.dart';
+import 'package:jireta_loan/features/collections/domain/entities/collection.dart';
+import 'package:jireta_loan/features/collections/domain/repositories/collection_repository.dart';
 
-/// Concrete implementation of [CollectionRepository].
-///
-/// Delegates to [CollectionRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class CollectionRepositoryImpl implements CollectionRepository {
   final CollectionRemoteDataSource _remoteDataSource;
 
@@ -22,7 +19,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
     String? status,
     String? method,
     String? riderId,
-    String? borrowerId,
+    String? lenderId,
     String? date,
     int page = 1,
     int pageSize = 20,
@@ -32,7 +29,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
         status: status,
         method: method,
         riderId: riderId,
-        borrowerId: borrowerId,
+        lenderId: lenderId,
         date: date,
         page: page,
         pageSize: pageSize,
@@ -41,7 +38,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
         collections: result.collections,
         total: result.total,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -71,7 +68,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
       final collection =
           await _remoteDataSource.detail(collectionId);
       return Right(collection);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -99,7 +96,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
         riderId: riderId,
       );
       return Right(collection);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -136,7 +133,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
         photoReceiptUrl: photoReceiptUrl,
       );
       return Right(collection);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -173,7 +170,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
         longitude: longitude,
       );
       return Right(collection);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -206,7 +203,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
         reason: reason,
       );
       return Right(collection);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -237,7 +234,7 @@ class CollectionRepositoryImpl implements CollectionRepository {
                 activeCollections: r.activeCollections,
               ))
           .toList());
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

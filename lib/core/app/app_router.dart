@@ -1,25 +1,13 @@
+// lib/core/app/app_router.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/utils/constants.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
 
-/// GoRouter configuration with auth guard and role-based routing.
-///
-/// Route structure:
-/// - /auth/*          → public routes (no auth required)
-/// - /admin/*         → admin-only routes
-/// - /manager/*       → manager-only routes
-/// - /rider/*         → rider-only routes
-/// - /borrower/*      → borrower-only routes
-/// - /                → redirects to role-based dashboard
 class AppRouter {
   AppRouter._();
 
-  /// Provider for the [GoRouter] instance.
-  ///
-  /// Listens to [authProvider] so that the router automatically
-  /// re-evaluates redirects when auth state changes.
   static final provider = Provider<GoRouter>((ref) {
     final authState = ref.watch(authProvider);
 
@@ -28,7 +16,6 @@ class AppRouter {
       debugLogDiagnostics: true,
       redirect: (context, state) => _guard(authState, state),
       routes: [
-        // ── Auth routes (public) ────────────────────────────────
         GoRoute(
           path: '/auth/login',
           name: 'login',
@@ -50,86 +37,83 @@ class AppRouter {
           builder: (context, state) => const _PlaceholderPage(title: 'Forgot Password'),
         ),
 
-        // ── Admin routes ────────────────────────────────────────
         GoRoute(
-          path: '/admin/dashboard',
-          name: 'adminDashboard',
-          builder: (context, state) => const _PlaceholderPage(title: 'Admin Dashboard'),
+          path: '/head-employee/dashboard',
+          name: 'headManagerDashboard',
+          builder: (context, state) => const _PlaceholderPage(title: 'Head Employee Dashboard'),
         ),
         GoRoute(
-          path: '/admin/users',
-          name: 'adminUsers',
+          path: '/head-employee/users',
+          name: 'headManagerUsers',
           builder: (context, state) => const _PlaceholderPage(title: 'User Management'),
         ),
         GoRoute(
-          path: '/admin/loans',
-          name: 'adminLoans',
+          path: '/head-employee/loans',
+          name: 'headManagerLoans',
           builder: (context, state) => const _PlaceholderPage(title: 'Loan Management'),
         ),
         GoRoute(
-          path: '/admin/lenders',
-          name: 'adminLenders',
+          path: '/head-employee/lenders',
+          name: 'headManagerLenders',
           builder: (context, state) => const _PlaceholderPage(title: 'Lender Management'),
         ),
         GoRoute(
-          path: '/admin/riders',
-          name: 'adminRiders',
+          path: '/head-employee/riders',
+          name: 'headManagerRiders',
           builder: (context, state) => const _PlaceholderPage(title: 'Rider Management'),
         ),
         GoRoute(
-          path: '/admin/collections',
-          name: 'adminCollections',
+          path: '/head-employee/collections',
+          name: 'headManagerCollections',
           builder: (context, state) => const _PlaceholderPage(title: 'Collections Management'),
         ),
         GoRoute(
-          path: '/admin/reports',
-          name: 'adminReports',
+          path: '/head-employee/reports',
+          name: 'headManagerReports',
           builder: (context, state) => const _PlaceholderPage(title: 'Reports'),
         ),
         GoRoute(
-          path: '/admin/audit',
-          name: 'adminAudit',
+          path: '/head-employee/audit',
+          name: 'headManagerAudit',
           builder: (context, state) => const _PlaceholderPage(title: 'Audit Log'),
         ),
         GoRoute(
-          path: '/admin/settings',
-          name: 'adminSettings',
+          path: '/head-employee/settings',
+          name: 'headManagerSettings',
           builder: (context, state) => const _PlaceholderPage(title: 'Settings'),
         ),
 
-        // ── Manager routes ──────────────────────────────────────
         GoRoute(
-          path: '/manager/dashboard',
-          name: 'managerDashboard',
-          builder: (context, state) => const _PlaceholderPage(title: 'Manager Dashboard'),
+          path: '/employee/dashboard',
+          name: 'employeeDashboard',
+          builder: (context, state) => const _PlaceholderPage(title: 'Employee Dashboard'),
         ),
         GoRoute(
-          path: '/manager/loans',
+          path: '/employee/loans',
           name: 'managerLoans',
           builder: (context, state) => const _PlaceholderPage(title: 'Loan Processing'),
         ),
         GoRoute(
-          path: '/manager/lenders',
+          path: '/employee/lenders',
           name: 'managerLenders',
           builder: (context, state) => const _PlaceholderPage(title: 'Lender Overview'),
         ),
         GoRoute(
-          path: '/manager/riders',
+          path: '/employee/riders',
           name: 'managerRiders',
           builder: (context, state) => const _PlaceholderPage(title: 'Rider Overview'),
         ),
         GoRoute(
-          path: '/manager/collections',
+          path: '/employee/collections',
           name: 'managerCollections',
           builder: (context, state) => const _PlaceholderPage(title: 'Collections Overview'),
         ),
         GoRoute(
-          path: '/manager/profile',
+          path: '/employee/profile',
           name: 'managerProfile',
-          builder: (context, state) => const _PlaceholderPage(title: 'Manager Profile'),
+          builder: (context, state) => const _PlaceholderPage(title: 'Employee Profile'),
         ),
 
-        // ── Rider routes ────────────────────────────────────────
         GoRoute(
           path: '/rider/today',
           name: 'riderToday',
@@ -151,29 +135,27 @@ class AppRouter {
           builder: (context, state) => const _PlaceholderPage(title: 'Rider Profile'),
         ),
 
-        // ── Borrower routes ─────────────────────────────────────
         GoRoute(
-          path: '/borrower/loan',
+          path: '/lender/loan',
           name: 'borrowerLoan',
           builder: (context, state) => const _PlaceholderPage(title: 'My Loan'),
         ),
         GoRoute(
-          path: '/borrower/payments',
-          name: 'borrowerPayments',
+          path: '/lender/payments',
+          name: 'lenderPayments',
           builder: (context, state) => const _PlaceholderPage(title: 'My Payments'),
         ),
         GoRoute(
-          path: '/borrower/notifications',
-          name: 'borrowerNotifications',
+          path: '/lender/notifications',
+          name: 'lenderNotifications',
           builder: (context, state) => const _PlaceholderPage(title: 'Notifications'),
         ),
         GoRoute(
-          path: '/borrower/profile',
-          name: 'borrowerProfile',
+          path: '/lender/profile',
+          name: 'lenderProfile',
           builder: (context, state) => const _PlaceholderPage(title: 'My Profile'),
         ),
 
-        // ── Root redirect ───────────────────────────────────────
         GoRoute(
           path: '/',
           name: 'root',
@@ -183,40 +165,27 @@ class AppRouter {
     );
   });
 
-  /// Central auth + role guard.
-  ///
-  /// - Unauthenticated users trying to access protected routes → /auth/login
-  /// - Authenticated users trying to access /auth/* → role-based home
-  /// - Authenticated users trying to access routes outside their role → role-based home
-  /// - Loading state → no redirect (show splash)
-  static String? _guard(AuthState authState, GoRouterState state) {
+  static String? _guard(AppAuthState authState, GoRouterState state) {
     final currentPath = state.matchedLocation;
 
-    // While auth is loading, don't redirect (show splash screen)
-    if (authState is AuthLoading) {
+    if (authState is AppAuthLoading) {
       return null;
     }
 
-    // Public routes that don't require auth
     final isPublicRoute = currentPath.startsWith('/auth');
 
-    // Unauthenticated user
-    if (authState is AuthUnauthenticated) {
+    if (authState is AppAuthUnauthenticated) {
       if (!isPublicRoute) {
-        // Redirect to login, preserving the intended destination
         return '/auth/login';
       }
       return null;
     }
 
-    // Authenticated user
-    if (authState is AuthAuthenticated) {
-      // If trying to access auth pages, redirect to home
+    if (authState is AppAuthAuthenticated) {
       if (isPublicRoute) {
         return _roleBasedHome(authState);
       }
 
-      // Check role-based access
       if (!_hasRoleAccess(authState.role, currentPath)) {
         return _roleBasedHome(authState);
       }
@@ -227,44 +196,36 @@ class AppRouter {
     return null;
   }
 
-  /// Get the default home route for a given role.
-  static String _roleBasedHome(AuthState authState) {
-    if (authState is! AuthAuthenticated) return '/auth/login';
+  static String _roleBasedHome(AppAuthState authState) {
+    if (authState is! AppAuthAuthenticated) return '/auth/login';
 
     return switch (authState.role) {
-      AppConstants.roleAdmin => '/admin/dashboard',
-      AppConstants.roleManager => '/manager/dashboard',
+      AppConstants.roleHeadManager => '/head-employee/dashboard',
+      AppConstants.roleEmployee => '/employee/dashboard',
       AppConstants.roleRider => '/rider/today',
-      AppConstants.roleBorrower => '/borrower/loan',
+      AppConstants.roleLender => '/lender/loan',
       _ => '/auth/login',
     };
   }
 
-  /// Check if a user with [role] is allowed to access [path].
   static bool _hasRoleAccess(String role, String path) {
-    // Admin can access everything
-    if (role == AppConstants.roleAdmin) return true;
+    if (role == AppConstants.roleHeadManager) return true;
 
-    // Role-specific access checks
-    if (path.startsWith('/admin')) return false;
-    if (path.startsWith('/manager')) {
-      return role == AppConstants.roleManager;
+    if (path.startsWith('/head-manager')) return false;
+    if (path.startsWith('/employee')) {
+      return role == AppConstants.roleEmployee;
     }
     if (path.startsWith('/rider')) {
       return role == AppConstants.roleRider;
     }
-    if (path.startsWith('/borrower')) {
-      return role == AppConstants.roleBorrower;
+    if (path.startsWith('/lender')) {
+      return role == AppConstants.roleLender;
     }
 
-    // Root and other paths are accessible
     return true;
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Placeholder page (will be replaced by real feature pages)
-// ─────────────────────────────────────────────────────────────────
 
 class _PlaceholderPage extends StatelessWidget {
   final String title;

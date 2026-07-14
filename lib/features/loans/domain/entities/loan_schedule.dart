@@ -1,6 +1,6 @@
+// lib/features/loans/domain/entities/loan_schedule.dart
 import 'package:equatable/equatable.dart';
 
-/// Installment status for a loan schedule entry.
 enum InstallmentStatus {
   pending,
   paid,
@@ -23,10 +23,6 @@ enum InstallmentStatus {
       };
 }
 
-/// A single installment in a loan's repayment schedule.
-///
-/// Each [LoanSchedule] entry represents one payment due date
-/// with its amount and current status.
 class LoanSchedule extends Equatable {
   final String id;
   final String loanId;
@@ -44,12 +40,10 @@ class LoanSchedule extends Equatable {
     this.status = InstallmentStatus.pending,
   });
 
-  /// Whether this installment is past due but not yet paid.
   bool get isOverdue =>
       status != InstallmentStatus.paid &&
       dueDate.isBefore(DateTime.now());
 
-  /// Whether this installment has been paid.
   bool get isPaid => status == InstallmentStatus.paid;
 
   @override

@@ -1,57 +1,59 @@
+// lib/features/auth/domain/entities/user.dart
 import 'package:equatable/equatable.dart';
 
-/// User role enumeration for LendFlow.
-///
-/// Roles determine access levels and available features:
-/// - [admin]: Full system access, user management, settings
-/// - [manager]: Loan approval, collections oversight, reporting
-/// - [rider]: Collection routes, payment recording, location tracking
-/// - [borrower]: Loan application, payment viewing, profile management
 enum UserRole {
-  admin,
-  manager,
+  headManager,
+  employee,
   rider,
-  borrower;
+  lender;
 
-  /// Parse a role string, defaulting to [borrower] if invalid.
   static UserRole fromString(String? value) {
     return switch (value?.toLowerCase()) {
-      'admin' => UserRole.admin,
-      'manager' => UserRole.manager,
+      'head_manager' => UserRole.headManager,
+      'employee' => UserRole.employee,
       'rider' => UserRole.rider,
-      'borrower' => UserRole.borrower,
-      _ => UserRole.borrower,
+      'lender' => UserRole.lender,
+      _ => UserRole.lender,
     };
   }
 
-  /// Serialize to lowercase string for API/storage.
-  String toApiString() => name;
-
-  /// Human-readable display label.
-  String get label => switch (this) {
-        UserRole.admin => 'Admin',
-        UserRole.manager => 'Manager',
-        UserRole.rider => 'Rider',
-        UserRole.borrower => 'Borrower',
+  String toApiString() => switch (this) {
+        UserRole.headManager => 'head_manager',
+        UserRole.employee => 'employee',
+        UserRole.rider => 'rider',
+        UserRole.lender => 'lender',
       };
 
-  /// Whether this role can approve/reject loans.
+  String get label => switch (this) {
+        UserRole.headManager => 'Head Manager',
+        UserRole.employee => 'Employee',
+        UserRole.rider => 'Rider',
+        UserRole.lender => 'Lender',
+      };
+
+  String get shortLabel => switch (this) {
+        UserRole.headManager => 'HM',
+        UserRole.employee => 'EMP',
+        UserRole.rider => 'RDR',
+        UserRole.lender => 'LNDR',
+      };
+
   bool get canApproveLoans =>
-      this == UserRole.admin || this == UserRole.manager;
+      this == UserRole.headManager || this == UserRole.employee;
 
-  /// Whether this role can view all loans across borrowers.
   bool get canViewAllLoans =>
-      this == UserRole.admin || this == UserRole.manager;
+      this == UserRole.headManager || this == UserRole.employee;
 
-  /// Whether this role is available for self-registration.
+  bool get canManageUsers => this == UserRole.headManager;
+
+  bool get canViewAuditLogs => this == UserRole.headManager;
+
+  bool get canManageSystemSettings => this == UserRole.headManager;
+
   bool get isSelfRegistrable =>
-      this == UserRole.borrower || this == UserRole.rider;
+      this == UserRole.lender || this == UserRole.rider;
 }
 
-/// Core user entity representing an authenticated LendFlow user.
-///
-/// This is the domain-level representation. Data-layer concerns
-/// (JSON serialization, Supabase mapping) live in [UserModel].
 class User extends Equatable {
   final String id;
   final String email;
@@ -71,20 +73,22 @@ class User extends Equatable {
     required this.createdAt,
   });
 
-  /// Convenience getter for display name with fallback.
   String get displayName => fullName.isNotEmpty ? fullName : email;
 
-  /// Whether this user has admin-level privileges.
-  bool get isAdmin => role == UserRole.admin;
+  String get initials {
+    final parts = fullName.split(' ').where((p) => p.isNotEmpty).toList();
+    if (parts.isEmpty) return email.substring(0, 1).toUpperCase();
+    if (parts.length == 1) return parts[0][0].toUpperCase();
+    return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
+  }
 
-  /// Whether this user has manager-level privileges.
-  bool get isManager => role == UserRole.manager;
+  bool get isHeadManager => role == UserRole.headManager;
 
-  /// Whether this user is a rider.
+  bool get isEmployee => role == UserRole.employee;
+
   bool get isRider => role == UserRole.rider;
 
-  /// Whether this user is a borrower.
-  bool get isBorrower => role == UserRole.borrower;
+  bool get isLender => role == UserRole.lender;
 
   @override
   List<Object?> get props => [

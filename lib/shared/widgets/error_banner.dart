@@ -1,34 +1,17 @@
+// lib/shared/widgets/error_banner.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// Inline error banner with red background, error message, and retry button.
-///
-/// Displays a dismissible or retryable error message at the top of a
-/// content area. Useful for showing network failures, validation errors,
-/// or any recoverable error state.
-///
-/// ```dart
-/// if (error != null)
-///   ErrorBanner(
-///     message: error,
-///     onRetry: () => ref.read(provider.notifier).reload(),
-///   )
-/// ```
 class ErrorBanner extends StatelessWidget {
-  /// The error message to display.
   final String message;
 
-  /// Optional callback when the retry button is pressed.
   final VoidCallback? onRetry;
 
-  /// Optional callback when the dismiss button is pressed.
   final VoidCallback? onDismiss;
 
-  /// Whether to show the retry button. Defaults to `true`.
   final bool showRetry;
 
-  /// Whether to show the dismiss button. Defaults to `true`.
   final bool showDismiss;
 
   const ErrorBanner({

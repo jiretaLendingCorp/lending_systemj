@@ -1,6 +1,6 @@
-import 'package:lendflow/features/settings/domain/entities/system_settings.dart';
+// lib/features/settings/data/models/system_settings_model.dart
+import 'package:jireta_loan/features/settings/domain/entities/system_settings.dart';
 
-/// Data-layer representation of [SystemSettings], with JSON serialization.
 class SystemSettingsModel extends SystemSettings {
   const SystemSettingsModel({
     required super.id,
@@ -8,7 +8,7 @@ class SystemSettingsModel extends SystemSettings {
     super.penaltyRate = 0.20,
     super.penaltyThresholdDays = 3,
     super.smsTemplate =
-        'Hi {borrower_name}, your payment of {amount} is due on {due_date}. - LendFlow',
+        'Hi {lender_name}, your payment of {amount} is due on {due_date}. - Jireta Loan',
     super.notificationPreferences = const NotificationPreferences(),
     super.systemFlags = const SystemFlags(),
     required super.updatedAt,
@@ -24,7 +24,7 @@ class SystemSettingsModel extends SystemSettings {
           3,
       smsTemplate: json['sms_template'] as String? ??
           json['smsTemplate'] as String? ??
-          'Hi {borrower_name}, your payment of {amount} is due on {due_date}. - LendFlow',
+          'Hi {lender_name}, your payment of {amount} is due on {due_date}. - Jireta Loan',
       notificationPreferences: _parseNotificationPrefs(
         json['notification_preferences'] ?? json['notificationPreferences'],
       ),

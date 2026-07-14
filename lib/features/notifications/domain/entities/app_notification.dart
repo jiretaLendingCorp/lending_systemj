@@ -1,9 +1,6 @@
+// lib/features/notifications/domain/entities/app_notification.dart
 import 'package:equatable/equatable.dart';
 
-/// Notification type classification.
-///
-/// Each type maps to a specific icon and color in the UI.
-/// No sensitive data (amounts, PII) is included in notification payloads.
 enum NotificationType {
   paymentReminder,
   loanApproved,
@@ -42,7 +39,6 @@ enum NotificationType {
         NotificationType.general => 'General',
       };
 
-  /// Whether this notification type is considered high priority.
   bool get isHighPriority => switch (this) {
         NotificationType.paymentReminder => true,
         NotificationType.loanApproved => true,
@@ -53,12 +49,6 @@ enum NotificationType {
       };
 }
 
-/// Core entity representing an in-app notification.
-///
-/// Notifications are created server-side and delivered via Supabase
-/// realtime. No sensitive data (amounts, personal information) is
-/// included in the notification payload — only reference IDs and
-/// generic status messages.
 class AppNotification extends Equatable {
   final String id;
   final String userId;

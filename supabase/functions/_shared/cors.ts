@@ -1,8 +1,4 @@
-/**
- * CORS headers for LendFlow Edge Functions.
- * Only whitelisted origins are allowed.
- */
-
+// supabase/functions/_shared/cors.ts
 const ALLOWED_ORIGINS: string[] = [
   Deno.env.get("CORS_ORIGIN") ?? "http://localhost:3000",
   Deno.env.get("CORS_ORIGIN_ALT") ?? "",

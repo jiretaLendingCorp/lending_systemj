@@ -1,19 +1,16 @@
+// lib/features/reports/presentation/pages/portfolio_report_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/features/reports/domain/entities/report_data.dart';
-import 'package:lendflow/features/reports/presentation/providers/report_notifier.dart';
-import 'package:lendflow/features/reports/presentation/widgets/report_summary_card.dart';
-import 'package:lendflow/shared/widgets/empty_state.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
-import 'package:lendflow/shared/widgets/loading_overlay.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
+import 'package:jireta_loan/features/reports/presentation/providers/report_notifier.dart';
+import 'package:jireta_loan/features/reports/presentation/widgets/report_summary_card.dart';
 
-/// Web: Portfolio summary report page.
-///
-/// Displays total disbursed, outstanding, paid, interest earned,
-/// and loan counts by status with KPI cards.
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
+
 class PortfolioReportPage extends ConsumerStatefulWidget {
   const PortfolioReportPage({super.key});
 
@@ -47,7 +44,6 @@ class _PortfolioReportPageState extends ConsumerState<PortfolioReportPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
                 Row(
                   children: [
                     Expanded(
@@ -273,7 +269,7 @@ class _StatusRow extends StatelessWidget {
             width: 120,
             child: LinearProgressIndicator(
               value: percentage / 100,
-              backgroundColor: color.withOpacity(0.15),
+              backgroundColor: color.withValues(alpha: 0.15),
               valueColor: AlwaysStoppedAnimation(color),
               borderRadius: BorderRadius.circular(4),
             ),

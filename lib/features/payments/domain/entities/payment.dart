@@ -1,7 +1,7 @@
+// lib/features/payments/domain/entities/payment.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-/// Payment method: how the borrower pays.
 enum PaymentMethod {
   gcash,
   office,
@@ -37,10 +37,6 @@ enum PaymentMethod {
       };
 }
 
-/// Payment status lifecycle:
-///   pending → completed
-///   pending → failed
-///   completed → refunded
 enum PaymentStatus {
   pending,
   completed,
@@ -72,14 +68,10 @@ enum PaymentStatus {
       this == PaymentStatus.refunded;
 }
 
-/// Core payment entity representing a loan repayment.
-///
-/// This is the domain-level representation. Data-layer concerns
-/// (JSON serialization) live in [PaymentModel].
 class Payment extends Equatable {
   final String id;
   final String loanId;
-  final String borrowerId;
+  final String lenderId;
   final double amount;
   final PaymentMethod method;
   final PaymentStatus status;
@@ -93,7 +85,7 @@ class Payment extends Equatable {
   const Payment({
     required this.id,
     required this.loanId,
-    required this.borrowerId,
+    required this.lenderId,
     required this.amount,
     this.method = PaymentMethod.cash,
     this.status = PaymentStatus.pending,
@@ -105,23 +97,19 @@ class Payment extends Equatable {
     required this.createdAt,
   });
 
-  /// Whether this payment was made via GCash/Xendit.
   bool get isGcash => method == PaymentMethod.gcash;
 
-  /// Whether this payment was made at the office.
   bool get isOffice => method == PaymentMethod.office;
 
-  /// Whether a rider collected this payment.
   bool get isCashCollection => method == PaymentMethod.cash;
 
-  /// Whether the payment is still in progress.
   bool get isInProgress => status == PaymentStatus.pending;
 
   @override
   List<Object?> get props => [
         id,
         loanId,
-        borrowerId,
+        lenderId,
         amount,
         method,
         status,

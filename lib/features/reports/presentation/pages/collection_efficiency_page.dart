@@ -1,18 +1,15 @@
+// lib/features/reports/presentation/pages/collection_efficiency_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/features/reports/domain/entities/report_data.dart';
-import 'package:lendflow/features/reports/presentation/providers/report_notifier.dart';
-import 'package:lendflow/features/reports/presentation/widgets/report_summary_card.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
-import 'package:lendflow/shared/widgets/loading_overlay.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
+import 'package:jireta_loan/features/reports/presentation/providers/report_notifier.dart';
+import 'package:jireta_loan/features/reports/presentation/widgets/report_summary_card.dart';
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
 
-/// Web: Collection efficiency report page.
-///
-/// Displays collection efficiency metrics including success rate,
-/// collection amounts, and average collection time.
 class CollectionEfficiencyPage extends ConsumerStatefulWidget {
   const CollectionEfficiencyPage({super.key});
 
@@ -47,7 +44,6 @@ class _CollectionEfficiencyPageState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
                 Row(
                   children: [
                     Expanded(
@@ -171,7 +167,6 @@ class _CollectionEfficiencyPageState
         children: [
           Text('Collection Breakdown', style: TextStyles.titleMedium(context)),
           const SizedBox(height: 20),
-          // Collected vs Expected progress
           _MetricRow(
             label: 'Total Expected',
             value: CurrencyFormatter.formatPhp(report.totalExpected),
@@ -208,7 +203,6 @@ class _CollectionEfficiencyPageState
             valueColor: ColorTokens.lightError,
           ),
           const SizedBox(height: 16),
-          // Efficiency progress bar
           Row(
             children: [
               Expanded(
@@ -223,7 +217,7 @@ class _CollectionEfficiencyPageState
                       child: LinearProgressIndicator(
                         value: report.efficiencyRate / 100,
                         minHeight: 12,
-                        backgroundColor: ColorTokens.accent.withOpacity(0.15),
+                        backgroundColor: ColorTokens.accent.withValues(alpha: 0.15),
                         valueColor:
                             const AlwaysStoppedAnimation(ColorTokens.accent),
                       ),

@@ -1,12 +1,9 @@
+// lib/features/notifications/presentation/widgets/notification_badge.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/notifications/presentation/providers/notification_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/notifications/presentation/providers/notification_notifier.dart';
 
-/// Unread count badge widget for use in app bars and bottom navigation.
-///
-/// Displays a small red circle with the unread notification count.
-/// Hidden when count is zero.
 class NotificationBadge extends ConsumerWidget {
   final Widget child;
   final double badgeSize;

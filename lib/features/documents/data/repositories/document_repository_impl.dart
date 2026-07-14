@@ -1,16 +1,13 @@
+// lib/features/documents/data/repositories/document_repository_impl.dart
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/documents/data/datasources/document_remote_datasource.dart';
-import 'package:lendflow/features/documents/domain/entities/kyc_document.dart';
-import 'package:lendflow/features/documents/domain/repositories/document_repository.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/documents/data/datasources/document_remote_datasource.dart';
+import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
+import 'package:jireta_loan/features/documents/domain/repositories/document_repository.dart';
 
-/// Concrete implementation of [DocumentRepository].
-///
-/// Delegates to [DocumentRemoteDataSource] for all network and storage
-/// operations, and maps [AppException] subtypes to [Failure] subtypes.
 class DocumentRepositoryImpl implements DocumentRepository {
   final DocumentRemoteDataSource _remoteDataSource;
 
@@ -19,7 +16,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
 
   @override
   Future<Either<Failure, KycDocument>> upload({
-    required String borrowerId,
+    required String lenderId,
     required String documentType,
     required String filePath,
     required String fileName,
@@ -27,14 +24,14 @@ class DocumentRepositoryImpl implements DocumentRepository {
   }) async {
     try {
       final document = await _remoteDataSource.upload(
-        borrowerId: borrowerId,
+        lenderId: lenderId,
         documentType: documentType,
         file: File(filePath),
         fileName: fileName,
         onProgress: onProgress,
       );
       return Right(document);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -58,14 +55,14 @@ class DocumentRepositoryImpl implements DocumentRepository {
 
   @override
   Future<Either<Failure, List<KycDocument>>> list({
-    required String borrowerId,
+    required String lenderId,
   }) async {
     try {
       final documents = await _remoteDataSource.list(
-        borrowerId: borrowerId,
+        lenderId: lenderId,
       );
       return Right(documents);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -93,7 +90,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
         expiresIn: expiresIn,
       );
       return Right(url);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -119,7 +116,7 @@ class DocumentRepositoryImpl implements DocumentRepository {
         filePath: filePath,
       );
       return const Right(null);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

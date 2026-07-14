@@ -1,13 +1,10 @@
+// lib/features/riders/domain/usecases/get_today_tasks_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
-import 'package:lendflow/features/riders/domain/repositories/rider_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
+import 'package:jireta_loan/features/riders/domain/repositories/rider_repository.dart';
 
-/// Get today's assigned tasks for the authenticated rider.
-///
-/// Returns a list of [RiderTask]s filtered by the optional [type]
-/// parameter (disbursement or collection).
 class GetTodayTasksUseCase {
   final RiderRepository _repository;
 
@@ -19,7 +16,6 @@ class GetTodayTasksUseCase {
   }
 }
 
-/// Parameters for the get today's tasks use case.
 class GetTodayTasksParams extends Equatable {
   final String? type;
 

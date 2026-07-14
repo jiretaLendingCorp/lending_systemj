@@ -1,7 +1,4 @@
-/**
- * POST /auth/otp-send
- * Rate-limited (3/hour), 6-digit OTP, 5-min TTL.
- */
+// supabase/functions/auth/otp-send/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -46,7 +43,6 @@ Deno.serve(async (req: Request) => {
     const { phone } = parsed.data;
     const supabase = getServiceClient();
 
-    // Rate limit: max 3 OTPs per user per hour
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const { count, error: countError } = await supabase
       .from("otp_codes")
@@ -62,7 +58,6 @@ Deno.serve(async (req: Request) => {
       return conflict("OTP rate limit exceeded. Maximum 3 requests per hour.");
     }
 
-    // Generate OTP
     const code = generateOtp();
     const codeHash = await hashOtp(code);
     const expiresAt = new Date(Date.now() + OTP_TTL_MINUTES * 60 * 1000).toISOString();
@@ -79,7 +74,6 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to create OTP");
     }
 
-    // Send OTP via SMS provider (e.g., Semaphore, Twilio)
     const smsApiKey = Deno.env.get("SMS_API_KEY");
     const smsProvider = Deno.env.get("SMS_PROVIDER") ?? "semaphore";
 
@@ -92,17 +86,15 @@ Deno.serve(async (req: Request) => {
           body: JSON.stringify({
             apikey: smsApiKey,
             number: phone,
-            message: `Your LendFlow verification code is: ${code}. Valid for ${OTP_TTL_MINUTES} minutes. Do not share this code.`,
-            sendername: "LendFlow",
+            message: `Your Jireta Loan verification code is: $code. Valid for $OTP_TTL_MINUTES minutes. Do not share this code.`,
+            sendername: "Jireta Loan",
           }),
         });
       } catch (smsError) {
         console.error("SMS send failed:", smsError);
-        // Don't fail the request — OTP is stored and can be retrieved for dev
       }
     }
 
-    // In development, return the code for testing
     const isDev = Deno.env.get("DENO_ENV") === "development";
 
     return successResponse(

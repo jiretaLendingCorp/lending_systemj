@@ -1,7 +1,4 @@
-/**
- * POST /loans/:id/approve
- * Manager/admin only, state transition under_review→approved, audit log.
- */
+// supabase/functions/loans/approve/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -28,8 +25,7 @@ Deno.serve(async (req: Request) => {
     if ("error" in authResult) return authResult.error;
     const { payload } = authResult;
 
-    // Only managers and admins can approve loans
-    if (!hasRole(payload, "manager", "admin")) {
+    if (!hasRole(payload, "employee", "head_manager")) {
       return forbidden("Only managers or admins can approve loans");
     }
 
@@ -48,10 +44,9 @@ Deno.serve(async (req: Request) => {
 
     const supabase = getServiceClient();
 
-    // Fetch current loan
     const { data: loan, error: loanError } = await supabase
       .from("loans")
-      .select("id, status, principal, interest_rate, term_days, schedule_type, borrower_id")
+      .select("id, status, principal, interest_rate, term_days, schedule_type, lender_id")
       .eq("id", loanId)
       .is("deleted_at", null)
       .single();
@@ -60,7 +55,6 @@ Deno.serve(async (req: Request) => {
       return notFound("Loan");
     }
 
-    // Validate state transition
     const allowedNextStates = VALID_TRANSITIONS[loan.status] ?? [];
     if (!allowedNextStates.includes("approved")) {
       return conflict(
@@ -70,7 +64,6 @@ Deno.serve(async (req: Request) => {
 
     const now = new Date().toISOString();
 
-    // Use the approve_loan stored procedure for atomic transition
     const { data: result, error: approveError } = await supabase.rpc("approve_loan", {
       p_loan_id: loanId,
       p_approved_by: payload.sub,
@@ -79,7 +72,6 @@ Deno.serve(async (req: Request) => {
 
     if (approveError) {
       console.error("Approve loan RPC error:", approveError);
-      // Fallback: direct update
       const { error: updateError } = await supabase
         .from("loans")
         .update({
@@ -96,30 +88,27 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Create disbursement record
     await supabase.from("disbursements").insert({
       loan_id: loanId,
       method: "office", // Default, can be changed later
       status: "pending",
     });
 
-    // Create notification for borrower
-    const { data: borrower } = await supabase
-      .from("borrowers")
+    const { data: lender } = await supabase
+      .from('lenders')
       .select("user_id")
-      .eq("id", loan.borrower_id)
+      .eq("id", loan.lender_id)
       .single();
 
-    if (borrower) {
+    if (lender) {
       await supabase.from("notifications").insert({
-        user_id: borrower.user_id,
+        user_id: lender.user_id,
         type: "loan_approved",
         title: "Loan Approved",
         body: `Your loan application for ₱${Number(loan.principal).toLocaleString()} has been approved.`,
       });
     }
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,

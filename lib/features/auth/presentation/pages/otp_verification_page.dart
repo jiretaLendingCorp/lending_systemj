@@ -1,17 +1,13 @@
+// lib/features/auth/presentation/pages/otp_verification_page.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/constants.dart';
-import 'package:lendflow/core/utils/validators.dart';
-import 'package:lendflow/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:jireta_loan/core/utils/validators.dart';
+import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
 
-/// OTP verification page with 6-digit entry and resend countdown.
-///
-/// Enforces a rate limit of 3 OTP resends per hour via a countdown
-/// timer. The user must enter the 6-digit code sent to their email
-/// to complete the signup verification.
 class OtpVerificationPage extends ConsumerStatefulWidget {
   final String email;
 
@@ -45,7 +41,6 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
   void initState() {
     super.initState();
     _startResendTimer();
-    // Auto-focus the first digit field
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNodes[0].requestFocus();
     });
@@ -84,7 +79,6 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
     if (value.isNotEmpty && index < AppConstants.otpLength - 1) {
       _focusNodes[index + 1].requestFocus();
     }
-    // Auto-submit when all digits are filled
     if (_otpCode.length == AppConstants.otpLength) {
       _handleVerify();
     }
@@ -133,7 +127,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authFeatureProvider);
-    final isLoading = authState is AuthLoading;
+    final isLoading = authState is AuthFeatureLoading;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     ref.listen<AuthFeatureState>(authFeatureProvider, (prev, next) {
@@ -144,13 +138,11 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
             backgroundColor: ColorTokens.lightError,
           ),
         );
-        // Clear all OTP fields on error
         for (final c in _controllers) {
           c.clear();
         }
         _focusNodes[0].requestFocus();
-      } else if (next is AuthAuthenticated) {
-        // Successfully verified — core auth provider handles navigation
+      } else if (next is AuthFeatureAuthenticated) {
       }
     });
 
@@ -167,7 +159,6 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header icon
               Icon(
                 Icons.verified_user_rounded,
                 size: 64,
@@ -206,7 +197,6 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
               ),
               const SizedBox(height: 40),
 
-              // OTP digit fields
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(AppConstants.otpLength, (index) {
@@ -272,7 +262,6 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
               ),
               const SizedBox(height: 32),
 
-              // Verify button
               SizedBox(
                 height: 48,
                 child: ElevatedButton(
@@ -291,7 +280,6 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
               ),
               const SizedBox(height: 24),
 
-              // Resend code section
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -305,7 +293,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
                   ),
                   _resendCountdown > 0
                       ? Text(
-                          'Resend in ${_resendCountdown}s',
+                          'Resend in $_resendCountdowns',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

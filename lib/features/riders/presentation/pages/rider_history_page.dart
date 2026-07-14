@@ -1,17 +1,12 @@
+// lib/features/riders/presentation/pages/rider_history_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
-import 'package:lendflow/features/riders/presentation/providers/rider_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
+import 'package:jireta_loan/features/riders/presentation/providers/rider_notifier.dart';
 
-/// Mobile page displaying the rider's completed task history.
-///
-/// Features:
-/// - Date range filter for narrowing results
-/// - Paginated list of past tasks
-/// - Pull-to-refresh support
 class RiderHistoryPage extends ConsumerStatefulWidget {
   const RiderHistoryPage({super.key});
 
@@ -86,7 +81,6 @@ class _RiderHistoryPageState extends ConsumerState<RiderHistoryPage> {
         onRefresh: () async => _loadHistory(),
         child: CustomScrollView(
           slivers: [
-            // Active date range filter chip
             if (_selectedDateRange != null)
               SliverToBoxAdapter(
                 child: Padding(
@@ -110,7 +104,6 @@ class _RiderHistoryPageState extends ConsumerState<RiderHistoryPage> {
                 ),
               ),
 
-            // Content
             if (riderState is RiderLoading)
               const SliverFillRemaining(
                 child: Center(child: CircularProgressIndicator()),
@@ -204,7 +197,6 @@ class _RiderHistoryPageState extends ConsumerState<RiderHistoryPage> {
   }
 }
 
-/// Card widget for displaying a historical task.
 class _HistoryTaskCard extends StatelessWidget {
   final RiderTask task;
 
@@ -251,7 +243,7 @@ class _HistoryTaskCard extends StatelessWidget {
                     color: (task.status == RiderTaskStatus.completed
                             ? ColorTokens.lightSuccess
                             : ColorTokens.lightError)
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -268,7 +260,7 @@ class _HistoryTaskCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              task.borrowerName,
+              task.lenderName,
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
@@ -281,7 +273,7 @@ class _HistoryTaskCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
-                    task.borrowerAddress,
+                    task.lenderAddress,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.outline,
                     ),

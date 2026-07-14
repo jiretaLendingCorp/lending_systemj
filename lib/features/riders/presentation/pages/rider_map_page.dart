@@ -1,18 +1,12 @@
+// lib/features/riders/presentation/pages/rider_map_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
-import 'package:lendflow/features/riders/presentation/providers/rider_notifier.dart';
-import 'package:lendflow/features/riders/presentation/widgets/gps_checkin_button.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
+import 'package:jireta_loan/features/riders/presentation/providers/rider_notifier.dart';
+import 'package:jireta_loan/features/riders/presentation/widgets/gps_checkin_button.dart';
 
-/// Mobile page displaying a Google Maps view of the rider's task locations.
-///
-/// Features:
-/// - Map markers for each task location, color-coded by type
-/// - GPS check-in button for the selected task
-/// - Bottom sheet with task details when a marker is tapped
-/// - Current location tracking
 class RiderMapPage extends ConsumerStatefulWidget {
   const RiderMapPage({super.key});
 
@@ -25,7 +19,6 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
   RiderTask? _selectedTask;
   LatLng? _currentLocation;
 
-  // Default to Manila, Philippines
   static const _defaultPosition = LatLng(14.5995, 120.9842);
 
   @override
@@ -48,7 +41,7 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
         position: position,
         icon: BitmapDescriptor.defaultMarkerWithHue(markerColor),
         infoWindow: InfoWindow(
-          title: task.borrowerName,
+          title: task.lenderName,
           snippet:
               '${task.type.label}: ${_formatAmount(task.amount)}',
         ),
@@ -90,7 +83,6 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
             onCameraMove: (_) {},
           ),
 
-          // Legend
           Positioned(
             top: 16,
             left: 16,
@@ -114,7 +106,7 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                     _legendItem(Colors.orange, 'Collection'),
                     if (_currentLocation != null) ...[
                       const SizedBox(height: 4),
-                      _legendItem(Colors.blue.withOpacity(0.5), 'Your Location'),
+                      _legendItem(Colors.blue.withValues(alpha: 0.5), 'Your Location'),
                     ],
                   ],
                 ),
@@ -122,7 +114,6 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
             ),
           ),
 
-          // Task count badge
           if (tasks.isNotEmpty)
             Positioned(
               top: 16,
@@ -144,7 +135,6 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
               ),
             ),
 
-          // GPS Check-in button (bottom)
           if (_selectedTask != null && _selectedTask!.status.isActive)
             Positioned(
               bottom: 32,
@@ -208,7 +198,7 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      task.borrowerName,
+                      task.lenderName,
                       style: theme.textTheme.titleMedium,
                     ),
                   ),
@@ -218,7 +208,7 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: _statusColor(task.status).withOpacity(0.1),
+                      color: _statusColor(task.status).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -232,7 +222,7 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                 ],
               ),
               const SizedBox(height: 16),
-              _infoRow(Icons.location_on_outlined, task.borrowerAddress),
+              _infoRow(Icons.location_on_outlined, task.lenderAddress),
               const SizedBox(height: 8),
               _infoRow(
                 Icons.payments_outlined,

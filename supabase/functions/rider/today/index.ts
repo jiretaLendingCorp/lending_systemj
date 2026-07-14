@@ -1,7 +1,4 @@
-/**
- * GET /rider/today
- * Today's assigned tasks for the authenticated rider.
- */
+// supabase/functions/rider/today/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -26,7 +23,6 @@ Deno.serve(async (req: Request) => {
 
     const supabase = getServiceClient();
 
-    // Get rider profile
     const { data: rider, error: riderError } = await supabase
       .from("riders")
       .select("id")
@@ -38,35 +34,32 @@ Deno.serve(async (req: Request) => {
       return forbidden("Rider profile not found");
     }
 
-    // Get today's date range
     const today = new Date();
     const startOfDay = new Date(today);
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date(today);
     endOfDay.setHours(23, 59, 59, 999);
 
-    // Fetch assigned disbursements
     const { data: disbursements, error: disbError } = await supabase
       .from("disbursements")
       .select(
         `id, status, method, created_at,
          loan:loans!disbursements_loan_id_fkey(
            id, principal, total_payable,
-           borrower:borrowers!loans_borrower_id_fkey(id, full_name, phone, address)
+           lender:lenders!loans_lender_id_fkey(id, full_name, phone, address)
          )`
       )
       .eq("assigned_rider_id", rider.id)
       .in("status", ["assigned", "in_transit"])
       .is("deleted_at", null);
 
-    // Fetch assigned collections
     const { data: collections, error: collError } = await supabase
       .from("collections")
       .select(
         `id, status, amount, method, created_at,
          loan:loans!collections_loan_id_fkey(
            id, principal, total_payable,
-           borrower:borrowers!collections_borrower_id_fkey(id, full_name, phone, address)
+           lender:lenders!collections_lender_id_fkey(id, full_name, phone, address)
          )`
       )
       .eq("assigned_rider_id", rider.id)
@@ -77,7 +70,6 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to fetch rider tasks");
     }
 
-    // Format tasks with unified structure
     const tasks = [
       ...(disbursements ?? []).map((d) => ({
         task_type: "disbursement" as const,
@@ -85,7 +77,7 @@ Deno.serve(async (req: Request) => {
         status: d.status,
         method: d.method,
         amount: d.loan?.total_payable ?? 0,
-        borrower: d.loan?.borrower ?? null,
+        lender: d.loan?.lender ?? null,
         created_at: d.created_at,
       })),
       ...(collections ?? []).map((c) => ({
@@ -94,17 +86,15 @@ Deno.serve(async (req: Request) => {
         status: c.status,
         method: c.method,
         amount: c.amount,
-        borrower: c.loan?.borrower ?? null,
+        lender: c.loan?.lender ?? null,
         created_at: c.created_at,
       })),
     ];
 
-    // Sort by created_at
     tasks.sort(
       (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     );
 
-    // Summary
     const summary = {
       total_tasks: tasks.length,
       disbursements: (disbursements ?? []).length,

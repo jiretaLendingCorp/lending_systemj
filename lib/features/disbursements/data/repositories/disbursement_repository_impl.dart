@@ -1,15 +1,12 @@
+// lib/features/disbursements/data/repositories/disbursement_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/disbursements/data/datasources/disbursement_remote_datasource.dart'
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/disbursements/data/datasources/disbursement_remote_datasource.dart'
     hide DisbursementListResult, RiderInfo;
-import 'package:lendflow/features/disbursements/domain/entities/disbursement.dart';
-import 'package:lendflow/features/disbursements/domain/repositories/disbursement_repository.dart';
+import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
+import 'package:jireta_loan/features/disbursements/domain/repositories/disbursement_repository.dart';
 
-/// Concrete implementation of [DisbursementRepository].
-///
-/// Delegates to [DisbursementRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class DisbursementRepositoryImpl implements DisbursementRepository {
   final DisbursementRemoteDataSource _remoteDataSource;
 
@@ -37,7 +34,7 @@ class DisbursementRepositoryImpl implements DisbursementRepository {
         disbursements: result.disbursements,
         total: result.total,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -67,7 +64,7 @@ class DisbursementRepositoryImpl implements DisbursementRepository {
       final disbursement =
           await _remoteDataSource.detail(disbursementId);
       return Right(disbursement);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -95,7 +92,7 @@ class DisbursementRepositoryImpl implements DisbursementRepository {
         riderId: riderId,
       );
       return Right(disbursement);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -132,7 +129,7 @@ class DisbursementRepositoryImpl implements DisbursementRepository {
         receiptPhotoUrl: receiptPhotoUrl,
       );
       return Right(disbursement);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -162,7 +159,7 @@ class DisbursementRepositoryImpl implements DisbursementRepository {
       final disbursement =
           await _remoteDataSource.markInTransit(disbursementId);
       return Right(disbursement);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -188,7 +185,7 @@ class DisbursementRepositoryImpl implements DisbursementRepository {
       final disbursement =
           await _remoteDataSource.markFailed(disbursementId, reason: reason);
       return Right(disbursement);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -218,7 +215,7 @@ class DisbursementRepositoryImpl implements DisbursementRepository {
                 activeDeliveries: r.activeDeliveries,
               ))
           .toList());
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

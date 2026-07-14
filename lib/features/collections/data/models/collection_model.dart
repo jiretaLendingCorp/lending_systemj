@@ -1,11 +1,11 @@
-import 'package:lendflow/features/collections/domain/entities/collection.dart';
+// lib/features/collections/data/models/collection_model.dart
+import 'package:jireta_loan/features/collections/domain/entities/collection.dart';
 
-/// Data-layer representation of a [Collection], with JSON serialization.
 class CollectionModel extends Collection {
   const CollectionModel({
     required super.id,
     required super.loanId,
-    required super.borrowerId,
+    required super.lenderId,
     super.method = CollectionMethod.cash,
     super.status = CollectionStatus.pending,
     super.assignedRiderId,
@@ -22,8 +22,8 @@ class CollectionModel extends Collection {
     return CollectionModel(
       id: json['id'] as String,
       loanId: json['loan_id'] as String? ?? json['loanId'] as String? ?? '',
-      borrowerId:
-          json['borrower_id'] as String? ?? json['borrowerId'] as String? ?? '',
+      lenderId:
+          json['lender_id'] as String? ?? json['lenderId'] as String? ?? '',
       method: CollectionMethod.fromString(
         json['method'] as String? ?? json['collection_method'] as String?,
       ),
@@ -49,7 +49,7 @@ class CollectionModel extends Collection {
     return {
       'id': id,
       'loan_id': loanId,
-      'borrower_id': borrowerId,
+      'lender_id': lenderId,
       'method': method.toApiString(),
       'status': status.toApiString(),
       'assigned_rider_id': assignedRiderId,
@@ -66,7 +66,7 @@ class CollectionModel extends Collection {
   CollectionModel copyWith({
     String? id,
     String? loanId,
-    String? borrowerId,
+    String? lenderId,
     CollectionMethod? method,
     CollectionStatus? status,
     String? assignedRiderId,
@@ -81,7 +81,7 @@ class CollectionModel extends Collection {
     return CollectionModel(
       id: id ?? this.id,
       loanId: loanId ?? this.loanId,
-      borrowerId: borrowerId ?? this.borrowerId,
+      lenderId: lenderId ?? this.lenderId,
       method: method ?? this.method,
       status: status ?? this.status,
       assignedRiderId: assignedRiderId ?? this.assignedRiderId,

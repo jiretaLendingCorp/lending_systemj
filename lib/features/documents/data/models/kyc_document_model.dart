@@ -1,10 +1,10 @@
-import 'package:lendflow/features/documents/domain/entities/kyc_document.dart';
+// lib/features/documents/data/models/kyc_document_model.dart
+import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
 
-/// Data-layer representation of a [KycDocument], with JSON serialization.
 class KycDocumentModel extends KycDocument {
   const KycDocumentModel({
     required super.id,
-    required super.borrowerId,
+    required super.lenderId,
     required super.documentType,
     required super.fileUrl,
     super.status = DocumentStatus.pending,
@@ -16,8 +16,8 @@ class KycDocumentModel extends KycDocument {
   factory KycDocumentModel.fromJson(Map<String, dynamic> json) {
     return KycDocumentModel(
       id: json['id'] as String,
-      borrowerId:
-          json['borrower_id'] as String? ?? json['borrowerId'] as String? ?? '',
+      lenderId:
+          json['lender_id'] as String? ?? json['lenderId'] as String? ?? '',
       documentType: DocumentType.fromString(
         json['document_type'] as String? ??
             json['documentType'] as String?,
@@ -39,7 +39,7 @@ class KycDocumentModel extends KycDocument {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'borrower_id': borrowerId,
+      'lender_id': lenderId,
       'document_type': documentType.toApiString(),
       'file_url': fileUrl,
       'status': status.toApiString(),
@@ -51,7 +51,7 @@ class KycDocumentModel extends KycDocument {
 
   KycDocumentModel copyWith({
     String? id,
-    String? borrowerId,
+    String? lenderId,
     DocumentType? documentType,
     String? fileUrl,
     DocumentStatus? status,
@@ -61,7 +61,7 @@ class KycDocumentModel extends KycDocument {
   }) {
     return KycDocumentModel(
       id: id ?? this.id,
-      borrowerId: borrowerId ?? this.borrowerId,
+      lenderId: lenderId ?? this.lenderId,
       documentType: documentType ?? this.documentType,
       fileUrl: fileUrl ?? this.fileUrl,
       status: status ?? this.status,

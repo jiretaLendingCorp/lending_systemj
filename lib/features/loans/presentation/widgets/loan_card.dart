@@ -1,14 +1,11 @@
+// lib/features/loans/presentation/widgets/loan_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/loans/presentation/widgets/loan_status_badge.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/features/loans/presentation/widgets/loan_status_badge.dart';
 
-/// Loan summary card widget for list views.
-///
-/// Displays key loan information including principal, total payable,
-/// status, term, and due date in a compact card format.
 class LoanCard extends StatelessWidget {
   final Loan loan;
   final VoidCallback? onTap;
@@ -33,7 +30,6 @@ class LoanCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row 1: Loan ID + Status badge
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -51,7 +47,6 @@ class LoanCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // Row 2: Principal and Total Payable
               Row(
                 children: [
                   Expanded(
@@ -75,7 +70,6 @@ class LoanCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              // Row 3: Term, Schedule, and Due Date
               Row(
                 children: [
                   Expanded(
@@ -106,7 +100,6 @@ class LoanCard extends StatelessWidget {
                 ],
               ),
 
-              // Row 4: Outstanding balance for active loans
               if (loan.status.isActive && loan.outstandingBalance > 0) ...[
                 const SizedBox(height: 12),
                 ClipRRect(
@@ -147,7 +140,6 @@ class LoanCard extends StatelessWidget {
                 ),
               ],
 
-              // Penalty amount for defaulted loans
               if (loan.penaltyAmount > 0) ...[
                 const SizedBox(height: 8),
                 Container(
@@ -188,7 +180,6 @@ class LoanCard extends StatelessWidget {
   }
 }
 
-/// Helper widget for displaying a label-value pair.
 class _InfoColumn extends StatelessWidget {
   final String label;
   final String value;

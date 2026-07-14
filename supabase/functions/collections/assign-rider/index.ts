@@ -1,7 +1,4 @@
-/**
- * POST /collections/:id/assign
- * Manager/admin only, assign a rider to a collection.
- */
+// supabase/functions/collections/assign-rider/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -21,7 +18,7 @@ Deno.serve(async (req: Request) => {
     if ("error" in authResult) return authResult.error;
     const { payload } = authResult;
 
-    if (!hasRole(payload, "manager", "admin")) {
+    if (!hasRole(payload, "employee", "head_manager")) {
       return forbidden("Only managers or admins can assign riders");
     }
 
@@ -41,10 +38,9 @@ Deno.serve(async (req: Request) => {
     const { rider_id } = parsed.data;
     const supabase = getServiceClient();
 
-    // Verify collection exists
     const { data: collection, error: dbError } = await supabase
       .from("collections")
-      .select("id, status, loan_id, borrower_id")
+      .select("id, status, loan_id, lender_id")
       .eq("id", collectionId)
       .is("deleted_at", null)
       .single();
@@ -59,7 +55,6 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Verify rider exists and is available
     const { data: rider, error: riderError } = await supabase
       .from("riders")
       .select("id, user_id, is_available")
@@ -75,7 +70,6 @@ Deno.serve(async (req: Request) => {
       return conflict("Rider is not currently available");
     }
 
-    // Assign rider
     const now = new Date().toISOString();
     const { error: updateError } = await supabase
       .from("collections")
@@ -90,7 +84,6 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to assign rider");
     }
 
-    // Notify the rider
     await supabase.from("notifications").insert({
       user_id: rider.user_id,
       type: "collection_assigned",
@@ -98,7 +91,6 @@ Deno.serve(async (req: Request) => {
       body: "You have been assigned a loan collection task.",
     });
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,

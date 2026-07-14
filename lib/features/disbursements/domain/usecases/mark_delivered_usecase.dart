@@ -1,14 +1,10 @@
+// lib/features/disbursements/domain/usecases/mark_delivered_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/disbursements/domain/entities/disbursement.dart';
-import 'package:lendflow/features/disbursements/domain/repositories/disbursement_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
+import 'package:jireta_loan/features/disbursements/domain/repositories/disbursement_repository.dart';
 
-/// Mark disbursement as delivered use case (rider action).
-///
-/// Validates that GPS coordinates are provided before marking
-/// the disbursement as delivered. GPS proof is required for
-/// audit and compliance purposes.
 class MarkDeliveredUseCase {
   final DisbursementRepository _repository;
 
@@ -18,7 +14,6 @@ class MarkDeliveredUseCase {
   Future<Either<Failure, Disbursement>> call(
     MarkDeliveredParams params,
   ) async {
-    // Validate GPS coordinates
     if (params.latitude == 0.0 && params.longitude == 0.0) {
       return Future.value(const Left(ValidationFailure(
         message: 'GPS coordinates are required to mark as delivered.',
@@ -28,7 +23,6 @@ class MarkDeliveredUseCase {
       )));
     }
 
-    // Validate latitude range
     if (params.latitude < -90 || params.latitude > 90) {
       return Future.value(const Left(ValidationFailure(
         message: 'Invalid GPS latitude.',
@@ -36,7 +30,6 @@ class MarkDeliveredUseCase {
       )));
     }
 
-    // Validate longitude range
     if (params.longitude < -180 || params.longitude > 180) {
       return Future.value(const Left(ValidationFailure(
         message: 'Invalid GPS longitude.',
@@ -44,7 +37,6 @@ class MarkDeliveredUseCase {
       )));
     }
 
-    // Validate disbursement ID
     if (params.disbursementId.isEmpty) {
       return Future.value(const Left(ValidationFailure(
         message: 'Disbursement ID is required.',
@@ -60,7 +52,6 @@ class MarkDeliveredUseCase {
   }
 }
 
-/// Parameters for the mark delivered use case.
 class MarkDeliveredParams extends Equatable {
   final String disbursementId;
   final double latitude;

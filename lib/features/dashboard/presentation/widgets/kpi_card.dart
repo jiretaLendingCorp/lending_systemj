@@ -1,11 +1,8 @@
+// lib/features/dashboard/presentation/widgets/kpi_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// KPI metric card with icon, value, and trend indicator.
-///
-/// Used on dashboard pages to display key performance indicators
-/// with optional trend arrows and percentage changes.
 class KpiCard extends StatelessWidget {
   final String title;
   final String value;
@@ -52,14 +49,13 @@ class KpiCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Icon + trend row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: effectiveIconColor.withOpacity(0.1),
+                    color: effectiveIconColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(icon, size: 22, color: effectiveIconColor),
@@ -70,8 +66,8 @@ class KpiCard extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: trendUp
-                          ? ColorTokens.lightSuccess.withOpacity(0.1)
-                          : ColorTokens.lightError.withOpacity(0.1),
+                          ? ColorTokens.lightSuccess.withValues(alpha: 0.1)
+                          : ColorTokens.lightError.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -100,7 +96,6 @@ class KpiCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            // Value
             Text(
               value,
               style: TextStyles.headlineSmall(context).copyWith(
@@ -108,12 +103,10 @@ class KpiCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            // Title
             Text(
               title,
               style: TextStyles.bodySmall(context),
             ),
-            // Subtitle
             if (subtitle != null) ...[
               const SizedBox(height: 2),
               Text(

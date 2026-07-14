@@ -1,18 +1,14 @@
+// lib/features/audit_logs/data/datasources/audit_log_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/audit_logs/data/models/audit_log_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/audit_logs/data/models/audit_log_model.dart';
 
-/// Remote data source for audit log operations using Dio.
-///
-/// Audit logs are read-only (admin access only). Supports
-/// filtering by userId, action, and date range.
 class AuditLogRemoteDataSource {
   final Dio _dio;
 
   AuditLogRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// List audit logs with optional filters and pagination.
   Future<AuditLogListResult> list({
     String? userId,
     String? action,
@@ -56,7 +52,6 @@ class AuditLogRemoteDataSource {
     }
   }
 
-  /// Get a single audit log detail by ID.
   Future<AuditLogModel> detail(String logId) async {
     try {
       final response = await _dio.get(
@@ -68,7 +63,6 @@ class AuditLogRemoteDataSource {
     }
   }
 
-  /// Export audit logs as CSV.
   Future<String> export({
     String? userId,
     String? action,
@@ -93,7 +87,6 @@ class AuditLogRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
   AppException _mapDioException(DioException e) {
     switch (e.type) {
@@ -113,14 +106,14 @@ class AuditLogRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'You do not have permission to view audit logs.',
           );
         }
@@ -149,7 +142,6 @@ class AuditLogRemoteDataSource {
   }
 }
 
-/// Paginated result for audit log list queries.
 class AuditLogListResult {
   final List<AuditLogModel> logs;
   final int total;

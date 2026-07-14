@@ -1,14 +1,11 @@
+// lib/features/notifications/data/repositories/notification_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/notifications/data/datasources/notification_remote_datasource.dart';
-import 'package:lendflow/features/notifications/domain/entities/app_notification.dart';
-import 'package:lendflow/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/notifications/data/datasources/notification_remote_datasource.dart';
+import 'package:jireta_loan/features/notifications/domain/entities/app_notification.dart';
+import 'package:jireta_loan/features/notifications/domain/repositories/notification_repository.dart';
 
-/// Concrete implementation of [NotificationRepository].
-///
-/// Delegates to [NotificationRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class NotificationRepositoryImpl implements NotificationRepository {
   final NotificationRemoteDataSource _remoteDataSource;
 
@@ -29,7 +26,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
         pageSize: pageSize,
       );
       return Right(notifications);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -53,7 +50,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
       final notification =
           await _remoteDataSource.markRead(notificationId);
       return Right(notification);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -75,7 +72,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
     try {
       await _remoteDataSource.markAllRead();
       return const Right(null);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

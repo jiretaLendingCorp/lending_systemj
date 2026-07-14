@@ -1,14 +1,10 @@
+// lib/features/loans/domain/usecases/create_loan_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/loans/domain/repositories/loan_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/features/loans/domain/repositories/loan_repository.dart';
 
-/// Create loan application use case.
-///
-/// Validates the loan amount is within the allowed range (₱3,000–₱500,000)
-/// and that all co-maker information is provided before creating
-/// the loan application.
 class CreateLoanUseCase {
   final LoanRepository _repository;
 
@@ -16,7 +12,6 @@ class CreateLoanUseCase {
       : _repository = repository;
 
   Future<Either<Failure, Loan>> call(CreateLoanParams params) {
-    // Validate loan amount range
     if (params.principal < 3000) {
       return Future.value(const Left(ValidationFailure(
         message: 'Minimum loan amount is ₱3,000.',
@@ -42,7 +37,6 @@ class CreateLoanUseCase {
   }
 }
 
-/// Parameters for the create loan use case.
 class CreateLoanParams extends Equatable {
   final double principal;
   final int termDays;

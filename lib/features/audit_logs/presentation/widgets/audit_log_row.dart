@@ -1,14 +1,11 @@
+// lib/features/audit_logs/presentation/widgets/audit_log_row.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/audit_logs/domain/entities/audit_log.dart';
-import 'package:lendflow/shared/widgets/avatar_widget.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Audit log table row widget.
-///
-/// Displays a single audit log entry in a data table row with
-/// timestamp, user, action, entity, and IP address.
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
+import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
+
 class AuditLogRow extends StatelessWidget {
   final AuditLog log;
   final VoidCallback? onTap;
@@ -36,7 +33,6 @@ class AuditLogRow extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Timestamp
             SizedBox(
               width: 160,
               child: Text(
@@ -45,7 +41,6 @@ class AuditLogRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            // User
             Expanded(
               flex: 2,
               child: Row(
@@ -78,7 +73,6 @@ class AuditLogRow extends StatelessWidget {
                 ],
               ),
             ),
-            // Action
             Expanded(
               flex: 2,
               child: Row(
@@ -86,7 +80,7 @@ class AuditLogRow extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: categoryColor.withOpacity(0.1),
+                      color: categoryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
@@ -101,7 +95,6 @@ class AuditLogRow extends StatelessWidget {
                 ],
               ),
             ),
-            // Entity
             Expanded(
               flex: 2,
               child: Text(
@@ -112,14 +105,12 @@ class AuditLogRow extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            // Changed
             Expanded(
               flex: 1,
               child: log.hasDiff
                   ? Icon(Icons.compare_arrows, size: 16, color: ColorTokens.lightInfo)
                   : const SizedBox.shrink(),
             ),
-            // IP Address
             SizedBox(
               width: 120,
               child: Text(
@@ -148,10 +139,10 @@ class AuditLogRow extends StatelessWidget {
 
   Color _roleColor(String role) {
     return switch (role.toLowerCase()) {
-      'admin' => ColorTokens.roleAdmin,
-      'manager' => ColorTokens.roleManager,
+      'head_manager' => ColorTokens.roleHeadManager,
+      'employee' => ColorTokens.roleEmployee,
       'rider' => ColorTokens.roleRider,
-      'borrower' => ColorTokens.roleBorrower,
+      'lender' => ColorTokens.roleLender,
       _ => ColorTokens.lightTextSecondary,
     };
   }

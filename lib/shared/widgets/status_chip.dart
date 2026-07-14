@@ -1,19 +1,8 @@
+// lib/shared/widgets/status_chip.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
 
-/// Generic colored status chip widget.
-///
-/// Renders a compact label inside a colored rounded rectangle,
-/// suitable for displaying loan/payment/collection statuses throughout
-/// the application.
-///
-/// ```dart
-/// StatusChip(
-///   label: 'Active',
-///   statusColor: StatusColor.success,
-/// )
-/// ```
 enum StatusColor {
   success,
   warning,
@@ -22,7 +11,6 @@ enum StatusColor {
   neutral,
 }
 
-/// Maps [StatusColor] to actual [Color] values from [ColorTokens].
 Color _statusToColor(StatusColor status, Brightness brightness) {
   return switch (status) {
     StatusColor.success => brightness == Brightness.light
@@ -44,19 +32,14 @@ Color _statusToColor(StatusColor status, Brightness brightness) {
 }
 
 class StatusChip extends StatelessWidget {
-  /// Text label displayed inside the chip.
   final String label;
 
-  /// Semantic color category for the chip.
   final StatusColor statusColor;
 
-  /// Optional custom color that overrides [statusColor].
   final Color? customColor;
 
-  /// Optional icon displayed before the label.
   final IconData? icon;
 
-  /// Font size for the label text. Defaults to 11.
   final double fontSize;
 
   const StatusChip({
@@ -68,7 +51,6 @@ class StatusChip extends StatelessWidget {
     this.fontSize = 11,
   });
 
-  /// Convenience constructors for common status types.
   const StatusChip.success({
     super.key,
     required this.label,
@@ -101,7 +83,6 @@ class StatusChip extends StatelessWidget {
   })  : statusColor = StatusColor.info,
         customColor = null;
 
-  /// Create a [StatusChip] from a loan status string.
   factory StatusChip.fromLoanStatus(String status, {Key? key}) {
     return switch (status.toLowerCase()) {
       'active' => StatusChip.info(key: key, label: 'Active'),

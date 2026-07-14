@@ -1,12 +1,9 @@
+// lib/features/users/presentation/widgets/role_dropdown.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/constants.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
 
-/// Role selection dropdown widget.
-///
-/// Displays a compact dropdown for selecting user roles.
-/// Used in user creation and user management table rows.
 class RoleDropdown extends StatelessWidget {
   final UserRole currentRole;
   final bool enabled;
@@ -28,7 +25,7 @@ class RoleDropdown extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
-          color: roleColor.withOpacity(0.1),
+          color: roleColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
@@ -81,13 +78,12 @@ class RoleDropdown extends StatelessWidget {
     );
   }
 
-  /// Returns the role-specific color.
   Color _roleColor(UserRole role) {
     return switch (role) {
-      UserRole.admin => ColorTokens.roleAdmin,
-      UserRole.manager => ColorTokens.roleManager,
+      UserRole.headManager => ColorTokens.roleHeadManager,
+      UserRole.employee => ColorTokens.roleEmployee,
       UserRole.rider => ColorTokens.roleRider,
-      UserRole.borrower => ColorTokens.roleBorrower,
+      UserRole.lender => ColorTokens.roleLender,
     };
   }
 }

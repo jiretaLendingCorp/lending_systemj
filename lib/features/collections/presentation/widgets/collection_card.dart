@@ -1,13 +1,10 @@
+// lib/features/collections/presentation/widgets/collection_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/collections/domain/entities/collection.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/collections/domain/entities/collection.dart';
 
-/// Collection summary card widget for list views.
-///
-/// Displays key collection information including loan ID, borrower,
-/// amount, method, status, rider info, and GPS verification badge.
 class CollectionCard extends StatelessWidget {
   final Collection collection;
   final VoidCallback? onTap;
@@ -34,7 +31,6 @@ class CollectionCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row 1: Loan ID + Amount + Status
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,7 +56,6 @@ class CollectionCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-              // Amount
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -86,7 +81,6 @@ class CollectionCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // Row 2: Method, Rider info
               Row(
                 children: [
                   Expanded(
@@ -108,16 +102,15 @@ class CollectionCard extends StatelessWidget {
                   ),
                   Expanded(
                     child: _InfoColumn(
-                      label: 'Borrower',
+                      label: 'Lender',
                       value:
-                          '#${collection.borrowerId.length > 6 ? collection.borrowerId.substring(0, 6).toUpperCase() : collection.borrowerId.toUpperCase()}',
+                          '#${collection.lenderId.length > 6 ? collection.lenderId.substring(0, 6).toUpperCase() : collection.lenderId.toUpperCase()}',
                       isDark: isDark,
                     ),
                   ),
                 ],
               ),
 
-              // GPS verification badge for collected
               if (collection.isCollected &&
                   collection.hasGpsCoordinates) ...[
                 const SizedBox(height: 8),
@@ -153,7 +146,6 @@ class CollectionCard extends StatelessWidget {
                 ),
               ],
 
-              // Assign rider button
               if (onAssignRider != null &&
                   collection.status.isActionable) ...[
                 const SizedBox(height: 12),
@@ -196,7 +188,6 @@ class CollectionCard extends StatelessWidget {
       };
 }
 
-/// Status badge for collection cards.
 class _CollectionStatusBadge extends StatelessWidget {
   final CollectionStatus status;
 
@@ -245,7 +236,6 @@ class _CollectionStatusBadge extends StatelessWidget {
       };
 }
 
-/// Helper widget for displaying a label-value pair.
 class _InfoColumn extends StatelessWidget {
   final String label;
   final String value;

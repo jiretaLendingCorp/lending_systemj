@@ -1,12 +1,9 @@
+// lib/features/riders/presentation/widgets/task_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
 
-/// Task summary card displaying key information about a rider task.
-///
-/// Shows the task type icon, borrower name, address, amount,
-/// and current status. Used in the today's tasks list.
 class TaskCard extends StatelessWidget {
   final RiderTask task;
   final VoidCallback? onTap;
@@ -30,7 +27,6 @@ class TaskCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header row: type icon, borrower name, status
               Row(
                 children: [
                   _TypeIcon(type: task.type),
@@ -40,7 +36,7 @@ class TaskCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          task.borrowerName,
+                          task.lenderName,
                           style: theme.textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -66,7 +62,6 @@ class TaskCard extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // Address row
               Row(
                 children: [
                   Icon(Icons.location_on_outlined,
@@ -74,7 +69,7 @@ class TaskCard extends StatelessWidget {
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      task.borrowerAddress,
+                      task.lenderAddress,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.outline,
                       ),
@@ -87,7 +82,6 @@ class TaskCard extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // Amount row
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
@@ -127,7 +121,6 @@ class TaskCard extends StatelessWidget {
   }
 }
 
-/// Type icon widget showing a colored circle with the task type icon.
 class _TypeIcon extends StatelessWidget {
   final RiderTaskType type;
 
@@ -146,7 +139,7 @@ class _TypeIcon extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(icon, color: color, size: 20),
@@ -154,7 +147,6 @@ class _TypeIcon extends StatelessWidget {
   }
 }
 
-/// Status badge showing the current task status.
 class _StatusBadge extends StatelessWidget {
   final RiderTaskStatus status;
 
@@ -166,7 +158,7 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

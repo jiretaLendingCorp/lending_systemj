@@ -1,28 +1,19 @@
+// lib/features/dashboard/presentation/pages/admin_dashboard_page.dart
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/dashboard/domain/entities/dashboard_stats.dart';
-import 'package:lendflow/features/dashboard/presentation/providers/dashboard_notifier.dart';
-import 'package:lendflow/features/dashboard/presentation/widgets/kpi_card.dart';
-import 'package:lendflow/shared/widgets/empty_state.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
-import 'package:lendflow/shared/widgets/loading_overlay.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/dashboard/domain/entities/dashboard_stats.dart';
+import 'package:jireta_loan/features/dashboard/presentation/providers/dashboard_notifier.dart';
+import 'package:jireta_loan/features/dashboard/presentation/widgets/kpi_card.dart';
+import 'package:jireta_loan/shared/widgets/empty_state.dart';
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
 
-/// Web admin dashboard page with KPI cards, charts, recent activity,
-/// and quick action buttons.
-///
-/// Layout:
-/// - Row of 6 KPI cards: Total Loans, Active Loans, Total Disbursed (₱),
-///   Overdue Count, Pending Approvals, Today's Collections
-/// - BarChart for monthly disbursements vs collections
-/// - PieChart for loan status distribution
-/// - Recent activity list (last 10 audit log entries)
-/// - Quick action buttons: Create Loan, Approve Loans, View Reports
 class AdminDashboardPage extends ConsumerStatefulWidget {
   const AdminDashboardPage({super.key});
 
@@ -55,7 +46,6 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Header ────────────────────────────────────────────
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -63,7 +53,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Admin Dashboard',
+                          'Head Employee Dashboard',
                           style: TextStyles.headlineSmall(context).copyWith(
                             fontWeight: FontWeight.w700,
                           ),
@@ -75,26 +65,25 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                         ),
                       ],
                     ),
-                    // ── Quick action buttons ──────────────────────────
                     Row(
                       children: [
                         _QuickActionButton(
                           label: 'Create Loan',
                           icon: Icons.add_rounded,
-                          onPressed: () => context.go('/admin/loans'),
+                          onPressed: () => context.go('/head-employee/loans'),
                         ),
                         const SizedBox(width: 8),
                         _QuickActionButton(
                           label: 'Approve Loans',
                           icon: Icons.check_circle_outline_rounded,
-                          onPressed: () => context.go('/admin/loans'),
+                          onPressed: () => context.go('/head-employee/loans'),
                           color: ColorTokens.lightSuccess,
                         ),
                         const SizedBox(width: 8),
                         _QuickActionButton(
                           label: 'View Reports',
                           icon: Icons.assessment_outlined,
-                          onPressed: () => context.go('/admin/reports'),
+                          onPressed: () => context.go('/head-employee/reports'),
                           color: ColorTokens.secondaryAccent,
                         ),
                       ],
@@ -103,7 +92,6 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                 ),
                 const SizedBox(height: 24),
 
-                // ── State handling ────────────────────────────────────
                 if (dashboardState is DashboardLoading)
                   const Center(
                     child: Padding(
@@ -121,15 +109,12 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                   ),
 
                 if (dashboardState is DashboardLoaded) ...[
-                  // ── KPI cards row ───────────────────────────────────
                   _buildKpiRow(dashboardState.stats),
                   const SizedBox(height: 24),
 
-                  // ── Charts row ─────────────────────────────────────
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // BarChart: monthly disbursements vs collections
                       Expanded(
                         flex: 3,
                         child: _MonthlyBarChart(
@@ -137,7 +122,6 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      // PieChart: loan status distribution
                       Expanded(
                         flex: 2,
                         child: _LoanStatusPieChart(
@@ -148,7 +132,6 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // ── Recent activity ────────────────────────────────
                   _RecentActivityList(
                     activities: dashboardState.recentActivity,
                   ),
@@ -158,7 +141,6 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
           ),
         ),
 
-        // Loading overlay for refresh operations
         if (dashboardState is DashboardLoading)
           const LoadingOverlay(isLoading: false),
       ],
@@ -168,7 +150,6 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
   Widget _buildKpiRow(DashboardStats stats) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Responsive: wrap to next row if not enough width
         final cardWidth = 200.0;
         final spacing = 16.0;
         final cardsPerRow =
@@ -229,7 +210,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                 value: '${stats.pendingApprovals}',
                 icon: Icons.hourglass_top_rounded,
                 iconColor: ColorTokens.lightWarning,
-                onTap: () => context.go('/admin/loans'),
+                onTap: () => context.go('/head-employee/loans'),
               ),
             ),
             SizedBox(
@@ -249,9 +230,6 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Quick action button
-// ─────────────────────────────────────────────────────────────────
 
 class _QuickActionButton extends StatelessWidget {
   final String label;
@@ -288,9 +266,6 @@ class _QuickActionButton extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Monthly bar chart (disbursements vs collections)
-// ─────────────────────────────────────────────────────────────────
 
 class _MonthlyBarChart extends StatelessWidget {
   final DashboardStats stats;
@@ -304,7 +279,6 @@ class _MonthlyBarChart extends StatelessWidget {
     final bgColor = isLight ? Colors.white : ColorTokens.darkSurface;
     final borderColor = isLight ? ColorTokens.lightBorder : ColorTokens.darkBorder;
 
-    // Sample monthly data for the chart
     final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     final disbursements = [450000, 380000, 520000, 470000, 610000, 550000];
     final collections = [320000, 350000, 410000, 430000, 490000, 520000];
@@ -326,7 +300,6 @@ class _MonthlyBarChart extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          // Legend
           Row(
             children: [
               Container(
@@ -471,9 +444,6 @@ class _MonthlyBarChart extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Loan status pie chart
-// ─────────────────────────────────────────────────────────────────
 
 class _LoanStatusPieChart extends StatelessWidget {
   final DashboardStats stats;
@@ -487,7 +457,6 @@ class _LoanStatusPieChart extends StatelessWidget {
     final bgColor = isLight ? Colors.white : ColorTokens.darkSurface;
     final borderColor = isLight ? ColorTokens.lightBorder : ColorTokens.darkBorder;
 
-    // Calculate distribution from stats
     final activeCount = stats.activeLoans;
     final overdueCount = stats.overdueCount;
     final paidCount = stats.totalLoans - stats.activeLoans - stats.overdueCount;
@@ -557,7 +526,6 @@ class _LoanStatusPieChart extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          // Legend
           Wrap(
             spacing: 16,
             runSpacing: 8,
@@ -624,9 +592,6 @@ class _ChartLegend extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Recent activity list
-// ─────────────────────────────────────────────────────────────────
 
 class _RecentActivityList extends StatelessWidget {
   final List<RecentActivity> activities;
@@ -660,7 +625,7 @@ class _RecentActivityList extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => context.go('/admin/audit'),
+                onPressed: () => context.go('/head-employee/audit'),
                 child: Text(
                   'View All',
                   style: TextStyle(
@@ -706,7 +671,6 @@ class _ActivityTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          // Activity icon
           Container(
             width: 36,
             height: 36,
@@ -721,7 +685,6 @@ class _ActivityTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          // Description
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -766,7 +729,7 @@ class _ActivityTile extends StatelessWidget {
       'payment_received' => ColorTokens.lightSuccess,
       'disbursement' => ColorTokens.lightInfo,
       'collection' => ColorTokens.secondaryAccent,
-      'user_created' => ColorTokens.roleAdmin,
+      'user_created' => ColorTokens.roleHeadManager,
       _ => ColorTokens.lightDisabled,
     };
   }

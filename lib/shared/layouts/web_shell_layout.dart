@@ -1,16 +1,14 @@
+// lib/shared/layouts/web_shell_layout.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/constants.dart';
-import 'package:lendflow/features/notifications/presentation/providers/notification_notifier.dart';
-import 'package:lendflow/shared/widgets/avatar_widget.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:jireta_loan/features/notifications/presentation/providers/notification_notifier.dart';
+import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
 
-// ─────────────────────────────────────────────────────────────────
-// Sidebar navigation item model
-// ─────────────────────────────────────────────────────────────────
 
 class _NavItem {
   final String label;
@@ -24,55 +22,35 @@ class _NavItem {
   });
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Role-based navigation definitions
-// ─────────────────────────────────────────────────────────────────
 
 const _adminNavItems = [
-  _NavItem(label: 'Dashboard', icon: Icons.dashboard_rounded, route: '/admin/dashboard'),
-  _NavItem(label: 'Users', icon: Icons.people_rounded, route: '/admin/users'),
-  _NavItem(label: 'Loans', icon: Icons.account_balance_rounded, route: '/admin/loans'),
-  _NavItem(label: 'Lenders', icon: Icons.business_rounded, route: '/admin/lenders'),
-  _NavItem(label: 'Riders', icon: Icons.two_wheeler_rounded, route: '/admin/riders'),
-  _NavItem(label: 'Collections', icon: Icons.payments_rounded, route: '/admin/collections'),
-  _NavItem(label: 'Reports', icon: Icons.assessment_rounded, route: '/admin/reports'),
-  _NavItem(label: 'Audit Logs', icon: Icons.history_rounded, route: '/admin/audit'),
-  _NavItem(label: 'Settings', icon: Icons.settings_rounded, route: '/admin/settings'),
+  _NavItem(label: 'Dashboard', icon: Icons.dashboard_rounded, route: '/head-employee/dashboard'),
+  _NavItem(label: 'Users', icon: Icons.people_rounded, route: '/head-employee/users'),
+  _NavItem(label: 'Loans', icon: Icons.account_balance_rounded, route: '/head-employee/loans'),
+  _NavItem(label: 'Lenders', icon: Icons.business_rounded, route: '/head-employee/lenders'),
+  _NavItem(label: 'Riders', icon: Icons.two_wheeler_rounded, route: '/head-employee/riders'),
+  _NavItem(label: 'Collections', icon: Icons.payments_rounded, route: '/head-employee/collections'),
+  _NavItem(label: 'Reports', icon: Icons.assessment_rounded, route: '/head-employee/reports'),
+  _NavItem(label: 'Audit Logs', icon: Icons.history_rounded, route: '/head-employee/audit'),
+  _NavItem(label: 'Settings', icon: Icons.settings_rounded, route: '/head-employee/settings'),
 ];
 
 const _managerNavItems = [
-  _NavItem(label: 'Dashboard', icon: Icons.dashboard_rounded, route: '/manager/dashboard'),
-  _NavItem(label: 'Loans', icon: Icons.account_balance_rounded, route: '/manager/loans'),
-  _NavItem(label: 'Lenders', icon: Icons.business_rounded, route: '/manager/lenders'),
-  _NavItem(label: 'Riders', icon: Icons.two_wheeler_rounded, route: '/manager/riders'),
-  _NavItem(label: 'Collections', icon: Icons.payments_rounded, route: '/manager/collections'),
-  _NavItem(label: 'Profile', icon: Icons.person_rounded, route: '/manager/profile'),
+  _NavItem(label: 'Dashboard', icon: Icons.dashboard_rounded, route: '/employee/dashboard'),
+  _NavItem(label: 'Loans', icon: Icons.account_balance_rounded, route: '/employee/loans'),
+  _NavItem(label: 'Lenders', icon: Icons.business_rounded, route: '/employee/lenders'),
+  _NavItem(label: 'Riders', icon: Icons.two_wheeler_rounded, route: '/employee/riders'),
+  _NavItem(label: 'Collections', icon: Icons.payments_rounded, route: '/employee/collections'),
+  _NavItem(label: 'Profile', icon: Icons.person_rounded, route: '/employee/profile'),
 ];
 
-// ─────────────────────────────────────────────────────────────────
-// Sidebar collapsed width provider
-// ─────────────────────────────────────────────────────────────────
 
 final _sidebarCollapsedProvider = StateProvider<bool>((ref) => false);
 
-// ─────────────────────────────────────────────────────────────────
-// Theme mode provider
-// ─────────────────────────────────────────────────────────────────
 
 final _themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
 
-// ─────────────────────────────────────────────────────────────────
-// WebShellLayout
-// ─────────────────────────────────────────────────────────────────
 
-/// Web shell layout with fixed left sidebar, top bar, and content area.
-///
-/// Features:
-/// - 280px fixed sidebar with role-filtered navigation
-/// - Collapsible sidebar on smaller screens
-/// - Top bar with user avatar, notifications badge, and theme toggle
-/// - Active navigation item highlighted with accent colour (#4CA5D2)
-/// - Logo at sidebar top, user info at sidebar bottom
 class WebShellLayout extends ConsumerWidget {
   final Widget child;
 
@@ -81,19 +59,18 @@ class WebShellLayout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    if (authState is! AuthAuthenticated) return const SizedBox.shrink();
+    if (authState is! AppAuthAuthenticated) return const SizedBox.shrink();
 
     final isCollapsed = ref.watch(_sidebarCollapsedProvider);
-    final navItems = authState.isAdmin
+    final navItems = authState.isHeadManager
         ? _adminNavItems
-        : authState.isManager
+        : authState.isEmployee
             ? _managerNavItems
             : <_NavItem>[];
 
     return Scaffold(
       body: Row(
         children: [
-          // ── Sidebar ──────────────────────────────────────────────
           _Sidebar(
             navItems: navItems,
             isCollapsed: isCollapsed,
@@ -102,13 +79,10 @@ class WebShellLayout extends ConsumerWidget {
                     !isCollapsed,
             user: authState,
           ),
-          // ── Main area ────────────────────────────────────────────
           Expanded(
             child: Column(
               children: [
-                // ── Top bar ───────────────────────────────────────
                 _TopBar(user: authState),
-                // ── Content ───────────────────────────────────────
                 Expanded(
                   child: child,
                 ),
@@ -121,15 +95,12 @@ class WebShellLayout extends ConsumerWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Sidebar
-// ─────────────────────────────────────────────────────────────────
 
 class _Sidebar extends ConsumerWidget {
   final List<_NavItem> navItems;
   final bool isCollapsed;
   final VoidCallback onToggleCollapse;
-  final AuthAuthenticated user;
+  final AppAuthAuthenticated user;
 
   const _Sidebar({
     required this.navItems,
@@ -159,13 +130,11 @@ class _Sidebar extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          // ── Logo + collapse toggle ───────────────────────────────
           _SidebarHeader(
             isCollapsed: isCollapsed,
             onToggle: onToggleCollapse,
           ),
           const Divider(height: 1),
-          // ── Navigation items ─────────────────────────────────────
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -179,7 +148,6 @@ class _Sidebar extends ConsumerWidget {
             ),
           ),
           const Divider(height: 1),
-          // ── User info at bottom ──────────────────────────────────
           _SidebarFooter(
             user: user,
             isCollapsed: isCollapsed,
@@ -190,9 +158,6 @@ class _Sidebar extends ConsumerWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Sidebar header (logo + collapse toggle)
-// ─────────────────────────────────────────────────────────────────
 
 class _SidebarHeader extends StatelessWidget {
   final bool isCollapsed;
@@ -209,7 +174,6 @@ class _SidebarHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 8, 12),
       child: Row(
         children: [
-          // Logo icon
           Container(
             width: 36,
             height: 36,
@@ -261,9 +225,6 @@ class _SidebarHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Navigation item tile
-// ─────────────────────────────────────────────────────────────────
 
 class _NavItemTile extends StatelessWidget {
   final _NavItem item;
@@ -364,12 +325,9 @@ class _NavItemTile extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Sidebar footer (user info)
-// ─────────────────────────────────────────────────────────────────
 
 class _SidebarFooter extends StatelessWidget {
-  final AuthAuthenticated user;
+  final AppAuthAuthenticated user;
   final bool isCollapsed;
 
   const _SidebarFooter({
@@ -455,17 +413,15 @@ class _SidebarFooter extends StatelessWidget {
 
   Color _roleTextColor(String role, bool isLight) {
     return switch (role.toLowerCase()) {
-      'admin' => ColorTokens.roleAdmin,
-      'manager' => ColorTokens.roleManager,
+      'head_manager' => ColorTokens.roleHeadManager,
+      'employee' => ColorTokens.roleEmployee,
       'rider' => ColorTokens.roleRider,
-      'borrower' => ColorTokens.roleBorrower,
+      'lender' => ColorTokens.roleLender,
       _ => isLight ? ColorTokens.lightTextSecondary : ColorTokens.darkTextSecondary,
     };
   }
 
   void _handleSignOut(BuildContext context) {
-    // The actual sign-out is handled by the auth provider.
-    // We navigate to login after confirming.
     showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -488,20 +444,14 @@ class _SidebarFooter extends StatelessWidget {
       ),
     ).then((confirmed) {
       if (confirmed == true) {
-        // Navigation to /auth/login is handled by the router's
-        // redirect logic when auth state changes to unauthenticated.
-        // The AuthNotifier's signOut() clears the session.
       }
     });
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Top bar
-// ─────────────────────────────────────────────────────────────────
 
 class _TopBar extends ConsumerWidget {
-  final AuthAuthenticated user;
+  final AppAuthAuthenticated user;
 
   const _TopBar({required this.user});
 
@@ -524,7 +474,6 @@ class _TopBar extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          // ── Page title (from route) ───────────────────────────────
           Expanded(
             child: Text(
               _pageTitle(GoRouterState.of(context).matchedLocation),
@@ -534,17 +483,15 @@ class _TopBar extends ConsumerWidget {
             ),
           ),
 
-          // ── Notifications button ──────────────────────────────────
           Stack(
             children: [
               IconButton(
                 icon: const Icon(Icons.notifications_outlined, size: 22),
                 onPressed: () {
-                  // Navigate to the appropriate notification center
-                  if (user.isAdmin) {
-                    context.go('/admin/dashboard');
-                  } else if (user.isManager) {
-                    context.go('/manager/dashboard');
+                  if (user.isHeadManager) {
+                    context.go('/head-employee/dashboard');
+                  } else if (user.isEmployee) {
+                    context.go('/employee/dashboard');
                   }
                 },
                 tooltip: 'Notifications',
@@ -580,7 +527,6 @@ class _TopBar extends ConsumerWidget {
 
           const SizedBox(width: 8),
 
-          // ── Theme toggle ──────────────────────────────────────────
           IconButton(
             icon: Icon(
               isLight ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
@@ -601,7 +547,6 @@ class _TopBar extends ConsumerWidget {
 
           const SizedBox(width: 8),
 
-          // ── User avatar ───────────────────────────────────────────
           AvatarWidget(
             fullName: user.fullName ?? user.email,
             role: user.role,

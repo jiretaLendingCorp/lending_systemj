@@ -1,11 +1,11 @@
+// lib/features/reports/data/repositories/report_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/reports/data/datasources/report_remote_datasource.dart';
-import 'package:lendflow/features/reports/domain/entities/report_data.dart';
-import 'package:lendflow/features/reports/domain/repositories/report_repository.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/reports/data/datasources/report_remote_datasource.dart';
+import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
+import 'package:jireta_loan/features/reports/domain/repositories/report_repository.dart';
 
-/// Concrete implementation of [ReportRepository].
 class ReportRepositoryImpl implements ReportRepository {
   final ReportRemoteDataSource _remoteDataSource;
 
@@ -23,7 +23,7 @@ class ReportRepositoryImpl implements ReportRepository {
         endDate: endDate,
       );
       return Right(report);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -47,7 +47,7 @@ class ReportRepositoryImpl implements ReportRepository {
     try {
       final report = await _remoteDataSource.getOverdue(asOfDate: asOfDate);
       return Right(report);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -75,7 +75,7 @@ class ReportRepositoryImpl implements ReportRepository {
         endDate: endDate,
       );
       return Right(report);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -107,7 +107,7 @@ class ReportRepositoryImpl implements ReportRepository {
         endDate: endDate,
       );
       return Right(url);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

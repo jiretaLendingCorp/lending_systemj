@@ -1,15 +1,12 @@
+// lib/features/payments/presentation/pages/payment_receipt_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
-import 'package:lendflow/features/payments/presentation/providers/payment_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/features/payments/presentation/providers/payment_notifier.dart';
 
-/// Payment receipt detail view page.
-///
-/// Shows comprehensive payment information including amount, method,
-/// status, reference numbers, timestamps, and receipt download.
 class PaymentReceiptPage extends ConsumerStatefulWidget {
   final String paymentId;
 
@@ -46,7 +43,6 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
               icon: const Icon(Icons.download_rounded),
               tooltip: 'Download Receipt',
               onPressed: () {
-                // Download receipt PDF
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Downloading receipt...')),
                 );
@@ -102,7 +98,6 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Receipt header
             Center(
               child: Column(
                 children: [
@@ -135,7 +130,6 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
             ),
             const SizedBox(height: 24),
 
-            // Receipt details
             _ReceiptSection(
               title: 'Payment Details',
               children: [
@@ -171,7 +165,6 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
             ),
             const SizedBox(height: 16),
 
-            // Reference information
             _ReceiptSection(
               title: 'Reference Information',
               children: [
@@ -207,7 +200,6 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
             ),
             const SizedBox(height: 16),
 
-            // Timestamps
             _ReceiptSection(
               title: 'Timestamps',
               children: [
@@ -228,7 +220,6 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
             ),
             const SizedBox(height: 32),
 
-            // Receipt download area
             if (payment.receiptUrl != null) ...[
               SizedBox(
                 width: double.infinity,
@@ -253,7 +244,6 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
               const SizedBox(height: 16),
             ],
 
-            // Share receipt button
             SizedBox(
               width: double.infinity,
               height: 48,
@@ -307,7 +297,6 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
       };
 }
 
-/// Receipt section with title and child rows.
 class _ReceiptSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -351,7 +340,6 @@ class _ReceiptSection extends StatelessWidget {
   }
 }
 
-/// Single row in the receipt detail.
 class _ReceiptRow extends StatelessWidget {
   final String label;
   final String value;
@@ -412,7 +400,6 @@ class _ReceiptRow extends StatelessWidget {
   }
 }
 
-/// Status badge for receipt header.
 class _ReceiptStatusBadge extends StatelessWidget {
   final PaymentStatus status;
 

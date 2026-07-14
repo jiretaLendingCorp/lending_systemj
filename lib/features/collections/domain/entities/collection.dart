@@ -1,7 +1,7 @@
+// lib/features/collections/domain/entities/collection.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-/// Collection method: how the payment is collected from the borrower.
 enum CollectionMethod {
   gcash,
   office,
@@ -37,10 +37,6 @@ enum CollectionMethod {
       };
 }
 
-/// Collection status lifecycle:
-///   pending → assigned → in_transit → collected
-///   pending → assigned → in_transit → failed
-///   pending → failed (unassignable)
 enum CollectionStatus {
   pending,
   assigned,
@@ -89,14 +85,10 @@ enum CollectionStatus {
       };
 }
 
-/// Core collection entity representing a payment collection from a borrower.
-///
-/// This is the domain-level representation. Data-layer concerns
-/// (JSON serialization) live in [CollectionModel].
 class Collection extends Equatable {
   final String id;
   final String loanId;
-  final String borrowerId;
+  final String lenderId;
   final CollectionMethod method;
   final CollectionStatus status;
   final String? assignedRiderId;
@@ -111,7 +103,7 @@ class Collection extends Equatable {
   const Collection({
     required this.id,
     required this.loanId,
-    required this.borrowerId,
+    required this.lenderId,
     this.method = CollectionMethod.cash,
     this.status = CollectionStatus.pending,
     this.assignedRiderId,
@@ -124,24 +116,20 @@ class Collection extends Equatable {
     required this.createdAt,
   });
 
-  /// Whether a rider has been assigned.
   bool get hasRiderAssigned => assignedRiderId != null;
 
-  /// Whether GPS coordinates are available.
   bool get hasGpsCoordinates =>
       gpsLatitude != null && gpsLongitude != null;
 
-  /// Whether the collection was completed.
   bool get isCollected => status == CollectionStatus.collected;
 
-  /// Whether this requires a rider (cash method).
   bool get requiresRider => method == CollectionMethod.cash;
 
   @override
   List<Object?> get props => [
         id,
         loanId,
-        borrowerId,
+        lenderId,
         method,
         status,
         assignedRiderId,

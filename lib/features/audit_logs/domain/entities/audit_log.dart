@@ -1,9 +1,6 @@
+// lib/features/audit_logs/domain/entities/audit_log.dart
 import 'package:equatable/equatable.dart';
 
-/// Audit log entity representing a system action record.
-///
-/// Audit logs are read-only (admin access only) and track
-/// all significant actions in the system including data changes.
 class AuditLog extends Equatable {
   final String id;
   final String userId;
@@ -29,10 +26,8 @@ class AuditLog extends Equatable {
     required this.createdAt,
   });
 
-  /// Whether this log records a data change with old/new values.
   bool get hasDiff => oldValue != null || newValue != null;
 
-  /// Action category (derived from action string).
   String get actionCategory {
     final lower = action.toLowerCase();
     if (lower.contains('create') || lower.contains('add')) return 'create';

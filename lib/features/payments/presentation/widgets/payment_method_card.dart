@@ -1,11 +1,8 @@
+// lib/features/payments/presentation/widgets/payment_method_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 
-/// Selectable payment method card widget.
-///
-/// Displays a card for each payment method (GCash, Office, Cash)
-/// with an icon, title, description, and selection indicator.
 class PaymentMethodCard extends StatelessWidget {
   final PaymentMethod method;
   final bool isSelected;
@@ -47,7 +44,6 @@ class PaymentMethodCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Method icon
             Container(
               width: 48,
               height: 48,
@@ -63,7 +59,6 @@ class PaymentMethodCard extends StatelessWidget {
             ),
             const SizedBox(width: 16),
 
-            // Method info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +88,6 @@ class PaymentMethodCard extends StatelessWidget {
               ),
             ),
 
-            // Selection indicator
             if (isSelected)
               Container(
                 width: 24,

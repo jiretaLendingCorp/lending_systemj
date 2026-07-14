@@ -1,20 +1,18 @@
+// lib/shared/layouts/mobile_shell_layout.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/riders/presentation/pages/rider_today_page.dart';
-import 'package:lendflow/features/riders/presentation/pages/rider_map_page.dart';
-import 'package:lendflow/features/riders/presentation/pages/rider_history_page.dart';
-import 'package:lendflow/features/riders/presentation/pages/rider_profile_page.dart';
-import 'package:lendflow/features/borrowers/presentation/pages/borrower_loan_page.dart';
-import 'package:lendflow/features/borrowers/presentation/pages/borrower_payments_page.dart';
-import 'package:lendflow/features/borrowers/presentation/pages/borrower_notifications_page.dart';
-import 'package:lendflow/features/borrowers/presentation/pages/borrower_profile_page.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_today_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_map_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_history_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_profile_page.dart';
+import 'package:jireta_loan/features/lenders/presentation/pages/borrower_loan_page.dart';
+import 'package:jireta_loan/features/lenders/presentation/pages/borrower_payments_page.dart';
+import 'package:jireta_loan/features/lenders/presentation/pages/borrower_notifications_page.dart';
+import 'package:jireta_loan/features/lenders/presentation/pages/borrower_profile_page.dart';
 
-// ─────────────────────────────────────────────────────────────────
-// Navigation item model
-// ─────────────────────────────────────────────────────────────────
 
 class _MobileNavItem {
   final String label;
@@ -30,9 +28,6 @@ class _MobileNavItem {
   });
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Role-based mobile navigation definitions
-// ─────────────────────────────────────────────────────────────────
 
 const _riderNavItems = [
   _MobileNavItem(
@@ -66,41 +61,29 @@ const _borrowerNavItems = [
     label: 'My Loan',
     icon: Icons.account_balance_wallet_outlined,
     activeIcon: Icons.account_balance_wallet,
-    route: '/borrower/loan',
+    route: '/lender/loan',
   ),
   _MobileNavItem(
     label: 'Payments',
     icon: Icons.payment_outlined,
     activeIcon: Icons.payment,
-    route: '/borrower/payments',
+    route: '/lender/payments',
   ),
   _MobileNavItem(
     label: 'Notifications',
     icon: Icons.notifications_outlined,
     activeIcon: Icons.notifications,
-    route: '/borrower/notifications',
+    route: '/lender/notifications',
   ),
   _MobileNavItem(
     label: 'Profile',
     icon: Icons.person_outline_rounded,
     activeIcon: Icons.person_rounded,
-    route: '/borrower/profile',
+    route: '/lender/profile',
   ),
 ];
 
-// ─────────────────────────────────────────────────────────────────
-// MobileShellLayout
-// ─────────────────────────────────────────────────────────────────
 
-/// Mobile shell layout with floating bottom navigation bar and PageView.
-///
-/// Features:
-/// - Floating bottom nav bar with rounded corners (24px radius)
-/// - Soft shadow effect, 15px margin from edges
-/// - 70px bar height
-/// - PageView for swipeable body content
-/// - Role-filtered tabs (Rider vs Borrower)
-/// - Active item highlighted with accent colour
 class MobileShellLayout extends ConsumerStatefulWidget {
   final Widget child;
 
@@ -128,16 +111,16 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
 
   List<_MobileNavItem> get _navItems {
     final authState = ref.read(authProvider);
-    if (authState is AuthAuthenticated) {
+    if (authState is AppAuthAuthenticated) {
       if (authState.isRider) return _riderNavItems;
-      if (authState.isBorrower) return _borrowerNavItems;
+      if (authState.isLender) return _borrowerNavItems;
     }
     return _borrowerNavItems;
   }
 
   List<Widget> get _pages {
     final authState = ref.read(authProvider);
-    if (authState is AuthAuthenticated) {
+    if (authState is AppAuthAuthenticated) {
       if (authState.isRider) {
         return const [
           RiderTodayPage(),
@@ -146,26 +129,25 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
           RiderProfilePage(),
         ];
       }
-      if (authState.isBorrower) {
+      if (authState.isLender) {
         return const [
-          BorrowerLoanPage(),
-          BorrowerPaymentsPage(),
-          BorrowerNotificationsPage(),
-          BorrowerProfilePage(),
+          LenderLoanPage(),
+          LenderPaymentsPage(),
+          LenderNotificationsPage(),
+          LenderProfilePage(),
         ];
       }
     }
     return const [
-      BorrowerLoanPage(),
-      BorrowerPaymentsPage(),
-      BorrowerNotificationsPage(),
-      BorrowerProfilePage(),
+      LenderLoanPage(),
+      LenderPaymentsPage(),
+      LenderNotificationsPage(),
+      LenderProfilePage(),
     ];
   }
 
   void _onPageChanged(int index) {
     setState(() => _currentIndex = index);
-    // Update the router URL to match the active tab
     final navItems = _navItems;
     if (index < navItems.length) {
       context.go(navItems[index].route);
@@ -192,7 +174,6 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
         onPageChanged: _onPageChanged,
         children: _pages,
       ),
-      // ── Floating bottom navigation bar ───────────────────────────
       bottomNavigationBar: Container(
         margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
         height: 70,
@@ -235,9 +216,6 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Individual floating nav item
-// ─────────────────────────────────────────────────────────────────
 
 class _FloatingNavItem extends StatelessWidget {
   final _MobileNavItem item;
@@ -263,7 +241,6 @@ class _FloatingNavItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Active indicator pill
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 width: isActive ? 24 : 0,
@@ -274,7 +251,6 @@ class _FloatingNavItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              // Icon
               Icon(
                 isActive ? item.activeIcon : item.icon,
                 size: 24,
@@ -285,7 +261,6 @@ class _FloatingNavItem extends StatelessWidget {
                         : ColorTokens.darkDisabled),
               ),
               const SizedBox(height: 4),
-              // Label
               Text(
                 item.label,
                 style: TextStyle(

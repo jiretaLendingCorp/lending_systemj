@@ -1,12 +1,9 @@
+// lib/features/collections/domain/usecases/assign_rider_collection_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/collections/domain/repositories/collection_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/collections/domain/repositories/collection_repository.dart';
 
-/// Assign rider for collection use case.
-///
-/// Validates that the rider ID and collection ID are provided
-/// before delegating to the repository.
 class AssignRiderCollectionUseCase {
   final CollectionRepository _repository;
 
@@ -16,7 +13,6 @@ class AssignRiderCollectionUseCase {
   Future<Either<Failure, dynamic>> call(
     AssignRiderCollectionParams params,
   ) async {
-    // Validate rider ID
     if (params.riderId.isEmpty) {
       return Future.value(const Left(ValidationFailure(
         message: 'Please select a rider to assign.',
@@ -24,7 +20,6 @@ class AssignRiderCollectionUseCase {
       )));
     }
 
-    // Validate collection ID
     if (params.collectionId.isEmpty) {
       return Future.value(const Left(ValidationFailure(
         message: 'Collection ID is required.',
@@ -39,7 +34,6 @@ class AssignRiderCollectionUseCase {
   }
 }
 
-/// Parameters for the assign rider collection use case.
 class AssignRiderCollectionParams extends Equatable {
   final String collectionId;
   final String riderId;

@@ -1,5 +1,6 @@
-name: lendflow
-description: "LendFlow - Multi-Platform Lending Management System for Jireta Lending Corp."
+# pubspec.yaml
+name: jireta_loan
+description: "Jireta Loan - Multi-Platform Lending Management System for Jireta Lending Corp."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -11,27 +12,20 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
 
-  # State Management
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
 
-  # Navigation
   go_router: ^14.2.0
 
-  # Network
   dio: ^5.4.3+1
 
-  # Supabase
   supabase_flutter: ^2.5.6
 
-  # Auth
   google_sign_in: ^6.2.1
 
-  # Storage
   flutter_secure_storage: ^9.2.2
   shared_preferences: ^2.2.3
 
-  # UI Components
   flutter_screenutil: ^5.9.3
   shimmer: ^3.0.0
   cached_network_image: ^3.3.1
@@ -44,17 +38,15 @@ dependencies:
   image_picker: ^1.1.2
   file_picker: ^8.0.6
   permission_handler: ^11.3.1
+  flutter_animate: ^4.5.0
 
-  # Maps & Location
   geolocator: ^12.0.0
   google_maps_flutter: ^2.7.0
 
-  # Notifications
   firebase_core: ^3.3.0
   firebase_messaging: ^15.0.4
   flutter_local_notifications: ^17.2.2
 
-  # Utilities
   uuid: ^4.4.0
   logger: ^2.4.0
   freezed_annotation: ^2.4.3

@@ -1,7 +1,4 @@
-/**
- * POST /notifications/send-sms
- * Called by pg_cron, not by client. 2-days-before-due reminders.
- */
+// supabase/functions/notifications/send-sms/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
 import { badRequest, successResponse, serverError } from "../_shared/errors.ts";
@@ -19,7 +16,6 @@ Deno.serve(async (req: Request) => {
       return badRequest("Method not allowed");
     }
 
-    // Verify cron secret
     const cronSecret = req.headers.get("x-cron-secret");
     if (!cronSecret || cronSecret !== CRON_SECRET) {
       return badRequest("Invalid cron secret");
@@ -27,7 +23,6 @@ Deno.serve(async (req: Request) => {
 
     const supabase = getServiceClient();
 
-    // Find loans due in 2 days
     const twoDaysFromNow = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000);
     const startOfDay = new Date(twoDaysFromNow);
     startOfDay.setHours(0, 0, 0, 0);
@@ -38,8 +33,8 @@ Deno.serve(async (req: Request) => {
       .from("loans")
       .select(
         `id, total_payable, due_at,
-         borrower:borrowers!loans_borrower_id_fkey(id, full_name, user_id),
-         borrower_phones:borrower_phones!borrower_phones_borrower_id_fkey(phone_number)`
+         lender:lenders!loans_lender_id_fkey(id, full_name, user_id),
+         lender_phones:lender_phones!lender_phones_lender_id_fkey(phone_number)`
       )
       .eq("status", "disbursed")
       .gte("due_at", startOfDay.toISOString())
@@ -54,8 +49,7 @@ Deno.serve(async (req: Request) => {
 
     for (const loan of upcomingLoans ?? []) {
       try {
-        // Get borrower's phone number
-        const phones = loan.borrower_phones ?? [];
+        const phones = loan.lender_phones ?? [];
         const phone = phones.length > 0 ? phones[0].phone_number : null;
 
         if (!phone) {
@@ -66,9 +60,8 @@ Deno.serve(async (req: Request) => {
         const amountDue = Number(loan.total_payable).toLocaleString();
         const dueDate = new Date(loan.due_at).toLocaleDateString("en-PH");
 
-        const message = `LendFlow Reminder: Your loan payment of ₱${amountDue} is due on ${dueDate}. Please ensure timely payment to avoid penalties.`;
+        const message = `Jireta Loan Reminder: Your loan payment of ₱$amountDue is due on $dueDate. Please ensure timely payment to avoid penalties.`;
 
-        // Send SMS via provider
         let smsSent = false;
         if (SMS_API_KEY && SMS_PROVIDER === "semaphore") {
           const response = await fetch("https://api.semaphore.co/api/v4/messages", {
@@ -78,16 +71,15 @@ Deno.serve(async (req: Request) => {
               apikey: SMS_API_KEY,
               number: phone,
               message,
-              sendername: "LendFlow",
+              sendername: "Jireta Loan",
             }),
           });
           smsSent = response.ok;
         }
 
-        // Create in-app notification
-        if (loan.borrower?.user_id) {
+        if (loan.lender?.user_id) {
           await supabase.from("notifications").insert({
-            user_id: loan.borrower.user_id,
+            user_id: loan.lender.user_id,
             type: "payment_reminder",
             title: "Payment Due Soon",
             body: message,
@@ -104,7 +96,6 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: null,
       user_role: "system",

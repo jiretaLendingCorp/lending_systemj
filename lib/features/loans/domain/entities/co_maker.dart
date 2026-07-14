@@ -1,10 +1,6 @@
+// lib/features/loans/domain/entities/co_maker.dart
 import 'package:equatable/equatable.dart';
 
-/// Co-maker (guarantor) entity for a loan application.
-///
-/// A co-maker is a person who agrees to be responsible for the
-/// loan repayment if the borrower defaults. Philippine lending
-/// regulations typically require a co-maker for micro-finance loans.
 class CoMaker extends Equatable {
   final String id;
   final String fullName;
@@ -22,7 +18,6 @@ class CoMaker extends Equatable {
     this.consentAt,
   });
 
-  /// Whether the co-maker has given consent.
   bool get hasConsented => consentAt != null;
 
   @override

@@ -1,14 +1,10 @@
+// lib/features/disbursements/presentation/widgets/assign_rider_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/disbursements/domain/repositories/disbursement_repository.dart';
-import 'package:lendflow/features/disbursements/presentation/providers/disbursement_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/disbursements/domain/repositories/disbursement_repository.dart';
+import 'package:jireta_loan/features/disbursements/presentation/providers/disbursement_notifier.dart';
 
-/// Dialog to select and assign a rider to a disbursement.
-///
-/// Loads available riders from the API and displays them in a
-/// selectable list. The manager/admin selects a rider and confirms
-/// the assignment.
 class AssignRiderDialog extends ConsumerStatefulWidget {
   final String disbursementId;
 
@@ -253,7 +249,6 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
                     ),
                     child: Row(
                       children: [
-                        // Rider avatar
                         CircleAvatar(
                           radius: 20,
                           backgroundColor: ColorTokens.roleRider
@@ -270,7 +265,6 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
                         ),
                         const SizedBox(width: 12),
 
-                        // Rider info
                         Expanded(
                           child: Column(
                             crossAxisAlignment:
@@ -341,7 +335,6 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
                           ),
                         ),
 
-                        // Selection indicator
                         if (isSelected)
                           const Icon(
                             Icons.check_circle_rounded,

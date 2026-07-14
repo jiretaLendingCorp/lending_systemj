@@ -1,7 +1,4 @@
-/**
- * GET /loans/:id
- * Ownership check for borrower, full detail with schedules and payments.
- */
+// supabase/functions/loans/detail/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -29,12 +26,11 @@ Deno.serve(async (req: Request) => {
 
     const supabase = getServiceClient();
 
-    // Fetch loan with related data
     const { data: loan, error: loanError } = await supabase
       .from("loans")
       .select(
         `*,
-         borrower:borrowers!loans_borrower_id_fkey(id, full_name, phone, address, kyc_status),
+         lender:lenders!loans_lender_id_fkey(id, full_name, phone, address, kyc_status),
          co_maker:co_makers!loans_co_maker_id_fkey(id, full_name, phone, address, relationship),
          loan_schedules(id, installment_number, amount_due, due_date, status, paid_at),
          payments(id, amount, method, status, reference_number, created_at),
@@ -49,21 +45,19 @@ Deno.serve(async (req: Request) => {
       return notFound("Loan");
     }
 
-    // Ownership check for borrowers
-    if (hasRole(payload, "borrower")) {
-      const { data: borrower } = await supabase
-        .from("borrowers")
+    if (hasRole(payload, "lender")) {
+      const { data: lender } = await supabase
+        .from('lenders')
         .select("id")
         .eq("user_id", payload.sub)
         .is("deleted_at", null)
         .single();
 
-      if (!borrower || borrower.id !== loan.borrower_id) {
+      if (!lender || lender.id !== loan.lender_id) {
         return forbidden("You do not have access to this loan");
       }
     }
 
-    // Compute summary
     const totalPaid = (loan.payments ?? [])
       .filter((p: { status: string }) => p.status === "completed")
       .reduce((sum: number, p: { amount: number }) => sum + Number(p.amount), 0);

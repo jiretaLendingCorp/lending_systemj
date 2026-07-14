@@ -1,15 +1,11 @@
+// lib/features/auth/data/repositories/auth_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
-import 'package:lendflow/features/auth/domain/repositories/auth_repository.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/features/auth/domain/repositories/auth_repository.dart';
 
-/// Concrete implementation of [AuthRepository].
-///
-/// Delegates to [AuthRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes, keeping
-/// the domain layer free of framework-specific error types.
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
 
@@ -27,7 +23,7 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
       return Right(user);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         code: e.statusCode,
@@ -74,7 +70,7 @@ class AuthRepositoryImpl implements AuthRepository {
         role: role,
       );
       return Right(user);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         code: e.statusCode,
@@ -109,7 +105,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await _remoteDataSource.otpSend(email: email);
       return const Right(null);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
       ));
@@ -139,7 +135,7 @@ class AuthRepositoryImpl implements AuthRepository {
         otp: otp,
       );
       return Right(user);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         code: e.statusCode,
@@ -164,7 +160,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final user = await _remoteDataSource.googleSignIn();
       return Right(user);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -186,7 +182,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final token = await _remoteDataSource.refreshToken();
       return Right(token);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -204,9 +200,6 @@ class AuthRepositoryImpl implements AuthRepository {
       await _remoteDataSource.logout();
       return const Right(null);
     } catch (e) {
-      // Logout is treated as always successful from the domain
-      // perspective — even if the server call fails, the local
-      // session is cleared by the AuthNotifier.
       return const Right(null);
     }
   }
@@ -216,7 +209,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await _remoteDataSource.forgotPassword(email: email);
       return const Right(null);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(message: e.message));
     } on NetworkException catch (e) {
       return Left(NetworkFailure(message: e.message));
@@ -241,7 +234,7 @@ class AuthRepositoryImpl implements AuthRepository {
         newPassword: newPassword,
       );
       return const Right(null);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(message: e.message));
     } on ValidationException catch (e) {
       return Left(ValidationFailure(

@@ -1,32 +1,26 @@
+// lib/features/users/presentation/providers/user_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/core/network/dio_client.dart';
-import 'package:lendflow/features/users/data/datasources/user_remote_datasource.dart';
-import 'package:lendflow/features/users/data/repositories/user_repository_impl.dart';
-import 'package:lendflow/features/users/domain/entities/user_management.dart';
-import 'package:lendflow/features/users/domain/repositories/user_repository.dart'
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/features/users/data/datasources/user_remote_datasource.dart';
+import 'package:jireta_loan/features/users/data/repositories/user_repository_impl.dart';
+import 'package:jireta_loan/features/users/domain/entities/user_management.dart';
+import 'package:jireta_loan/features/users/domain/repositories/user_repository.dart'
     as domain;
 
-// ─────────────────────────────────────────────────────────────────
-// User management state model
-// ─────────────────────────────────────────────────────────────────
 
-/// Represents the feature-level user management state.
 sealed class UserFeatureState {
   const UserFeatureState();
 }
 
-/// Initial state.
 class UserInitial extends UserFeatureState {
   const UserInitial();
 }
 
-/// Users are being loaded.
 class UsersLoading extends UserFeatureState {
   const UsersLoading();
 }
 
-/// Users loaded successfully.
 class UsersLoaded extends UserFeatureState {
   final List<UserManagement> users;
   final int total;
@@ -42,11 +36,9 @@ class UsersLoaded extends UserFeatureState {
     this.currentPage = 1,
   });
 
-  /// Whether there are more pages to load.
   bool get hasMore => users.length < total;
 }
 
-/// User operation succeeded (create, deactivate, reset password, etc.).
 class UserOperationSuccess extends UserFeatureState {
   final String message;
   final UserManagement? user;
@@ -57,7 +49,6 @@ class UserOperationSuccess extends UserFeatureState {
   });
 }
 
-/// An error occurred.
 class UserError extends UserFeatureState {
   final String message;
   final Failure? failure;
@@ -65,23 +56,17 @@ class UserError extends UserFeatureState {
   const UserError(this.message, {this.failure});
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Providers
-// ─────────────────────────────────────────────────────────────────
 
-/// Provides the [UserRemoteDataSource].
 final userRemoteDataSourceProvider = Provider<UserRemoteDataSource>((ref) {
   return UserRemoteDataSource(dio: ref.watch(dioProvider));
 });
 
-/// Provides the [UserRepository] implementation.
 final userRepositoryProvider = Provider<domain.UserRepository>((ref) {
   return UserRepositoryImpl(
     remoteDataSource: ref.watch(userRemoteDataSourceProvider),
   );
 });
 
-/// Provides the [UserNotifier] for user management screens.
 final userFeatureProvider =
     StateNotifierProvider<UserNotifier, UserFeatureState>((ref) {
   return UserNotifier(
@@ -89,11 +74,7 @@ final userFeatureProvider =
   );
 });
 
-// ─────────────────────────────────────────────────────────────────
-// User notifier
-// ─────────────────────────────────────────────────────────────────
 
-/// Riverpod [StateNotifier] managing user management UI state.
 class UserNotifier extends StateNotifier<UserFeatureState> {
   final domain.UserRepository _repository;
 
@@ -102,7 +83,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
   })  : _repository = repository,
         super(const UserInitial());
 
-  /// Load users with optional role filter and search.
   Future<void> loadUsers({
     String? role,
     String? search,
@@ -135,7 +115,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
     );
   }
 
-  /// Load more users (pagination).
   Future<void> loadMore() async {
     if (state is! UsersLoaded) return;
     final current = state as UsersLoaded;
@@ -148,7 +127,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
     );
   }
 
-  /// Create a new user.
   Future<void> createUser({
     required String email,
     required String password,
@@ -177,7 +155,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
     );
   }
 
-  /// Deactivate a user account.
   Future<void> deactivateUser(String userId) async {
     final result = await _repository.deactivate(userId);
 
@@ -190,7 +167,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
     );
   }
 
-  /// Reactivate a deactivated user account.
   Future<void> reactivateUser(String userId) async {
     final result = await _repository.reactivate(userId);
 
@@ -203,7 +179,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
     );
   }
 
-  /// Reset a user's password.
   Future<void> resetPassword(String userId) async {
     final result = await _repository.resetPassword(userId);
 
@@ -215,7 +190,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
     );
   }
 
-  /// Force logout a user from all sessions.
   Future<void> forceLogout(String userId) async {
     final result = await _repository.forceLogout(userId);
 
@@ -227,7 +201,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
     );
   }
 
-  /// Update a user's role.
   Future<void> updateUserRole({
     required String userId,
     required String newRole,
@@ -246,7 +219,6 @@ class UserNotifier extends StateNotifier<UserFeatureState> {
     );
   }
 
-  /// Reset state to initial.
   void resetState() {
     state = const UserInitial();
   }

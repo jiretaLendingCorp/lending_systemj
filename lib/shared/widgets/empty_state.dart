@@ -1,41 +1,21 @@
+// lib/shared/widgets/empty_state.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// Empty state widget with icon, title, subtitle, and optional action button.
-///
-/// Used when a list, table, or content area has no data to display.
-/// Provides a friendly visual cue with an optional call-to-action.
-///
-/// ```dart
-/// EmptyState(
-///   icon: Icons.inbox_outlined,
-///   title: 'No loans found',
-///   subtitle: 'Create your first loan to get started',
-///   actionLabel: 'Create Loan',
-///   onAction: () => context.go('/admin/loans/create'),
-/// )
-/// ```
 class EmptyState extends StatelessWidget {
-  /// Icon displayed above the title.
   final IconData icon;
 
-  /// Primary message.
   final String title;
 
-  /// Secondary descriptive message.
   final String? subtitle;
 
-  /// Label for the optional action button.
   final String? actionLabel;
 
-  /// Callback when the action button is pressed.
   final VoidCallback? onAction;
 
-  /// Override the default icon size.
   final double iconSize;
 
-  /// Override the default icon color.
   final Color? iconColor;
 
   const EmptyState({

@@ -1,20 +1,14 @@
+// lib/features/riders/data/datasources/rider_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/riders/data/models/rider_task_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/riders/data/models/rider_task_model.dart';
 
-/// Remote data source for rider task operations using Dio.
-///
-/// Provides methods for fetching today's tasks, GPS check-in,
-/// marking tasks as delivered or collected, and retrieving history.
 class RiderRemoteDataSource {
   final Dio _dio;
 
   RiderRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// Fetch today's assigned tasks for the authenticated rider.
-  ///
-  /// Returns a list of [RiderTaskModel]s for the current date.
   Future<List<RiderTaskModel>> getTodayTasks({String? type}) async {
     try {
       final queryParams = <String, dynamic>{};
@@ -45,11 +39,6 @@ class RiderRemoteDataSource {
     }
   }
 
-  /// Perform GPS check-in for a task.
-  ///
-  /// Sends the rider's current GPS coordinates along with the task ID.
-  /// The server validates that the rider is within the allowed radius
-  /// of the borrower's address.
   Future<RiderTaskModel> gpsCheckin({
     required String taskId,
     required double latitude,
@@ -70,10 +59,6 @@ class RiderRemoteDataSource {
     }
   }
 
-  /// Mark a disbursement task as delivered.
-  ///
-  /// Called after the rider has successfully delivered cash to the borrower.
-  /// An optional [photoReceiptUrl] can be provided as proof of delivery.
   Future<RiderTaskModel> markDelivered({
     required String taskId,
     required double latitude,
@@ -100,10 +85,6 @@ class RiderRemoteDataSource {
     }
   }
 
-  /// Mark a collection task as collected.
-  ///
-  /// Called after the rider has successfully collected payment from
-  /// the borrower. The [amount] collected and GPS coordinates are required.
   Future<RiderTaskModel> markCollected({
     required String taskId,
     required double amount,
@@ -132,9 +113,6 @@ class RiderRemoteDataSource {
     }
   }
 
-  /// Fetch the rider's task history with optional date range.
-  ///
-  /// Returns completed and failed tasks for the given period.
   Future<List<RiderTaskModel>> getHistory({
     DateTime? startDate,
     DateTime? endDate,
@@ -177,14 +155,9 @@ class RiderRemoteDataSource {
     }
   }
 
-  /// Placeholder for getting the current rider's ID from auth context.
-  ///
-  /// In production, this is resolved from the auth token or a local cache.
   String _currentRiderId() => 'me';
 
-  // ── Private helpers ─────────────────────────────────────────────
 
-  /// Map a [DioException] to the appropriate [AppException] subtype.
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -203,14 +176,14 @@ class RiderRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'You do not have permission to access rider tasks.',
           );
         }

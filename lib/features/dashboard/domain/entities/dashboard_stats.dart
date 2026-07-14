@@ -1,9 +1,6 @@
+// lib/features/dashboard/domain/entities/dashboard_stats.dart
 import 'package:equatable/equatable.dart';
 
-/// Dashboard statistics entity.
-///
-/// Contains all KPIs displayed on admin and manager dashboards.
-/// Manager dashboard is scoped to their own branch.
 class DashboardStats extends Equatable {
   final int totalLoans;
   final int activeLoans;
@@ -25,14 +22,11 @@ class DashboardStats extends Equatable {
     this.todayDisbursements = 0.0,
   });
 
-  /// Collection rate as percentage.
   double get collectionRate =>
       totalDisbursed > 0 ? (totalCollected / totalDisbursed) * 100 : 0.0;
 
-  /// Outstanding balance.
   double get outstandingBalance => totalDisbursed - totalCollected;
 
-  /// Overdue rate as percentage of active loans.
   double get overdueRate =>
       activeLoans > 0 ? (overdueCount / activeLoans) * 100 : 0.0;
 
@@ -49,7 +43,6 @@ class DashboardStats extends Equatable {
       ];
 }
 
-/// Recent activity entry for the dashboard.
 class RecentActivity extends Equatable {
   final String id;
   final String type;
@@ -65,7 +58,6 @@ class RecentActivity extends Equatable {
     required this.createdAt,
   });
 
-  /// Icon for the activity type.
   String get icon => switch (type) {
         'loan_created' => 'loan',
         'loan_approved' => 'approve',

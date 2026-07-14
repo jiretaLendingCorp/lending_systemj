@@ -1,6 +1,6 @@
 {
-    "name": "lending_systemj",
-    "short_name": "lending_systemj",
+    "name": "jireta_loan",
+    "short_name": "jireta_loan",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,15 +1,12 @@
+// lib/features/dashboard/data/repositories/dashboard_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/dashboard/data/datasources/dashboard_remote_datasource.dart'
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/dashboard/data/datasources/dashboard_remote_datasource.dart'
     as data;
-import 'package:lendflow/features/dashboard/domain/entities/dashboard_stats.dart';
-import 'package:lendflow/features/dashboard/domain/repositories/dashboard_repository.dart';
 
-/// Concrete implementation of [DashboardRepository].
-///
-/// Delegates to [DashboardRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
+import 'package:jireta_loan/features/dashboard/domain/repositories/dashboard_repository.dart';
+
 class DashboardRepositoryImpl implements DashboardRepository {
   final data.DashboardRemoteDataSource _remoteDataSource;
 
@@ -25,7 +22,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
         stats: result.stats,
         recentActivity: result.recentActivity,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -50,7 +47,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
         stats: result.stats,
         recentActivity: result.recentActivity,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

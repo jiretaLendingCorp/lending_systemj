@@ -1,7 +1,4 @@
-/**
- * GET /auth/google-callback
- * OAuth 2.0 PKCE callback handler for Google sign-in.
- */
+// supabase/functions/auth/google-callback/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
 import { badRequest, successResponse, serverError } from "../_shared/errors.ts";
@@ -22,77 +19,71 @@ Deno.serve(async (req: Request) => {
 
     if (error) {
       return Response.redirect(
-        `${FRONTEND_URL}/auth/error?message=${encodeURIComponent(error)}`
+        `$FRONTEND_URL/auth/error?message=${encodeURIComponent(error)}`
       );
     }
 
     if (!code) {
       return Response.redirect(
-        `${FRONTEND_URL}/auth/error?message=${encodeURIComponent("Missing authorization code")}`
+        `$FRONTEND_URL/auth/error?message=${encodeURIComponent("Missing authorization code")}`
       );
     }
 
     const supabase = getServiceClient();
 
-    // Exchange the code for a session using Supabase Auth
     const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
 
     if (exchangeError || !data.user) {
       console.error("OAuth code exchange failed:", exchangeError);
       return Response.redirect(
-        `${FRONTEND_URL}/auth/error?message=${encodeURIComponent("Authentication failed")}`
+        `$FRONTEND_URL/auth/error?message=${encodeURIComponent("Authentication failed")}`
       );
     }
 
     const user = data.user;
 
-    // Check if this is a new user (no borrower record yet)
     const { data: existingBorrower } = await supabase
-      .from("borrowers")
+      .from('lenders')
       .select("id")
       .eq("user_id", user.id)
       .is("deleted_at", null)
       .maybeSingle();
 
     if (!existingBorrower) {
-      // Create borrower record for new Google sign-ups
       const fullName =
         user.user_metadata?.full_name ??
         user.user_metadata?.name ??
         "";
 
-      await supabase.from("borrowers").insert({
+      await supabase.from('lenders').insert({
         user_id: user.id,
         full_name: fullName,
         kyc_status: "pending",
       });
     }
 
-    // Log audit event
     await supabase.from("audit_logs").insert({
       user_id: user.id,
-      user_role: user.app_metadata?.role ?? "borrower",
+      user_role: user.app_metadata?.role ?? "lender",
       action: "google_oauth_login",
       new_value: { provider: "google", email: user.email },
       ip_address: req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? null,
     });
 
-    // Update last login
     await supabase
       .from("users")
       .update({ last_login_at: new Date().toISOString() })
       .eq("id", user.id);
 
-    // Redirect to frontend with session
     const redirectUrl = state
-      ? `${FRONTEND_URL}/auth/callback?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}&state=${state}`
-      : `${FRONTEND_URL}/auth/callback?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}`;
+      ? `$FRONTEND_URL/auth/callback?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}&state=$state`
+      : `$FRONTEND_URL/auth/callback?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}`;
 
     return Response.redirect(redirectUrl);
   } catch (err) {
     console.error("Google callback error:", err);
     return Response.redirect(
-      `${FRONTEND_URL}/auth/error?message=${encodeURIComponent("Internal server error")}`
+      `$FRONTEND_URL/auth/error?message=${encodeURIComponent("Internal server error")}`
     );
   }
 });

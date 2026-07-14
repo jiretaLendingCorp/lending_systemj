@@ -1,18 +1,15 @@
+// lib/features/auth/presentation/pages/signup_page.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/validators.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
-import 'package:lendflow/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:lendflow/features/auth/presentation/widgets/auth_text_field.dart';
-import 'package:lendflow/features/auth/presentation/widgets/google_sign_in_button.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/validators.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:jireta_loan/features/auth/presentation/widgets/google_sign_in_button.dart';
 
-/// Signup page for new user registration.
-///
-/// Self-registration is limited to borrower and rider roles.
-/// Admin and manager accounts are created via the admin panel.
 class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
 
@@ -33,7 +30,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
   final _passwordFocus = FocusNode();
   final _confirmPasswordFocus = FocusNode();
 
-  UserRole _selectedRole = UserRole.borrower;
+  UserRole _selectedRole = UserRole.lender;
   bool _isWeb = false;
 
   @override
@@ -75,7 +72,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authFeatureProvider);
-    final isLoading = authState is AuthLoading;
+    final isLoading = authState is AuthFeatureLoading;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     ref.listen<AuthFeatureState>(authFeatureProvider, (prev, next) {
@@ -96,7 +93,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Header
           Icon(
             Icons.person_add_rounded,
             size: 48,
@@ -112,7 +108,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Join LendFlow to get started',
+            'Join Jireta Loan to get started',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: isDark
                       ? ColorTokens.darkTextSecondary
@@ -122,7 +118,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 32),
 
-          // Full Name
           AuthTextField(
             label: 'Full Name',
             hint: 'Enter your full name',
@@ -142,7 +137,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 16),
 
-          // Email
           AuthTextField(
             label: 'Email',
             hint: 'Enter your email',
@@ -162,7 +156,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 16),
 
-          // Phone
           AuthTextField(
             label: 'Phone Number',
             hint: '09XXXXXXXXX',
@@ -182,7 +175,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 16),
 
-          // Role selection
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -199,9 +191,9 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                 children: [
                   Expanded(
                     child: _RoleOption(
-                      role: UserRole.borrower,
+                      role: UserRole.lender,
                       selectedRole: _selectedRole,
-                      onTap: () => setState(() => _selectedRole = UserRole.borrower),
+                      onTap: () => setState(() => _selectedRole = UserRole.lender),
                       isDark: isDark,
                     ),
                   ),
@@ -220,7 +212,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 16),
 
-          // Password
           AuthTextField(
             label: 'Password',
             hint: 'Create a strong password',
@@ -240,7 +231,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 16),
 
-          // Confirm Password
           AuthTextField(
             label: 'Confirm Password',
             hint: 'Re-enter your password',
@@ -261,7 +251,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 24),
 
-          // Sign up button
           SizedBox(
             height: 48,
             child: ElevatedButton(
@@ -280,7 +269,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 24),
 
-          // Divider
           Row(
             children: [
               Expanded(
@@ -314,14 +302,12 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
           const SizedBox(height: 24),
 
-          // Google Sign-In
           GoogleSignInButton(
             onPressed: _handleGoogleSignIn,
             isLoading: isLoading,
           ),
           const SizedBox(height: 32),
 
-          // Login link
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -400,7 +386,6 @@ class _SignupPageState extends ConsumerState<SignupPage> {
   }
 }
 
-/// Selectable role option card for the signup form.
 class _RoleOption extends StatelessWidget {
   final UserRole role;
   final UserRole selectedRole;
@@ -417,8 +402,8 @@ class _RoleOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = role == selectedRole;
-    final roleColor = role == UserRole.borrower
-        ? ColorTokens.roleBorrower
+    final roleColor = role == UserRole.lender
+        ? ColorTokens.roleLender
         : ColorTokens.roleRider;
 
     return InkWell(
@@ -443,7 +428,7 @@ class _RoleOption extends StatelessWidget {
         child: Column(
           children: [
             Icon(
-              role == UserRole.borrower
+              role == UserRole.lender
                   ? Icons.person_rounded
                   : Icons.two_wheeler_rounded,
               size: 28,

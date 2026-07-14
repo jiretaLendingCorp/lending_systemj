@@ -1,32 +1,26 @@
+// lib/features/audit_logs/presentation/providers/audit_log_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/core/network/dio_client.dart';
-import 'package:lendflow/features/audit_logs/data/datasources/audit_log_remote_datasource.dart';
-import 'package:lendflow/features/audit_logs/data/repositories/audit_log_repository_impl.dart';
-import 'package:lendflow/features/audit_logs/domain/entities/audit_log.dart';
-import 'package:lendflow/features/audit_logs/domain/repositories/audit_log_repository.dart'
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/features/audit_logs/data/datasources/audit_log_remote_datasource.dart';
+import 'package:jireta_loan/features/audit_logs/data/repositories/audit_log_repository_impl.dart';
+import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
+import 'package:jireta_loan/features/audit_logs/domain/repositories/audit_log_repository.dart'
     as domain;
 
-// ─────────────────────────────────────────────────────────────────
-// Audit log states
-// ─────────────────────────────────────────────────────────────────
 
-/// Represents the feature-level audit log state.
 sealed class AuditLogFeatureState {
   const AuditLogFeatureState();
 }
 
-/// Initial state.
 class AuditLogInitial extends AuditLogFeatureState {
   const AuditLogInitial();
 }
 
-/// Logs are being loaded.
 class AuditLogsLoading extends AuditLogFeatureState {
   const AuditLogsLoading();
 }
 
-/// Logs loaded successfully.
 class AuditLogsLoaded extends AuditLogFeatureState {
   final List<AuditLog> logs;
   final int total;
@@ -38,18 +32,15 @@ class AuditLogsLoaded extends AuditLogFeatureState {
     this.currentPage = 1,
   });
 
-  /// Whether there are more pages to load.
   bool get hasMore => logs.length < total;
 }
 
-/// Export succeeded.
 class AuditLogExportSuccess extends AuditLogFeatureState {
   final String downloadUrl;
 
   const AuditLogExportSuccess({required this.downloadUrl});
 }
 
-/// An error occurred.
 class AuditLogError extends AuditLogFeatureState {
   final String message;
   final Failure? failure;
@@ -57,24 +48,18 @@ class AuditLogError extends AuditLogFeatureState {
   const AuditLogError(this.message, {this.failure});
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Providers
-// ─────────────────────────────────────────────────────────────────
 
-/// Provides the [AuditLogRemoteDataSource].
 final auditLogRemoteDataSourceProvider =
     Provider<AuditLogRemoteDataSource>((ref) {
   return AuditLogRemoteDataSource(dio: ref.watch(dioProvider));
 });
 
-/// Provides the [AuditLogRepository] implementation.
 final auditLogRepositoryProvider = Provider<domain.AuditLogRepository>((ref) {
   return AuditLogRepositoryImpl(
     remoteDataSource: ref.watch(auditLogRemoteDataSourceProvider),
   );
 });
 
-/// Provides the [AuditLogNotifier] for audit log screens.
 final auditLogFeatureProvider =
     StateNotifierProvider<AuditLogNotifier, AuditLogFeatureState>((ref) {
   return AuditLogNotifier(
@@ -82,11 +67,7 @@ final auditLogFeatureProvider =
   );
 });
 
-// ─────────────────────────────────────────────────────────────────
-// Audit log notifier
-// ─────────────────────────────────────────────────────────────────
 
-/// Riverpod [StateNotifier] managing audit log UI state.
 class AuditLogNotifier extends StateNotifier<AuditLogFeatureState> {
   final domain.AuditLogRepository _repository;
 
@@ -95,7 +76,6 @@ class AuditLogNotifier extends StateNotifier<AuditLogFeatureState> {
   })  : _repository = repository,
         super(const AuditLogInitial());
 
-  /// Load audit logs with optional filters.
   Future<void> loadLogs({
     String? userId,
     String? action,
@@ -130,7 +110,6 @@ class AuditLogNotifier extends StateNotifier<AuditLogFeatureState> {
     );
   }
 
-  /// Load more logs (pagination).
   Future<void> loadMore({
     String? userId,
     String? action,
@@ -150,17 +129,14 @@ class AuditLogNotifier extends StateNotifier<AuditLogFeatureState> {
     );
   }
 
-  /// Get a single audit log detail.
   Future<void> loadDetail(String logId) async {
     final result = await _repository.detail(logId);
-    // Detail loading doesn't change the list state
     result.fold(
       (failure) => AuditLogError(failure.message, failure: failure),
       (_) => null,
     );
   }
 
-  /// Export audit logs as CSV.
   Future<void> exportLogs({
     String? userId,
     String? action,
@@ -180,7 +156,6 @@ class AuditLogNotifier extends StateNotifier<AuditLogFeatureState> {
     );
   }
 
-  /// Reset state to initial.
   void resetState() {
     state = const AuditLogInitial();
   }

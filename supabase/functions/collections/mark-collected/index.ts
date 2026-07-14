@@ -1,7 +1,4 @@
-/**
- * POST /collections/:id/collected
- * Rider only, GPS + photo required.
- */
+// supabase/functions/collections/mark-collected/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -59,7 +56,6 @@ Deno.serve(async (req: Request) => {
     const { latitude, longitude, photo_receipt_url, amount, method } = parsed.data;
     const supabase = getServiceClient();
 
-    // Get rider profile
     const { data: rider } = await supabase
       .from("riders")
       .select("id")
@@ -71,10 +67,9 @@ Deno.serve(async (req: Request) => {
       return forbidden("Rider profile not found");
     }
 
-    // Fetch collection
     const { data: collection, error: dbError } = await supabase
       .from("collections")
-      .select("id, status, assigned_rider_id, loan_id, borrower_id, amount")
+      .select("id, status, assigned_rider_id, loan_id, lender_id, amount")
       .eq("id", collectionId)
       .is("deleted_at", null)
       .single();
@@ -83,26 +78,22 @@ Deno.serve(async (req: Request) => {
       return notFound("Collection");
     }
 
-    // Verify this rider is assigned
     if (collection.assigned_rider_id !== rider.id) {
       return forbidden("You are not assigned to this collection");
     }
 
-    // Verify correct status
     if (!["assigned", "in_transit"].includes(collection.status)) {
       return conflict(
         `Cannot mark collection as collected in '${collection.status}' status`
       );
     }
 
-    // Validate collection amount
     if (amount > Number(collection.amount)) {
       return badRequest("Collection amount exceeds the expected amount");
     }
 
     const now = new Date().toISOString();
 
-    // Update collection
     const { error: updateError } = await supabase
       .from("collections")
       .update({
@@ -121,10 +112,9 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to mark collection as collected");
     }
 
-    // Create payment record for this collection
     await supabase.from("payments").insert({
       loan_id: collection.loan_id,
-      borrower_id: collection.borrower_id,
+      lender_id: collection.lender_id,
       amount,
       method,
       status: "completed",
@@ -133,23 +123,21 @@ Deno.serve(async (req: Request) => {
       receipt_url: photo_receipt_url,
     });
 
-    // Notify borrower
-    const { data: borrower } = await supabase
-      .from("borrowers")
+    const { data: lender } = await supabase
+      .from('lenders')
       .select("user_id")
-      .eq("id", collection.borrower_id)
+      .eq("id", collection.lender_id)
       .single();
 
-    if (borrower) {
+    if (lender) {
       await supabase.from("notifications").insert({
-        user_id: borrower.user_id,
+        user_id: lender.user_id,
         type: "payment_collected",
         title: "Payment Collected",
-        body: `A payment of ₱${amount.toLocaleString()} has been collected from you via ${method}.`,
+        body: `A payment of ₱${amount.toLocaleString()} has been collected from you via $method.`,
       });
     }
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,

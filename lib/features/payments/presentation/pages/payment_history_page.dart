@@ -1,16 +1,13 @@
+// lib/features/payments/presentation/pages/payment_history_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
-import 'package:lendflow/features/payments/presentation/providers/payment_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/features/payments/presentation/providers/payment_notifier.dart';
 
-/// Payment history list page with filters.
-///
-/// Displays all payments for the current borrower (or all payments
-/// for admin/manager), with filter chips for status and method.
 class PaymentHistoryPage extends ConsumerStatefulWidget {
   final String? loanId;
 
@@ -89,7 +86,6 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
       ),
       body: Column(
         children: [
-          // Status filter chips
           SizedBox(
             height: 44,
             child: ListView.separated(
@@ -132,7 +128,6 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
             ),
           ),
 
-          // Method filter chips
           SizedBox(
             height: 44,
             child: ListView.separated(
@@ -176,7 +171,6 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
             ),
           ),
 
-          // Payment list
           Expanded(
             child: _buildBody(paymentState, isDark),
           ),
@@ -297,7 +291,6 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
   }
 }
 
-/// Payment card for the history list.
 class _PaymentHistoryCard extends StatelessWidget {
   final Payment payment;
   final VoidCallback? onTap;
@@ -394,7 +387,6 @@ class _PaymentHistoryCard extends StatelessWidget {
       };
 }
 
-/// Small status badge for payment history items.
 class _StatusBadge extends StatelessWidget {
   final PaymentStatus status;
 

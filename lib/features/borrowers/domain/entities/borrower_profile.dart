@@ -1,6 +1,6 @@
+// lib/features/lenders/domain/entities/lender_profile.dart
 import 'package:equatable/equatable.dart';
 
-/// KYC verification status for a borrower.
 enum KycStatus {
   pending,
   verified,
@@ -30,7 +30,6 @@ enum KycStatus {
   bool get isRejected => this == KycStatus.rejected;
 }
 
-/// Employment type classification for borrowers.
 enum EmploymentType {
   employed,
   selfEmployed,
@@ -60,11 +59,7 @@ enum EmploymentType {
       };
 }
 
-/// Core entity representing a borrower's profile.
-///
-/// Contains personal information, employment details, and KYC status.
-/// The borrower profile is linked to a user account via [userId].
-class BorrowerProfile extends Equatable {
+class LenderProfile extends Equatable {
   final String id;
   final String userId;
   final String fullName;
@@ -77,7 +72,7 @@ class BorrowerProfile extends Equatable {
   final KycStatus kycStatus;
   final DateTime createdAt;
 
-  const BorrowerProfile({
+  const LenderProfile({
     required this.id,
     required this.userId,
     required this.fullName,
@@ -91,10 +86,8 @@ class BorrowerProfile extends Equatable {
     required this.createdAt,
   });
 
-  /// Whether the borrower can apply for a loan.
   bool get canApplyForLoan => kycStatus.isVerified;
 
-  /// Whether the borrower has completed their profile.
   bool get isProfileComplete =>
       fullName.isNotEmpty &&
       phone.isNotEmpty &&
@@ -102,7 +95,6 @@ class BorrowerProfile extends Equatable {
       address.isNotEmpty &&
       birthday != null;
 
-  /// Display name (first name only from full name).
   String get displayName =>
       fullName.split(' ').first;
 

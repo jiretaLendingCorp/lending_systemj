@@ -1,7 +1,4 @@
-/**
- * POST /disbursements/:id/delivered
- * Rider only, GPS check-in required.
- */
+// supabase/functions/disbursements/mark-delivered/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -40,7 +37,6 @@ Deno.serve(async (req: Request) => {
     if ("error" in authResult) return authResult.error;
     const { payload } = authResult;
 
-    // Only riders can mark disbursements as delivered
     if (!hasRole(payload, "rider")) {
       return forbidden("Only riders can mark disbursements as delivered");
     }
@@ -61,7 +57,6 @@ Deno.serve(async (req: Request) => {
     const { latitude, longitude, receipt_url } = parsed.data;
     const supabase = getServiceClient();
 
-    // Get rider profile
     const { data: rider } = await supabase
       .from("riders")
       .select("id")
@@ -73,7 +68,6 @@ Deno.serve(async (req: Request) => {
       return forbidden("Rider profile not found");
     }
 
-    // Fetch disbursement
     const { data: disbursement, error: dbError } = await supabase
       .from("disbursements")
       .select("id, status, assigned_rider_id, loan_id")
@@ -85,36 +79,25 @@ Deno.serve(async (req: Request) => {
       return notFound("Disbursement");
     }
 
-    // Verify this rider is assigned
     if (disbursement.assigned_rider_id !== rider.id) {
       return forbidden("You are not assigned to this disbursement");
     }
 
-    // Verify correct status
     if (!["assigned", "in_transit"].includes(disbursement.status)) {
       return conflict(
         `Cannot mark disbursement as delivered in '${disbursement.status}' status`
       );
     }
 
-    // Get borrower address coordinates for GPS verification
     const { data: loan } = await supabase
       .from("loans")
-      .select("borrower_id, borrowers(address)")
+      .select("lender_id, lenders(address)")
       .eq("id", disbursement.loan_id)
       .single();
 
-    // For now, store GPS coordinates and accept the check-in
-    // In production, you would geocode the borrower's address and compare
-    // const borrowerCoords = await geocodeAddress(loan.borrowers.address);
-    // const distance = haversineDistance(latitude, longitude, borrowerCoords.lat, borrowerCoords.lng);
-    // if (distance > GPS_THRESHOLD_METERS) {
-    //   return unprocessable(`GPS check-in is ${Math.round(distance)}m from delivery address (max ${GPS_THRESHOLD_METERS}m)`);
-    // }
 
     const now = new Date().toISOString();
 
-    // Update disbursement
     const { error: updateError } = await supabase
       .from("disbursements")
       .update({
@@ -131,7 +114,6 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to mark disbursement as delivered");
     }
 
-    // Update loan status to disbursed
     await supabase
       .from("loans")
       .update({
@@ -141,34 +123,32 @@ Deno.serve(async (req: Request) => {
       })
       .eq("id", disbursement.loan_id);
 
-    // Create collection record for repayment
     const { data: loanData } = await supabase
       .from("loans")
-      .select("borrower_id, total_payable")
+      .select("lender_id, total_payable")
       .eq("id", disbursement.loan_id)
       .single();
 
     if (loanData) {
       await supabase.from("collections").insert({
         loan_id: disbursement.loan_id,
-        borrower_id: loanData.borrower_id,
+        lender_id: loanData.lender_id,
         amount: loanData.total_payable,
         method: "office",
         status: "pending",
       });
     }
 
-    // Notify borrower
     if (loanData) {
-      const { data: borrower } = await supabase
-        .from("borrowers")
+      const { data: lender } = await supabase
+        .from('lenders')
         .select("user_id")
-        .eq("id", loanData.borrower_id)
+        .eq("id", loanData.lender_id)
         .single();
 
-      if (borrower) {
+      if (lender) {
         await supabase.from("notifications").insert({
-          user_id: borrower.user_id,
+          user_id: lender.user_id,
           type: "loan_disbursed",
           title: "Loan Disbursed",
           body: "Your loan has been delivered. Repayment schedule is now active.",
@@ -176,7 +156,6 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,

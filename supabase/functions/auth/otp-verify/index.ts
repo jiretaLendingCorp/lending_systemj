@@ -1,7 +1,4 @@
-/**
- * POST /auth/otp-verify
- * Verify OTP, mark email verified, invalidate after 3 failed attempts.
- */
+// supabase/functions/auth/otp-verify/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -38,7 +35,6 @@ Deno.serve(async (req: Request) => {
     const { phone, code } = parsed.data;
     const supabase = getServiceClient();
 
-    // Find the most recent unused OTP for this user
     const { data: otpRecords, error: fetchError } = await supabase
       .from("otp_codes")
       .select("*")
@@ -57,9 +53,7 @@ Deno.serve(async (req: Request) => {
 
     const otpRecord = otpRecords[0];
 
-    // Check if OTP has expired
     if (new Date(otpRecord.expires_at) < new Date()) {
-      // Mark as used so it can't be retried
       await supabase
         .from("otp_codes")
         .update({ is_used: true })
@@ -68,7 +62,6 @@ Deno.serve(async (req: Request) => {
       return unauthorized("OTP has expired. Please request a new one.");
     }
 
-    // Check if max attempts exceeded
     if (otpRecord.attempts >= MAX_OTP_ATTEMPTS) {
       await supabase
         .from("otp_codes")
@@ -76,14 +69,12 @@ Deno.serve(async (req: Request) => {
         .eq("id", otpRecord.id);
 
       return conflict(
-        `Maximum verification attempts (${MAX_OTP_ATTEMPTS}) exceeded. Please request a new OTP.`
+        `Maximum verification attempts ($MAX_OTP_ATTEMPTS) exceeded. Please request a new OTP.`
       );
     }
 
-    // Verify the code
     const inputHash = await hashOtp(code);
     if (inputHash !== otpRecord.code_hash) {
-      // Increment attempt counter
       await supabase
         .from("otp_codes")
         .update({ attempts: otpRecord.attempts + 1 })
@@ -91,17 +82,15 @@ Deno.serve(async (req: Request) => {
 
       const remaining = MAX_OTP_ATTEMPTS - (otpRecord.attempts + 1);
       return unauthorized(
-        `Invalid OTP. ${remaining} attempt${remaining !== 1 ? "s" : ""} remaining.`
+        `Invalid OTP. $remaining attempt${remaining !== 1 ? "s" : ""} remaining.`
       );
     }
 
-    // OTP is valid — mark as used
     await supabase
       .from("otp_codes")
       .update({ is_used: true })
       .eq("id", otpRecord.id);
 
-    // Update user's phone and mark as verified
     const { error: updateError } = await supabase.auth.admin.updateUserById(payload.sub, {
       phone: phone,
       phone_confirm: true,
@@ -112,14 +101,12 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to verify phone number");
     }
 
-    // Update borrower record if exists
     await supabase
-      .from("borrowers")
+      .from('lenders')
       .update({ kyc_status: "phone_verified" })
       .eq("user_id", payload.sub)
       .is("deleted_at", null);
 
-    // Log audit event
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,

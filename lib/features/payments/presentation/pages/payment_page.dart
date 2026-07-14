@@ -1,19 +1,14 @@
+// lib/features/payments/presentation/pages/payment_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
-import 'package:lendflow/features/payments/presentation/providers/payment_notifier.dart';
-import 'package:lendflow/features/payments/presentation/widgets/payment_method_card.dart';
-import 'package:lendflow/features/payments/presentation/widgets/payment_summary_card.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/features/payments/presentation/providers/payment_notifier.dart';
+import 'package:jireta_loan/features/payments/presentation/widgets/payment_method_card.dart';
+import 'package:jireta_loan/features/payments/presentation/widgets/payment_summary_card.dart';
 
-/// Payment page for borrowers: select loan, enter amount, choose method, submit.
-///
-/// Supports three payment methods:
-/// - GCash (via Xendit): digital wallet payment
-/// - Office: over-the-counter at branch
-/// - Cash: rider collects cash in person
 class PaymentPage extends ConsumerStatefulWidget {
   final String? loanId;
 
@@ -82,7 +77,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
             backgroundColor: ColorTokens.lightSuccess,
           ),
         );
-        // Navigate to receipt page
         context.push('/payments/${next.payment.id}/receipt');
       } else if (next is PaymentError) {
         setState(() => _isSubmitting = false);
@@ -106,7 +100,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Loan info header
               if (widget.loanId != null) ...[
                 Container(
                   width: double.infinity,
@@ -158,7 +151,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                 const SizedBox(height: 24),
               ],
 
-              // Amount input
               Text(
                 'Payment Amount',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -207,7 +199,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                 onChanged: (_) => setState(() {}),
               ),
 
-              // Quick amount buttons
               const SizedBox(height: 12),
               Wrap(
                 spacing: 8,
@@ -233,7 +224,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
 
               const SizedBox(height: 32),
 
-              // Payment method selection
               Text(
                 'Payment Method',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -256,7 +246,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
 
               const SizedBox(height: 24),
 
-              // Payment summary
               if (_amountController.text.isNotEmpty) ...[
                 PaymentSummaryCard(
                   amount: CurrencyFormatter.parsePhp(_amountController.text),
@@ -265,7 +254,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                 const SizedBox(height: 24),
               ],
 
-              // Submit button
               SizedBox(
                 width: double.infinity,
                 height: 52,

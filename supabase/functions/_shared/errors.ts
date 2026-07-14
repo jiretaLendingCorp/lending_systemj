@@ -1,7 +1,4 @@
-/**
- * Standardized error response helpers for LendFlow Edge Functions.
- */
-
+// supabase/functions/_shared/errors.ts
 export class AppError extends Error {
   public readonly statusCode: number;
   public readonly code: string;
@@ -33,42 +30,42 @@ function errorResponse(
   });
 }
 
-/** 400 Bad Request */
+
 export function badRequest(message: string, details?: unknown): Response {
   return errorResponse(400, "BAD_REQUEST", message, details);
 }
 
-/** 401 Unauthorized */
+
 export function unauthorized(message = "Authentication required"): Response {
   return errorResponse(401, "UNAUTHORIZED", message);
 }
 
-/** 403 Forbidden */
+
 export function forbidden(message = "Insufficient permissions"): Response {
   return errorResponse(403, "FORBIDDEN", message);
 }
 
-/** 404 Not Found */
+
 export function notFound(resource: string): Response {
-  return errorResponse(404, "NOT_FOUND", `${resource} not found`);
+  return errorResponse(404, "NOT_FOUND", `$resource not found`);
 }
 
-/** 409 Conflict */
+
 export function conflict(message: string, details?: unknown): Response {
   return errorResponse(409, "CONFLICT", message, details);
 }
 
-/** 422 Unprocessable Entity */
+
 export function unprocessable(message: string, details?: unknown): Response {
   return errorResponse(422, "UNPROCESSABLE_ENTITY", message, details);
 }
 
-/** 500 Internal Server Error */
+
 export function serverError(message = "Internal server error"): Response {
   return errorResponse(500, "INTERNAL_SERVER_ERROR", message);
 }
 
-/** Build a success JSON response with CORS headers */
+
 export function successResponse<T>(
   data: T,
   status = 200,
@@ -83,7 +80,7 @@ export function successResponse<T>(
   });
 }
 
-/** Build a paginated success JSON response */
+
 export function paginatedResponse<T>(
   data: T[],
   total: number,

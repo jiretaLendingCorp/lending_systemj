@@ -1,12 +1,12 @@
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
+// lib/features/riders/data/models/rider_task_model.dart
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
 
-/// Data-layer representation of a [RiderTask], with JSON serialization.
 class RiderTaskModel extends RiderTask {
   const RiderTaskModel({
     required super.id,
     required super.type,
-    required super.borrowerName,
-    required super.borrowerAddress,
+    required super.lenderName,
+    required super.lenderAddress,
     required super.amount,
     super.status = RiderTaskStatus.pending,
     required super.loanId,
@@ -22,11 +22,11 @@ class RiderTaskModel extends RiderTask {
       type: RiderTaskType.fromString(
         json['type'] as String? ?? json['task_type'] as String?,
       ),
-      borrowerName: json['borrower_name'] as String? ??
-          json['borrowerName'] as String? ??
+      lenderName: json['lender_name'] as String? ??
+          json['lenderName'] as String? ??
           '',
-      borrowerAddress: json['borrower_address'] as String? ??
-          json['borrowerAddress'] as String? ??
+      lenderAddress: json['lender_address'] as String? ??
+          json['lenderAddress'] as String? ??
           '',
       amount: _parseDouble(json['amount']),
       status: RiderTaskStatus.fromString(
@@ -53,8 +53,8 @@ class RiderTaskModel extends RiderTask {
     return {
       'id': id,
       'type': type.toApiString(),
-      'borrower_name': borrowerName,
-      'borrower_address': borrowerAddress,
+      'lender_name': lenderName,
+      'lender_address': lenderAddress,
       'amount': amount,
       'status': status.toApiString(),
       'loan_id': loanId,
@@ -68,8 +68,8 @@ class RiderTaskModel extends RiderTask {
   RiderTaskModel copyWith({
     String? id,
     RiderTaskType? type,
-    String? borrowerName,
-    String? borrowerAddress,
+    String? lenderName,
+    String? lenderAddress,
     double? amount,
     RiderTaskStatus? status,
     String? loanId,
@@ -81,8 +81,8 @@ class RiderTaskModel extends RiderTask {
     return RiderTaskModel(
       id: id ?? this.id,
       type: type ?? this.type,
-      borrowerName: borrowerName ?? this.borrowerName,
-      borrowerAddress: borrowerAddress ?? this.borrowerAddress,
+      lenderName: lenderName ?? this.lenderName,
+      lenderAddress: lenderAddress ?? this.lenderAddress,
       amount: amount ?? this.amount,
       status: status ?? this.status,
       loanId: loanId ?? this.loanId,

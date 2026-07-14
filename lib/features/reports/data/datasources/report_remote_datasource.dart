@@ -1,20 +1,14 @@
+// lib/features/reports/data/datasources/report_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/reports/data/models/report_models.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/reports/data/models/report_models.dart';
 
-/// Remote data source for report operations using Dio.
-///
-/// Provides endpoints for portfolio, overdue, and collection
-/// efficiency reports with optional date range filtering.
 class ReportRemoteDataSource {
   final Dio _dio;
 
   ReportRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// Fetch the loan portfolio report.
-  ///
-  /// Optional [startDate] and [endDate] for filtering.
   Future<PortfolioReportModel> getPortfolio({
     DateTime? startDate,
     DateTime? endDate,
@@ -40,9 +34,6 @@ class ReportRemoteDataSource {
     }
   }
 
-  /// Fetch the overdue aging report.
-  ///
-  /// Groups overdue loans into 1-7 days, 8-30 days, and 30+ days buckets.
   Future<OverdueReportModel> getOverdue({
     DateTime? asOfDate,
   }) async {
@@ -64,9 +55,6 @@ class ReportRemoteDataSource {
     }
   }
 
-  /// Fetch the collection efficiency report.
-  ///
-  /// Optional [startDate] and [endDate] for filtering.
   Future<CollectionEfficiencyReportModel> getCollectionEfficiency({
     DateTime? startDate,
     DateTime? endDate,
@@ -92,9 +80,6 @@ class ReportRemoteDataSource {
     }
   }
 
-  /// Export a report as CSV/PDF.
-  ///
-  /// Returns the download URL or binary data depending on the backend.
   Future<String> exportReport({
     required String reportType,
     required String format,
@@ -124,7 +109,6 @@ class ReportRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
   AppException _mapDioException(DioException e) {
     switch (e.type) {
@@ -144,14 +128,14 @@ class ReportRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'You do not have permission to view reports.',
           );
         }

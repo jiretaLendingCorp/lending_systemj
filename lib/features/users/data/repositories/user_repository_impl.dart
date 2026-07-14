@@ -1,16 +1,13 @@
+// lib/features/users/data/repositories/user_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/users/data/datasources/user_remote_datasource.dart'
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/users/data/datasources/user_remote_datasource.dart'
     hide UserListResult;
-import 'package:lendflow/features/users/domain/entities/user_management.dart';
-import 'package:lendflow/features/users/domain/repositories/user_repository.dart'
+import 'package:jireta_loan/features/users/domain/entities/user_management.dart';
+import 'package:jireta_loan/features/users/domain/repositories/user_repository.dart'
     as domain;
 
-/// Concrete implementation of [UserRepository].
-///
-/// Delegates to [UserRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class UserRepositoryImpl implements domain.UserRepository {
   final UserRemoteDataSource _remoteDataSource;
 
@@ -37,7 +34,7 @@ class UserRepositoryImpl implements domain.UserRepository {
         users: result.users,
         total: result.total,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -78,7 +75,7 @@ class UserRepositoryImpl implements domain.UserRepository {
         branchId: branchId,
       );
       return Right(user);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -105,7 +102,7 @@ class UserRepositoryImpl implements domain.UserRepository {
     try {
       final user = await _remoteDataSource.deactivate(userId);
       return Right(user);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -127,7 +124,7 @@ class UserRepositoryImpl implements domain.UserRepository {
     try {
       final user = await _remoteDataSource.reactivate(userId);
       return Right(user);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -149,7 +146,7 @@ class UserRepositoryImpl implements domain.UserRepository {
     try {
       await _remoteDataSource.resetPassword(userId);
       return const Right(null);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -171,7 +168,7 @@ class UserRepositoryImpl implements domain.UserRepository {
     try {
       await _remoteDataSource.forceLogout(userId);
       return const Right(null);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -199,7 +196,7 @@ class UserRepositoryImpl implements domain.UserRepository {
         newRole: newRole,
       );
       return Right(user);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

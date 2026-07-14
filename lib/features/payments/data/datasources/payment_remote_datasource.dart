@@ -1,23 +1,14 @@
+// lib/features/payments/data/datasources/payment_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/payments/data/models/payment_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/payments/data/models/payment_model.dart';
 
-/// Remote data source for payment operations using Dio.
-///
-/// All payment CRUD operations go through the backend API.
-/// The Dio instance includes auth, idempotency, and error interceptors.
 class PaymentRemoteDataSource {
   final Dio _dio;
 
   PaymentRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// Create a new payment for a loan.
-  ///
-  /// The [method] determines the flow:
-  /// - GCash: creates a Xendit payment link/invoice
-  /// - Office: records an over-the-counter payment
-  /// - Cash: creates a collection assignment for a rider
   Future<PaymentModel> create({
     required String loanId,
     required double amount,
@@ -38,13 +29,9 @@ class PaymentRemoteDataSource {
     }
   }
 
-  /// List payments with optional filters and pagination.
-  ///
-  /// Supports filtering by [loanId], [status], [method],
-  /// and [borrowerId]. Returns a paginated result.
   Future<PaymentListResult> list({
     String? loanId,
-    String? borrowerId,
+    String? lenderId,
     String? status,
     String? method,
     int page = 1,
@@ -58,8 +45,8 @@ class PaymentRemoteDataSource {
       if (loanId != null && loanId.isNotEmpty) {
         queryParams['loan_id'] = loanId;
       }
-      if (borrowerId != null && borrowerId.isNotEmpty) {
-        queryParams['borrower_id'] = borrowerId;
+      if (lenderId != null && lenderId.isNotEmpty) {
+        queryParams['lender_id'] = lenderId;
       }
       if (status != null && status.isNotEmpty) {
         queryParams['status'] = status;
@@ -85,9 +72,6 @@ class PaymentRemoteDataSource {
     }
   }
 
-  /// Get payments for a specific loan.
-  ///
-  /// Convenience method that calls [list] with the loan ID filter.
   Future<PaymentListResult> getByLoanId(
     String loanId, {
     int page = 1,
@@ -114,7 +98,6 @@ class PaymentRemoteDataSource {
     }
   }
 
-  /// Get detailed information about a specific payment.
   Future<PaymentModel> detail(String paymentId) async {
     try {
       final response = await _dio.get(
@@ -126,7 +109,6 @@ class PaymentRemoteDataSource {
     }
   }
 
-  /// Verify a payment (admin/manager action).
   Future<PaymentModel> verify(String paymentId) async {
     try {
       final response = await _dio.post(
@@ -138,7 +120,6 @@ class PaymentRemoteDataSource {
     }
   }
 
-  /// Reject a payment (admin/manager action).
   Future<PaymentModel> reject(String paymentId, {String? reason}) async {
     try {
       final response = await _dio.post(
@@ -151,7 +132,6 @@ class PaymentRemoteDataSource {
     }
   }
 
-  /// Get the receipt URL for a specific payment.
   Future<String> getReceiptUrl(String paymentId) async {
     try {
       final response = await _dio.get(
@@ -164,9 +144,7 @@ class PaymentRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
-  /// Map a [DioException] to the appropriate [AppException] subtype.
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -185,14 +163,14 @@ class PaymentRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'You do not have permission to manage payments.',
           );
         }
@@ -238,7 +216,6 @@ class PaymentRemoteDataSource {
   }
 }
 
-/// Paginated result for payment list queries.
 class PaymentListResult {
   final List<PaymentModel> payments;
   final int total;

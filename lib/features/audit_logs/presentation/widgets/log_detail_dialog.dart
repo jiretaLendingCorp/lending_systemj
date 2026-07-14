@@ -1,13 +1,10 @@
+// lib/features/audit_logs/presentation/widgets/log_detail_dialog.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/audit_logs/domain/entities/audit_log.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
 
-/// Dialog showing audit log detail with old/new value diff.
-///
-/// Displays complete audit log information including a visual
-/// diff view for data changes.
 class LogDetailDialog extends StatelessWidget {
   final AuditLog log;
 
@@ -16,7 +13,6 @@ class LogDetailDialog extends StatelessWidget {
     required this.log,
   });
 
-  /// Show the log detail dialog.
   static Future<void> show(BuildContext context, AuditLog log) {
     return showDialog(
       context: context,
@@ -141,13 +137,12 @@ class _DiffView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final bgColor = isOld
-        ? ColorTokens.lightError.withOpacity(0.06)
-        : ColorTokens.lightSuccess.withOpacity(0.06);
+        ? ColorTokens.lightError.withValues(alpha: 0.06)
+        : ColorTokens.lightSuccess.withValues(alpha: 0.06);
     final borderColor = isOld
-        ? ColorTokens.lightError.withOpacity(0.2)
-        : ColorTokens.lightSuccess.withOpacity(0.2);
+        ? ColorTokens.lightError.withValues(alpha: 0.2)
+        : ColorTokens.lightSuccess.withValues(alpha: 0.2);
     final textColor = isOld ? ColorTokens.lightError : ColorTokens.lightSuccess;
 
     return Container(

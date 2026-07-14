@@ -1,14 +1,7 @@
-/// PII masking utilities for LendFlow.
-///
-/// Used in logs, UI displays, and any context where personally
-/// identifiable information must be partially obscured.
+// lib/core/utils/masking_helper.dart
 class MaskingHelper {
   MaskingHelper._();
 
-  /// Mask a Philippine phone number.
-  ///
-  /// Example: `09171234567` → `0917****4567`
-  /// Example: `+639171234567` → `+639****4567`
   static String maskPhone(String phone) {
     final digits = phone.replaceAll(RegExp(r'\D'), '');
     if (digits.length < 8) {
@@ -20,10 +13,6 @@ class MaskingHelper {
     return '$visibleStart$maskedMiddle$visibleEnd';
   }
 
-  /// Mask an email address.
-  ///
-  /// Example: `john.doe@example.com` → `j*****e@example.com`
-  /// Example: `a@b.co` → `a@b.co` (too short to mask meaningfully)
   static String maskEmail(String email) {
     final parts = email.split('@');
     if (parts.length != 2) return '***@***';
@@ -42,10 +31,6 @@ class MaskingHelper {
     return '$first$masked$last@$domain';
   }
 
-  /// Mask a person's full name.
-  ///
-  /// Example: `Juan Dela Cruz` → `J*** D*** C***`
-  /// Example: `Juan` → `J***`
   static String maskName(String name) {
     final parts = name.trim().split(RegExp(r'\s+'));
     return parts.map((part) {
@@ -54,10 +39,6 @@ class MaskingHelper {
     }).join(' ');
   }
 
-  /// Mask a loan / account reference number.
-  ///
-  /// Shows first 4 and last 4 characters, masks the middle.
-  /// Example: `LN-2025-001234` → `LN-2****1234`
   static String maskReference(String ref) {
     if (ref.length <= 8) return ref;
     final visibleStart = ref.substring(0, 4);
@@ -66,37 +47,24 @@ class MaskingHelper {
     return '$visibleStart$maskedMiddle$visibleEnd';
   }
 
-  /// Mask a government ID number.
-  ///
-  /// Shows only the last 4 digits.
-  /// Example: `1234567890` → `******7890`
   static String maskGovId(String id) {
     final digits = id.replaceAll(RegExp(r'\D'), '');
     if (digits.length <= 4) return '****';
     return '*${digits.substring(digits.length - 4)}';
   }
 
-  /// Mask a bank account number.
-  ///
-  /// Shows only the last 4 digits.
-  /// Example: `123456789012` → `********9012`
   static String maskBankAccount(String account) {
     final digits = account.replaceAll(RegExp(r'\D'), '');
     if (digits.length <= 4) return '****';
     return '*${digits.substring(digits.length - 4)}';
   }
 
-  /// Mask an address — keeps only the city/province portion.
-  ///
-  /// Example: `123 Rizal St, Makati City` → `***, Makati City`
   static String maskAddress(String address) {
     final parts = address.split(',');
     if (parts.length <= 1) return '***';
     return '***, ${parts.sublist(1).join(',').trim()}';
   }
 
-  /// Generic mask: shows [visibleStart] chars at start and
-  /// [visibleEnd] chars at end, replacing the middle with *.
   static String maskGeneric(
     String value, {
     int visibleStart = 2,

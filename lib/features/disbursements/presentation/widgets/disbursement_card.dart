@@ -1,12 +1,9 @@
+// lib/features/disbursements/presentation/widgets/disbursement_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/disbursements/domain/entities/disbursement.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
 
-/// Disbursement summary card widget for list views.
-///
-/// Displays key disbursement information including loan ID, method,
-/// status, rider info, and timestamps in a compact card format.
 class DisbursementCard extends StatelessWidget {
   final Disbursement disbursement;
   final VoidCallback? onTap;
@@ -33,7 +30,6 @@ class DisbursementCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row 1: Loan ID + Status
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -61,7 +57,6 @@ class DisbursementCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
 
-              // Row 2: Method and Rider info
               Row(
                 children: [
                   Expanded(
@@ -92,7 +87,6 @@ class DisbursementCard extends StatelessWidget {
                 ],
               ),
 
-              // Assign rider button
               if (onAssignRider != null &&
                   disbursement.status.isActionable) ...[
                 const SizedBox(height: 12),
@@ -120,7 +114,6 @@ class DisbursementCard extends StatelessWidget {
                 ),
               ],
 
-              // GPS verification indicator for delivered
               if (disbursement.isDelivered &&
                   disbursement.hasGpsCoordinates) ...[
                 const SizedBox(height: 8),
@@ -169,7 +162,6 @@ class DisbursementCard extends StatelessWidget {
       };
 }
 
-/// Status badge for disbursement cards.
 class _DisbursementStatusBadge extends StatelessWidget {
   final DisbursementStatus status;
 
@@ -218,7 +210,6 @@ class _DisbursementStatusBadge extends StatelessWidget {
       };
 }
 
-/// Helper widget for displaying a label-value pair.
 class _InfoColumn extends StatelessWidget {
   final String label;
   final String value;

@@ -1,16 +1,13 @@
+// lib/features/loans/data/repositories/loan_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/loans/data/datasources/loan_remote_datasource.dart' hide LoanListResult;
-import 'package:lendflow/features/loans/data/models/create_loan_request.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/loans/domain/entities/loan_schedule.dart';
-import 'package:lendflow/features/loans/domain/repositories/loan_repository.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/loans/data/datasources/loan_remote_datasource.dart' hide LoanListResult;
+import 'package:jireta_loan/features/loans/data/models/create_loan_request.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan_schedule.dart';
+import 'package:jireta_loan/features/loans/domain/repositories/loan_repository.dart';
 
-/// Concrete implementation of [LoanRepository].
-///
-/// Delegates to [LoanRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class LoanRepositoryImpl implements LoanRepository {
   final LoanRemoteDataSource _remoteDataSource;
 
@@ -35,7 +32,7 @@ class LoanRepositoryImpl implements LoanRepository {
         loans: result.loans,
         total: result.total,
       ));
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -79,7 +76,7 @@ class LoanRepositoryImpl implements LoanRepository {
       );
       final loan = await _remoteDataSource.create(request);
       return Right(loan);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -106,7 +103,7 @@ class LoanRepositoryImpl implements LoanRepository {
     try {
       final loan = await _remoteDataSource.detail(loanId);
       return Right(loan);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -128,7 +125,7 @@ class LoanRepositoryImpl implements LoanRepository {
     try {
       final schedules = await _remoteDataSource.schedule(loanId);
       return Right(schedules);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -150,7 +147,7 @@ class LoanRepositoryImpl implements LoanRepository {
     try {
       final loan = await _remoteDataSource.approve(loanId);
       return Right(loan);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -172,7 +169,7 @@ class LoanRepositoryImpl implements LoanRepository {
     try {
       final loan = await _remoteDataSource.reject(loanId, reason: reason);
       return Right(loan);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -194,7 +191,7 @@ class LoanRepositoryImpl implements LoanRepository {
     try {
       final loan = await _remoteDataSource.computePenalty(loanId);
       return Right(loan);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

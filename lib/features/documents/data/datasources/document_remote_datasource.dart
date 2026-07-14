@@ -1,20 +1,16 @@
+// lib/features/documents/data/datasources/document_remote_datasource.dart
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/documents/data/models/kyc_document_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/documents/data/models/kyc_document_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Remote data source for KYC document operations using Supabase Storage.
-///
-/// Handles file uploads, listing, signed URL generation, and deletion
-/// for borrower KYC documents stored in a private Supabase storage bucket.
 class DocumentRemoteDataSource {
   final SupabaseClient _supabaseClient;
   final Dio _dio;
 
-  /// The Supabase storage bucket name for KYC documents.
   static const _bucketName = 'kyc-documents';
 
   DocumentRemoteDataSource({
@@ -23,25 +19,17 @@ class DocumentRemoteDataSource {
   })  : _supabaseClient = supabaseClient,
         _dio = dio;
 
-  /// Upload a KYC document file to Supabase Storage.
-  ///
-  /// The file is stored in a path structured as:
-  /// `{borrowerId}/{documentType}/{timestamp}_{filename}`
-  ///
-  /// Returns the created [KycDocumentModel] with the storage path.
   Future<KycDocumentModel> upload({
-    required String borrowerId,
+    required String lenderId,
     required String documentType,
     required File file,
     required String fileName,
     void Function(int sent, int total)? onProgress,
   }) async {
     try {
-      // Generate a unique storage path
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final storagePath = '$borrowerId/$documentType/${timestamp}_$fileName';
+      final storagePath = '$lenderId/$documentType/${timestamp}_$fileName';
 
-      // Upload to Supabase Storage
       await _supabaseClient.storage.from(_bucketName).upload(
             storagePath,
             file,
@@ -51,11 +39,10 @@ class DocumentRemoteDataSource {
             ),
           );
 
-      // Create a record in the documents table via the API
       final response = await _dio.post(
         ApiEndpoints.uploadsDocument,
         data: {
-          'borrower_id': borrowerId,
+          'lender_id': lenderId,
           'document_type': documentType,
           'file_url': storagePath,
           'file_name': fileName,
@@ -69,7 +56,7 @@ class DocumentRemoteDataSource {
     } on StorageException catch (e) {
       throw ServerException(
         message: 'Failed to upload document: ${e.message}',
-        statusCode: e.statusCode,
+        statusCode: int.tryParse(e.statusCode ?? ''),
       );
     } catch (e) {
       throw ServerException(
@@ -78,14 +65,13 @@ class DocumentRemoteDataSource {
     }
   }
 
-  /// List all KYC documents for a borrower.
   Future<List<KycDocumentModel>> list({
-    required String borrowerId,
+    required String lenderId,
   }) async {
     try {
       final response = await _dio.get(
         ApiEndpoints.uploadsDocument,
-        queryParameters: {'borrower_id': borrowerId},
+        queryParameters: {'lender_id': lenderId},
       );
 
       final data = response.data;
@@ -106,11 +92,6 @@ class DocumentRemoteDataSource {
     }
   }
 
-  /// Generate a signed URL for secure document access.
-  ///
-  /// The signed URL expires after [expiresIn] seconds (default: 1 hour).
-  /// This ensures that private documents are only accessible to
-  /// authorized users with a time-limited URL.
   Future<String> getSignedUrl({
     required String filePath,
     int expiresIn = 3600,
@@ -124,23 +105,20 @@ class DocumentRemoteDataSource {
     } on StorageException catch (e) {
       throw ServerException(
         message: 'Failed to generate signed URL: ${e.message}',
-        statusCode: e.statusCode,
+        statusCode: int.tryParse(e.statusCode ?? ''),
       );
     }
   }
 
-  /// Delete a KYC document from storage and the database.
   Future<void> delete({
     required String documentId,
     required String filePath,
   }) async {
     try {
-      // Delete from Supabase Storage
       await _supabaseClient.storage
           .from(_bucketName)
           .remove([filePath]);
 
-      // Delete the database record
       await _dio.delete(
         '${ApiEndpoints.uploadsDocument}/$documentId',
       );
@@ -149,12 +127,11 @@ class DocumentRemoteDataSource {
     } on StorageException catch (e) {
       throw ServerException(
         message: 'Failed to delete document: ${e.message}',
-        statusCode: e.statusCode,
+        statusCode: int.tryParse(e.statusCode ?? ''),
       );
     }
   }
 
-  /// Determine the content type based on the file extension.
   String _contentType(String fileName) {
     final extension = fileName.split('.').last.toLowerCase();
     return switch (extension) {
@@ -167,9 +144,7 @@ class DocumentRemoteDataSource {
     };
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
-  /// Map a [DioException] to the appropriate [AppException] subtype.
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -188,7 +163,7 @@ class DocumentRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,

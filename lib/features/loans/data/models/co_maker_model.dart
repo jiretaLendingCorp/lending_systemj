@@ -1,6 +1,6 @@
-import 'package:lendflow/features/loans/domain/entities/co_maker.dart';
+// lib/features/loans/data/models/co_maker_model.dart
+import 'package:jireta_loan/features/loans/domain/entities/co_maker.dart';
 
-/// Data-layer representation of a [CoMaker], with JSON serialization.
 class CoMakerModel extends CoMaker {
   const CoMakerModel({
     required super.id,

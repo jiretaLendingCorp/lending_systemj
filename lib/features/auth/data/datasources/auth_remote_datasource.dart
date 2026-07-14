@@ -1,15 +1,12 @@
+// lib/features/auth/data/datasources/auth_remote_datasource.dart
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/features/auth/data/models/user_model.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/features/auth/data/models/user_model.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
 
-/// Remote data source for authentication operations.
-///
-/// All auth operations go through Supabase Auth, with some
-/// operations also hitting the backend API for profile sync.
 class AuthRemoteDataSource {
   final supabase.SupabaseClient _supabase;
   final Dio _dio;
@@ -20,7 +17,6 @@ class AuthRemoteDataSource {
   })  : _supabase = supabaseClient,
         _dio = dio;
 
-  /// Sign in with email and password.
   Future<UserModel> login({
     required String email,
     required String password,
@@ -32,14 +28,14 @@ class AuthRemoteDataSource {
       );
       final user = response.user;
       if (user == null) {
-        throw const AuthException(
+        throw const AppAuthException(
           message: 'Login failed. Please try again.',
           requiresReAuth: true,
         );
       }
       return _userFromSupabaseResponse(user);
     } on supabase.AuthException catch (e) {
-      throw AuthException(
+      throw AppAuthException(
         message: _mapSupabaseAuthMessage(e.message),
         requiresReAuth: true,
       );
@@ -48,7 +44,6 @@ class AuthRemoteDataSource {
     }
   }
 
-  /// Sign up with email, password, and profile data.
   Future<UserModel> signup({
     required String email,
     required String password,
@@ -68,11 +63,11 @@ class AuthRemoteDataSource {
       );
       final user = response.user;
       if (user == null) {
-        throw const AuthException(message: 'Signup failed. Please try again.');
+        throw const AppAuthException(message: 'Signup failed. Please try again.');
       }
       return _userFromSupabaseResponse(user);
     } on supabase.AuthException catch (e) {
-      throw AuthException(
+      throw AppAuthException(
         message: _mapSupabaseAuthMessage(e.message),
       );
     } catch (e) {
@@ -80,7 +75,6 @@ class AuthRemoteDataSource {
     }
   }
 
-  /// Send an OTP to the user's email for verification.
   Future<void> otpSend({required String email}) async {
     try {
       await _supabase.auth.signInWithOtp(
@@ -88,18 +82,17 @@ class AuthRemoteDataSource {
       );
     } on supabase.AuthException catch (e) {
       if (e.message.contains('rate limit') || e.message.contains('too many')) {
-        throw const AuthException(
+        throw const AppAuthException(
           message: 'Too many OTP requests. Please wait before requesting again.',
           errorCode: 'OTP_RATE_LIMITED',
         );
       }
-      throw AuthException(message: _mapSupabaseAuthMessage(e.message));
+      throw AppAuthException(message: _mapSupabaseAuthMessage(e.message));
     } catch (e) {
       throw _mapToAppException(e);
     }
   }
 
-  /// Verify an OTP code sent to the user's email.
   Future<UserModel> otpVerify({
     required String email,
     required String otp,
@@ -112,29 +105,28 @@ class AuthRemoteDataSource {
       );
       final user = response.user;
       if (user == null) {
-        throw const AuthException(
+        throw const AppAuthException(
           message: 'Verification failed. Please try again.',
         );
       }
       return _userFromSupabaseResponse(user);
     } on supabase.AuthException catch (e) {
-      throw AuthException(message: _mapSupabaseAuthMessage(e.message));
+      throw AppAuthException(message: _mapSupabaseAuthMessage(e.message));
     } catch (e) {
       throw _mapToAppException(e);
     }
   }
 
-  /// Sign in with Google OAuth.
   Future<UserModel> googleSignIn() async {
     try {
       final googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
-        throw const AuthException(message: 'Google sign-in was cancelled.');
+        throw const AppAuthException(message: 'Google sign-in was cancelled.');
       }
       final auth = await googleUser.authentication;
       final idToken = auth.idToken;
       if (idToken == null) {
-        throw const AuthException(
+        throw const AppAuthException(
           message: 'Failed to obtain Google authentication token.',
         );
       }
@@ -145,25 +137,24 @@ class AuthRemoteDataSource {
       );
       final user = response.user;
       if (user == null) {
-        throw const AuthException(
+        throw const AppAuthException(
           message: 'Google sign-in failed. Please try again.',
         );
       }
       return _userFromSupabaseResponse(user);
-    } on AuthException {
+    } on AppAuthException {
       rethrow;
     } catch (e) {
-      throw AuthException(message: 'Google sign-in error: $e');
+      throw AppAuthException(message: 'Google sign-in error: $e');
     }
   }
 
-  /// Refresh the current access token.
   Future<String> refreshToken() async {
     try {
       final response = await _supabase.auth.refreshSession();
       final session = response.session;
       if (session == null) {
-        throw const AuthException(
+        throw const AppAuthException(
           message: 'Session expired. Please sign in again.',
           tokenExpired: true,
           requiresReAuth: true,
@@ -171,7 +162,7 @@ class AuthRemoteDataSource {
       }
       return session.accessToken;
     } on supabase.AuthException catch (e) {
-      throw AuthException(
+      throw AppAuthException(
         message: _mapSupabaseAuthMessage(e.message),
         tokenExpired: true,
         requiresReAuth: true,
@@ -181,30 +172,25 @@ class AuthRemoteDataSource {
     }
   }
 
-  /// Sign out and invalidate the current session.
   Future<void> logout() async {
     try {
       await _supabase.auth.signOut();
     } catch (_) {
-      // Even if server-side logout fails, we treat local
-      // sign-out as successful.
     }
   }
 
-  /// Send a password reset email to the given address.
   Future<void> forgotPassword({required String email}) async {
     try {
       await _supabase.auth.resetPasswordForEmail(
         email.trim().toLowerCase(),
       );
     } on supabase.AuthException catch (e) {
-      throw AuthException(message: _mapSupabaseAuthMessage(e.message));
+      throw AppAuthException(message: _mapSupabaseAuthMessage(e.message));
     } catch (e) {
       throw _mapToAppException(e);
     }
   }
 
-  /// Reset the password using the recovery token from the email link.
   Future<void> resetPassword({
     required String token,
     required String newPassword,
@@ -218,13 +204,12 @@ class AuthRemoteDataSource {
         supabase.UserAttributes(password: newPassword),
       );
     } on supabase.AuthException catch (e) {
-      throw AuthException(message: _mapSupabaseAuthMessage(e.message));
+      throw AppAuthException(message: _mapSupabaseAuthMessage(e.message));
     } catch (e) {
       throw _mapToAppException(e);
     }
   }
 
-  /// Get the current authenticated user profile from the backend API.
   Future<UserModel> getCurrentUser() async {
     try {
       final response = await _dio.get(ApiEndpoints.authMe);
@@ -234,9 +219,7 @@ class AuthRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
-  /// Create a [UserModel] from a Supabase auth response user.
   UserModel _userFromSupabaseResponse(supabase.User user) {
     final metadata = user.userMetadata;
     final appMetadata = user.appMetadata;
@@ -252,17 +235,15 @@ class AuthRemoteDataSource {
     );
   }
 
-  /// Parse a UserRole from a string, defaulting to borrower.
   UserRole _parseUserRole(String? value) {
     return switch (value?.toLowerCase()) {
-      'admin' => UserRole.admin,
-      'manager' => UserRole.manager,
+      'head_manager' => UserRole.headManager,
+      'employee' => UserRole.employee,
       'rider' => UserRole.rider,
-      _ => UserRole.borrower,
+      _ => UserRole.lender,
     };
   }
 
-  /// Parse a DateTime from various possible formats.
   DateTime? _parseDateTime(dynamic value) {
     if (value == null) return null;
     if (value is DateTime) return value;
@@ -270,7 +251,6 @@ class AuthRemoteDataSource {
     return null;
   }
 
-  /// Map Supabase auth error messages to user-friendly messages.
   String _mapSupabaseAuthMessage(String? message) {
     if (message == null) return 'An authentication error occurred.';
     final lowerMessage = message.toLowerCase();
@@ -302,7 +282,6 @@ class AuthRemoteDataSource {
     return message;
   }
 
-  /// Map a generic exception to an [AppException] subtype.
   AppException _mapToAppException(Object error) {
     if (error is DioException) {
       return _mapDioException(error);
@@ -313,7 +292,6 @@ class AuthRemoteDataSource {
     return ServerException(message: error.toString());
   }
 
-  /// Map a [DioException] to the appropriate [AppException] subtype.
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
@@ -332,14 +310,14 @@ class AuthRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'You do not have permission to perform this action.',
           );
         }

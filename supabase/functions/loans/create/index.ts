@@ -1,8 +1,4 @@
-/**
- * POST /loans/create
- * Validate amount (3000-500000), interest_rate=0.20, co_maker required,
- * KYC complete, no duplicate active loan, status=draft.
- */
+// supabase/functions/loans/create/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -22,9 +18,8 @@ Deno.serve(async (req: Request) => {
     if ("error" in authResult) return authResult.error;
     const { payload } = authResult;
 
-    // Only borrowers can create loans
-    if (!hasRole(payload, "borrower")) {
-      return forbidden("Only borrowers can create loan applications");
+    if (!hasRole(payload, "lender")) {
+      return forbidden("Only lenders can create loan applications");
     }
 
     const body = await req.json();
@@ -36,32 +31,30 @@ Deno.serve(async (req: Request) => {
     const { principal, term_days, schedule_type, co_maker, purpose } = parsed.data;
     const supabase = getServiceClient();
 
-    // 1. Verify borrower exists and KYC is complete
-    const { data: borrower, error: borrowerError } = await supabase
-      .from("borrowers")
+    const { data: lender, error: borrowerError } = await supabase
+      .from('lenders')
       .select("id, kyc_status")
       .eq("user_id", payload.sub)
       .is("deleted_at", null)
       .single();
 
-    if (borrowerError || !borrower) {
-      return forbidden("Borrower profile not found");
+    if (borrowerError || !lender) {
+      return forbidden("Lender profile not found");
     }
 
     const KYC_COMPLETE_STATUSES = ["verified", "phone_verified", "docs_uploaded"];
-    if (!KYC_COMPLETE_STATUSES.includes(borrower.kyc_status) && borrower.kyc_status !== "verified") {
+    if (!KYC_COMPLETE_STATUSES.includes(lender.kyc_status) && lender.kyc_status !== "verified") {
       return unprocessable(
         "KYC verification is required before applying for a loan",
-        { kyc_status: borrower.kyc_status }
+        { kyc_status: lender.kyc_status }
       );
     }
 
-    // 2. Check for duplicate active loans
     const ACTIVE_STATUSES = ["draft", "under_review", "approved", "disbursed"];
     const { data: activeLoans, error: activeError } = await supabase
       .from("loans")
       .select("id, status")
-      .eq("borrower_id", borrower.id)
+      .eq("lender_id", lender.id)
       .in("status", ACTIVE_STATUSES)
       .is("deleted_at", null);
 
@@ -73,11 +66,10 @@ Deno.serve(async (req: Request) => {
       return conflict("You already have an active loan application");
     }
 
-    // 3. Verify documents are uploaded
     const { data: documents, error: docsError } = await supabase
       .from("documents")
       .select("id, document_type, status")
-      .eq("borrower_id", borrower.id)
+      .eq("lender_id", lender.id)
       .in("document_type", ["government_id", "proof_of_billing", "selfie"])
       .is("deleted_at", null);
 
@@ -98,7 +90,6 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // 4. Create co_maker record
     const { data: coMaker, error: coMakerError } = await supabase
       .from("co_makers")
       .insert({
@@ -115,14 +106,13 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to create co-maker record");
     }
 
-    // 5. Create the loan
     const interest_rate = 0.20;
     const total_payable = principal * (1 + interest_rate);
 
     const { data: loan, error: loanError } = await supabase
       .from("loans")
       .insert({
-        borrower_id: borrower.id,
+        lender_id: lender.id,
         co_maker_id: coMaker.id,
         principal,
         interest_rate,
@@ -135,18 +125,15 @@ Deno.serve(async (req: Request) => {
       .single();
 
     if (loanError || !loan) {
-      // Cleanup co_maker on failure
       await supabase.from("co_makers").delete().eq("id", coMaker.id);
       return serverError("Failed to create loan application");
     }
 
-    // 6. Link co_maker to loan via junction table
     await supabase.from("loan_co_makers").insert({
       loan_id: loan.id,
       co_maker_id: coMaker.id,
     });
 
-    // 7. Audit log
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,

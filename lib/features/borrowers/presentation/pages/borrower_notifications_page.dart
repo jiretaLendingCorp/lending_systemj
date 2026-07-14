@@ -1,21 +1,19 @@
+// lib/features/lenders/presentation/pages/borrower_notifications_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/features/notifications/presentation/providers/notification_notifier.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/notifications/presentation/providers/notification_notifier.dart';
 
-/// Mobile page displaying the borrower's notification center.
-///
-/// Delegates to the shared notification feature's center page
-/// for consistency across the app.
-class BorrowerNotificationsPage extends ConsumerStatefulWidget {
-  const BorrowerNotificationsPage({super.key});
+class LenderNotificationsPage extends ConsumerStatefulWidget {
+  const LenderNotificationsPage({super.key});
 
   @override
-  ConsumerState<BorrowerNotificationsPage> createState() =>
+  ConsumerState<LenderNotificationsPage> createState() =>
       _BorrowerNotificationsPageState();
 }
 
 class _BorrowerNotificationsPageState
-    extends ConsumerState<BorrowerNotificationsPage> {
+    extends ConsumerState<LenderNotificationsPage> {
   @override
   void initState() {
     super.initState();
@@ -124,7 +122,6 @@ class _BorrowerNotificationsPageState
   }
 }
 
-/// Single notification item widget.
 class _NotificationItem extends StatelessWidget {
   final dynamic notification;
   final VoidCallback onTap;
@@ -140,7 +137,7 @@ class _NotificationItem extends StatelessWidget {
     final isUnread = !(notification.isRead as bool);
 
     return Card(
-      color: isUnread ? ColorTokens.accent.withOpacity(0.03) : null,
+      color: isUnread ? ColorTokens.accent.withValues(alpha: 0.03) : null,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -149,7 +146,6 @@ class _NotificationItem extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Unread indicator
               if (isUnread)
                 Container(
                   width: 8,
@@ -162,7 +158,6 @@ class _NotificationItem extends StatelessWidget {
                 )
               else
                 const SizedBox(width: 18),
-              // Content
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

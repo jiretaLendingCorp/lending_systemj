@@ -1,17 +1,11 @@
+// lib/features/notifications/presentation/pages/notification_center_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/notifications/domain/entities/app_notification.dart';
-import 'package:lendflow/features/notifications/presentation/providers/notification_notifier.dart';
-import 'package:lendflow/features/notifications/presentation/widgets/notification_card.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Notification center page displaying all notifications.
-///
-/// Features:
-/// - Mark all as read button
-/// - Filter by notification type
-/// - Pull-to-refresh
-/// - Pagination (load more)
+import 'package:jireta_loan/features/notifications/presentation/providers/notification_notifier.dart';
+import 'package:jireta_loan/features/notifications/presentation/widgets/notification_card.dart';
+
 class NotificationCenterPage extends ConsumerStatefulWidget {
   const NotificationCenterPage({super.key});
 
@@ -61,7 +55,6 @@ class _NotificationCenterPageState
             .loadNotifications(type: _activeFilter),
         child: CustomScrollView(
           slivers: [
-            // Filter chips
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -87,7 +80,6 @@ class _NotificationCenterPageState
               ),
             ),
 
-            // Content
             if (notifState is NotificationLoading)
               const SliverFillRemaining(
                 child: Center(child: CircularProgressIndicator()),
@@ -213,7 +205,7 @@ class _NotificationCenterPageState
             .read(notificationFeatureProvider.notifier)
             .loadNotifications(type: type);
       },
-      selectedColor: ColorTokens.accent.withOpacity(0.15),
+      selectedColor: ColorTokens.accent.withValues(alpha: 0.15),
       checkmarkColor: ColorTokens.accent,
     );
   }

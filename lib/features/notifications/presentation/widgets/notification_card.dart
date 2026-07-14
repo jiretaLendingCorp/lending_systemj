@@ -1,16 +1,9 @@
+// lib/features/notifications/presentation/widgets/notification_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/notifications/domain/entities/app_notification.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/notifications/domain/entities/app_notification.dart';
 
-/// Card widget for displaying a single notification item.
-///
-/// Features:
-/// - Type-specific icon with colored background
-/// - Unread indicator (blue dot)
-/// - Title and body text
-/// - Relative timestamp
-/// - Tap handler for marking as read
 class NotificationCard extends StatelessWidget {
   final AppNotification notification;
   final VoidCallback? onTap;
@@ -30,7 +23,7 @@ class NotificationCard extends StatelessWidget {
     return Card(
       color: notification.isRead
           ? null
-          : ColorTokens.accent.withOpacity(0.03),
+          : ColorTokens.accent.withValues(alpha: 0.03),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -39,24 +32,21 @@ class NotificationCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Type icon
               Container(
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: typeColor.withOpacity(0.1),
+                  color: typeColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(typeIcon, color: typeColor, size: 20),
               ),
               const SizedBox(width: 12),
 
-              // Content
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title row with unread dot
                     Row(
                       children: [
                         if (!notification.isRead)
@@ -85,7 +75,6 @@ class NotificationCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
 
-                    // Body text
                     Text(
                       notification.body,
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -96,11 +85,10 @@ class NotificationCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
 
-                    // Timestamp
                     Text(
                       DateFormatter.formatRelative(notification.createdAt),
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.outline.withOpacity(0.7),
+                        color: theme.colorScheme.outline.withValues(alpha: 0.7),
                       ),
                     ),
                   ],

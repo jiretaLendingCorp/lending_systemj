@@ -1,16 +1,13 @@
+// lib/features/users/presentation/widgets/user_table_row.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
-import 'package:lendflow/features/users/domain/entities/user_management.dart';
-import 'package:lendflow/features/users/presentation/widgets/role_dropdown.dart';
-import 'package:lendflow/shared/widgets/avatar_widget.dart';
-import 'package:lendflow/shared/widgets/status_chip.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
 
-/// Data table row for a single [UserManagement] entry.
-///
-/// Displays user avatar, name, email, role, status, last login,
-/// and action buttons for admin operations.
+import 'package:jireta_loan/features/users/domain/entities/user_management.dart';
+import 'package:jireta_loan/features/users/presentation/widgets/role_dropdown.dart';
+import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
+import 'package:jireta_loan/shared/widgets/status_chip.dart';
+
 class UserTableRow extends StatelessWidget {
   final UserManagement user;
   final VoidCallback? onTap;
@@ -50,7 +47,6 @@ class UserTableRow extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Avatar + Name + Email
             Expanded(
               flex: 3,
               child: Row(
@@ -82,7 +78,6 @@ class UserTableRow extends StatelessWidget {
                 ],
               ),
             ),
-            // Role
             Expanded(
               flex: 2,
               child: RoleDropdown(
@@ -91,7 +86,6 @@ class UserTableRow extends StatelessWidget {
                 onChanged: onRoleChanged,
               ),
             ),
-            // Phone
             Expanded(
               flex: 2,
               child: Text(
@@ -99,15 +93,13 @@ class UserTableRow extends StatelessWidget {
                 style: theme.textTheme.bodySmall,
               ),
             ),
-            // Status
             Expanded(
               flex: 1,
               child: StatusChip(
                 label: user.statusLabel,
-                color: user.isActive ? ColorTokens.lightSuccess : ColorTokens.lightError,
+                statusColor: user.isActive ? StatusColor.success : StatusColor.error,
               ),
             ),
-            // Last Login
             Expanded(
               flex: 2,
               child: Text(
@@ -117,7 +109,6 @@ class UserTableRow extends StatelessWidget {
                 style: theme.textTheme.bodySmall,
               ),
             ),
-            // Actions
             Expanded(
               flex: 2,
               child: Row(

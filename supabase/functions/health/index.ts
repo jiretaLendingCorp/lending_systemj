@@ -1,7 +1,4 @@
-/**
- * GET /health
- * Returns { status: "ok", timestamp }
- */
+// supabase/functions/health/index.ts
 Deno.serve(async (req: Request) => {
   if (req.method !== "GET") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {

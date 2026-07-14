@@ -1,14 +1,11 @@
+// lib/features/settings/data/repositories/settings_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/settings/data/datasources/settings_remote_datasource.dart';
-import 'package:lendflow/features/settings/domain/entities/system_settings.dart';
-import 'package:lendflow/features/settings/domain/repositories/settings_repository.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/settings/data/datasources/settings_remote_datasource.dart';
+import 'package:jireta_loan/features/settings/domain/entities/system_settings.dart';
+import 'package:jireta_loan/features/settings/domain/repositories/settings_repository.dart';
 
-/// Concrete implementation of [SettingsRepository].
-///
-/// Delegates to [SettingsRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class SettingsRepositoryImpl implements SettingsRepository {
   final SettingsRemoteDataSource _remoteDataSource;
 
@@ -20,7 +17,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
     try {
       final settings = await _remoteDataSource.get();
       return Right(settings);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -48,7 +45,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
         reAuthToken: reAuthToken,
       );
       return Right(settings);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -81,7 +78,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
         reAuthToken: reAuthToken,
       );
       return Right(settings);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -116,7 +113,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
         reAuthToken: reAuthToken,
       );
       return Right(settings);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -146,7 +143,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
       final settings =
           await _remoteDataSource.updateSmsTemplate(smsTemplate: smsTemplate);
       return Right(settings);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -172,7 +169,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
         preferences: preferences,
       );
       return Right(settings);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -200,7 +197,7 @@ class SettingsRepositoryImpl implements SettingsRepository {
         reAuthToken: reAuthToken,
       );
       return Right(settings);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

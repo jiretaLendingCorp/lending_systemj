@@ -1,8 +1,4 @@
-/**
- * JWT verification and role extraction for LendFlow Edge Functions.
- * Uses Supabase Auth JWT verification with JWKS.
- */
-
+// supabase/functions/_shared/jwt.ts
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 export interface JwtPayload {
@@ -15,16 +11,13 @@ export interface JwtPayload {
   [key: string]: unknown;
 }
 
-export type UserRole = "borrower" | "rider" | "manager" | "admin";
+export type UserRole = "lender" | "rider" | "employee" | "head_manager";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const JWT_SECRET = Deno.env.get("JWT_SECRET") ?? "";
 
-/**
- * Verify a JWT token from the Authorization header.
- * Returns the decoded payload or null if invalid.
- */
+
 export async function verifyJwt(authHeader: string | null): Promise<JwtPayload | null> {
   if (!authHeader) return null;
 
@@ -32,10 +25,9 @@ export async function verifyJwt(authHeader: string | null): Promise<JwtPayload |
   if (!token) return null;
 
   try {
-    // Use Supabase Auth admin API to get user from token
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       global: {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer $token` },
       },
     });
 
@@ -43,7 +35,7 @@ export async function verifyJwt(authHeader: string | null): Promise<JwtPayload |
     if (error || !data.user) return null;
 
     const user = data.user;
-    const role: UserRole = (user.app_metadata?.role as UserRole) ?? "borrower";
+    const role: UserRole = (user.app_metadata?.role as UserRole) ?? "lender";
 
     return {
       sub: user.id,
@@ -56,17 +48,12 @@ export async function verifyJwt(authHeader: string | null): Promise<JwtPayload |
   }
 }
 
-/**
- * Check if a user has one of the required roles.
- */
+
 export function hasRole(payload: JwtPayload, ...roles: UserRole[]): boolean {
   return roles.includes(payload.role as UserRole);
 }
 
-/**
- * Require that the JWT payload has one of the given roles.
- * Returns the role if valid, or null if unauthorized.
- */
+
 export function requireRole(payload: JwtPayload, ...roles: UserRole[]): UserRole | null {
   if (hasRole(payload, ...roles)) {
     return payload.role as UserRole;
@@ -74,9 +61,7 @@ export function requireRole(payload: JwtPayload, ...roles: UserRole[]): UserRole
   return null;
 }
 
-/**
- * Extract and verify JWT from request, returning payload or error response.
- */
+
 export async function authenticateRequest(
   req: Request
 ): Promise<{ payload: JwtPayload } | { error: Response }> {

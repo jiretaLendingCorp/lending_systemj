@@ -1,7 +1,7 @@
-import 'package:lendflow/features/auth/domain/entities/user.dart';
-import 'package:lendflow/features/users/domain/entities/user_management.dart';
+// lib/features/users/data/models/user_management_model.dart
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/features/users/domain/entities/user_management.dart';
 
-/// Data-layer representation of [UserManagement], with JSON serialization.
 class UserManagementModel extends UserManagement {
   const UserManagementModel({
     required super.id,

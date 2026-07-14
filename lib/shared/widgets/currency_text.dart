@@ -1,28 +1,14 @@
+// lib/shared/widgets/currency_text.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
 
-/// PHP currency display widget using [CurrencyFormatter].
-///
-/// Formats a numeric `amount` as Philippine Peso (₱) and renders it
-/// with an optional custom text style. Supports compact (no decimals)
-/// and full formatting modes.
-///
-/// ```dart
-/// CurrencyText(amount: 12500.75)                         // ₱12,500.75
-/// CurrencyText(amount: 12500.75, compact: true)          // ₱12,501
-/// CurrencyText(amount: 12500.75, style: TextStyle(...))  // with custom style
-/// ```
 class CurrencyText extends StatelessWidget {
-  /// The monetary amount to format and display.
   final double amount;
 
-  /// Optional text style override.
   final TextStyle? style;
 
-  /// When `true`, omits decimal places. Defaults to `false`.
   final bool compact;
 
-  /// Whether to show the currency symbol. Defaults to `true`.
   final bool showSymbol;
 
   const CurrencyText({

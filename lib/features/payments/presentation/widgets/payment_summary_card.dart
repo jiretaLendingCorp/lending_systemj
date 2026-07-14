@@ -1,12 +1,9 @@
+// lib/features/payments/presentation/widgets/payment_summary_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 
-/// Payment amount summary card with breakdown.
-///
-/// Displays the payment amount, method fee (if applicable),
-/// and total amount to be charged/collected.
 class PaymentSummaryCard extends StatelessWidget {
   final double amount;
   final PaymentMethod method;
@@ -17,8 +14,6 @@ class PaymentSummaryCard extends StatelessWidget {
     required this.method,
   });
 
-  /// Convenience fee for GCash payments (Xendit processing fee).
-  /// In production, this would come from the backend.
   double get _convenienceFee => method == PaymentMethod.gcash ? 15.0 : 0.0;
 
   double get _totalAmount => amount + _convenienceFee;
@@ -61,7 +56,6 @@ class PaymentSummaryCard extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: 12),
 
-          // Payment amount
           _SummaryRow(
             label: 'Payment Amount',
             value: CurrencyFormatter.formatPhp(amount),
@@ -69,7 +63,6 @@ class PaymentSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // Method indicator
           _SummaryRow(
             label: 'Payment Method',
             value: method.label,
@@ -79,7 +72,6 @@ class PaymentSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // Convenience fee (GCash only)
           if (_convenienceFee > 0) ...[
             _SummaryRow(
               label: 'Convenience Fee',
@@ -95,7 +87,6 @@ class PaymentSummaryCard extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: 12),
 
-          // Total
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -115,7 +106,6 @@ class PaymentSummaryCard extends StatelessWidget {
             ],
           ),
 
-          // Note for GCash
           if (method == PaymentMethod.gcash) ...[
             const SizedBox(height: 12),
             Container(
@@ -145,7 +135,6 @@ class PaymentSummaryCard extends StatelessWidget {
             ),
           ],
 
-          // Note for Office
           if (method == PaymentMethod.office) ...[
             const SizedBox(height: 12),
             Container(
@@ -175,7 +164,6 @@ class PaymentSummaryCard extends StatelessWidget {
             ),
           ],
 
-          // Note for Cash
           if (method == PaymentMethod.cash) ...[
             const SizedBox(height: 12),
             Container(
@@ -216,7 +204,6 @@ class PaymentSummaryCard extends StatelessWidget {
       };
 }
 
-/// Single row in the payment summary.
 class _SummaryRow extends StatelessWidget {
   final String label;
   final String value;

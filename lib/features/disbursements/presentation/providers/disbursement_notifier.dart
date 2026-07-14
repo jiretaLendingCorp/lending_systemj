@@ -1,34 +1,28 @@
+// lib/features/disbursements/presentation/providers/disbursement_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/core/network/dio_client.dart';
-import 'package:lendflow/features/disbursements/data/datasources/disbursement_remote_datasource.dart';
-import 'package:lendflow/features/disbursements/data/repositories/disbursement_repository_impl.dart';
-import 'package:lendflow/features/disbursements/domain/entities/disbursement.dart';
-import 'package:lendflow/features/disbursements/domain/repositories/disbursement_repository.dart';
-import 'package:lendflow/features/disbursements/domain/usecases/assign_rider_usecase.dart';
-import 'package:lendflow/features/disbursements/domain/usecases/mark_delivered_usecase.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/features/disbursements/data/datasources/disbursement_remote_datasource.dart';
+import 'package:jireta_loan/features/disbursements/data/repositories/disbursement_repository_impl.dart';
+import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
+import 'package:jireta_loan/features/disbursements/domain/repositories/disbursement_repository.dart';
+import 'package:jireta_loan/features/disbursements/domain/usecases/assign_rider_usecase.dart';
+import 'package:jireta_loan/features/disbursements/domain/usecases/mark_delivered_usecase.dart';
 
-// ─────────────────────────────────────────────────────────────────
-// Disbursement state model
-// ─────────────────────────────────────────────────────────────────
 
-/// Represents the feature-level disbursement state.
 sealed class DisbursementFeatureState {
   const DisbursementFeatureState();
 }
 
-/// Initial state.
 class DisbursementInitial extends DisbursementFeatureState {
   const DisbursementInitial();
 }
 
-/// Disbursements are being loaded.
 class DisbursementsLoading extends DisbursementFeatureState {
   const DisbursementsLoading();
 }
 
-/// Disbursements loaded successfully.
 class DisbursementsLoaded extends DisbursementFeatureState {
   final List<Disbursement> disbursements;
   final int total;
@@ -47,14 +41,12 @@ class DisbursementsLoaded extends DisbursementFeatureState {
   bool get hasMore => disbursements.length < total;
 }
 
-/// Single disbursement detail loaded.
 class DisbursementDetailLoaded extends DisbursementFeatureState {
   final Disbursement disbursement;
 
   const DisbursementDetailLoaded({required this.disbursement});
 }
 
-/// Disbursement operation succeeded.
 class DisbursementOperationSuccess extends DisbursementFeatureState {
   final Disbursement disbursement;
   final String message;
@@ -65,7 +57,6 @@ class DisbursementOperationSuccess extends DisbursementFeatureState {
   });
 }
 
-/// An error occurred.
 class DisbursementError extends DisbursementFeatureState {
   final String message;
   final Failure? failure;
@@ -73,17 +64,12 @@ class DisbursementError extends DisbursementFeatureState {
   const DisbursementError(this.message, {this.failure});
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Providers
-// ─────────────────────────────────────────────────────────────────
 
-/// Provides the [DisbursementRemoteDataSource].
 final disbursementRemoteDataSourceProvider =
     Provider<DisbursementRemoteDataSource>((ref) {
   return DisbursementRemoteDataSource(dio: ref.watch(dioProvider));
 });
 
-/// Provides the [DisbursementRepository] implementation.
 final disbursementRepositoryProvider =
     Provider<DisbursementRepository>((ref) {
   return DisbursementRepositoryImpl(
@@ -91,14 +77,12 @@ final disbursementRepositoryProvider =
   );
 });
 
-/// Provides the [AssignRiderUseCase].
 final assignRiderUseCaseProvider = Provider<AssignRiderUseCase>((ref) {
   return AssignRiderUseCase(
     repository: ref.watch(disbursementRepositoryProvider),
   );
 });
 
-/// Provides the [MarkDeliveredUseCase].
 final markDeliveredUseCaseProvider =
     Provider<MarkDeliveredUseCase>((ref) {
   return MarkDeliveredUseCase(
@@ -106,7 +90,6 @@ final markDeliveredUseCaseProvider =
   );
 });
 
-/// Provides the [DisbursementNotifier].
 final disbursementFeatureProvider = StateNotifierProvider<
     DisbursementNotifier, DisbursementFeatureState>((ref) {
   return DisbursementNotifier(
@@ -116,20 +99,15 @@ final disbursementFeatureProvider = StateNotifierProvider<
   );
 });
 
-/// Provider for the current user's role.
 final disbursementUserRoleProvider = Provider<String?>((ref) {
   final authState = ref.watch(authProvider);
-  if (authState is AuthAuthenticated) {
+  if (authState is AppAuthAuthenticated) {
     return authState.role;
   }
   return null;
 });
 
-// ─────────────────────────────────────────────────────────────────
-// Disbursement notifier
-// ─────────────────────────────────────────────────────────────────
 
-/// Riverpod [StateNotifier] managing disbursement feature UI state.
 class DisbursementNotifier
     extends StateNotifier<DisbursementFeatureState> {
   final AssignRiderUseCase _assignRiderUseCase;
@@ -145,7 +123,6 @@ class DisbursementNotifier
         _repository = repository,
         super(const DisbursementInitial());
 
-  /// Load disbursements with optional filters.
   Future<void> loadDisbursements({
     String? status,
     String? method,
@@ -181,7 +158,6 @@ class DisbursementNotifier
     );
   }
 
-  /// Load more disbursements (pagination).
   Future<void> loadMore({String? riderId}) async {
     if (state is! DisbursementsLoaded) return;
     final current = state as DisbursementsLoaded;
@@ -195,7 +171,6 @@ class DisbursementNotifier
     );
   }
 
-  /// Load a single disbursement's detail.
   Future<void> loadDisbursementDetail(String disbursementId) async {
     state = const DisbursementsLoading();
 
@@ -208,7 +183,6 @@ class DisbursementNotifier
     );
   }
 
-  /// Assign a rider to a disbursement.
   Future<void> assignRider({
     required String disbursementId,
     required String riderId,
@@ -230,7 +204,6 @@ class DisbursementNotifier
     );
   }
 
-  /// Mark a disbursement as in transit.
   Future<void> markInTransit(String disbursementId) async {
     final result = await _repository.markInTransit(disbursementId);
     state = result.fold(
@@ -243,7 +216,6 @@ class DisbursementNotifier
     );
   }
 
-  /// Mark a disbursement as delivered (rider action).
   Future<void> markDelivered({
     required String disbursementId,
     required double latitude,
@@ -269,7 +241,6 @@ class DisbursementNotifier
     );
   }
 
-  /// Mark a disbursement as failed.
   Future<void> markFailed(String disbursementId, {String? reason}) async {
     final result =
         await _repository.markFailed(disbursementId, reason: reason);
@@ -283,7 +254,6 @@ class DisbursementNotifier
     );
   }
 
-  /// Reset state to initial.
   void resetState() {
     state = const DisbursementInitial();
   }

@@ -1,14 +1,10 @@
+// lib/features/riders/domain/usecases/complete_task_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
-import 'package:lendflow/features/riders/domain/repositories/rider_repository.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
+import 'package:jireta_loan/features/riders/domain/repositories/rider_repository.dart';
 
-/// Mark a task as completed (delivered or collected).
-///
-/// Dispatches to either [markDelivered] or [markCollected] based on
-/// the [completionType] parameter. Validates that the amount is
-/// provided for collection tasks.
 class CompleteTaskUseCase {
   final RiderRepository _repository;
 
@@ -16,16 +12,14 @@ class CompleteTaskUseCase {
       : _repository = repository;
 
   Future<Either<Failure, RiderTask>> call(CompleteTaskParams params) {
-    // Validate amount for collection tasks
     if (params.completionType == TaskCompletionType.collected &&
-        params.amount <= 0) {
+        (params.amount == null || params.amount! <= 0)) {
       return Future.value(const Left(ValidationFailure(
         message: 'Collection amount must be greater than zero.',
         fieldErrors: {'amount': 'Must be greater than zero.'},
       )));
     }
 
-    // Validate GPS coordinates
     if (params.latitude == 0.0 && params.longitude == 0.0) {
       return Future.value(const Left(ValidationFailure(
         message: 'GPS coordinates appear invalid. Please ensure location services are enabled.',
@@ -52,13 +46,11 @@ class CompleteTaskUseCase {
   }
 }
 
-/// Type of task completion.
 enum TaskCompletionType {
   delivered,
   collected;
 }
 
-/// Parameters for the complete task use case.
 class CompleteTaskParams extends Equatable {
   final String taskId;
   final TaskCompletionType completionType;

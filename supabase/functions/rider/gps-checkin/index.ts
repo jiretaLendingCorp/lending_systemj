@@ -1,7 +1,4 @@
-/**
- * POST /rider/gps-checkin
- * Validate coords against task address.
- */
+// supabase/functions/rider/gps-checkin/index.ts
 import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -52,7 +49,6 @@ Deno.serve(async (req: Request) => {
     const { task_id, task_type, latitude, longitude, accuracy } = parsed.data;
     const supabase = getServiceClient();
 
-    // Get rider profile
     const { data: rider } = await supabase
       .from("riders")
       .select("id")
@@ -64,7 +60,6 @@ Deno.serve(async (req: Request) => {
       return forbidden("Rider profile not found");
     }
 
-    // Update rider's current location
     await supabase
       .from("riders")
       .update({
@@ -73,7 +68,6 @@ Deno.serve(async (req: Request) => {
       })
       .eq("id", rider.id);
 
-    // Fetch the task
     let task: Record<string, unknown> | null = null;
     let targetAddress: string | null = null;
 
@@ -83,7 +77,7 @@ Deno.serve(async (req: Request) => {
         .select(
           `id, status, assigned_rider_id,
            loan:loans!disbursements_loan_id_fkey(
-             borrower:borrowers!loans_borrower_id_fkey(address)
+             lender:lenders!loans_lender_id_fkey(address)
            )`
         )
         .eq("id", task_id)
@@ -99,15 +93,14 @@ Deno.serve(async (req: Request) => {
       }
 
       task = data;
-      // @ts-expect-error nested join typing
-      targetAddress = data.loan?.borrower?.address ?? null;
+      targetAddress = data.loan?.lender?.address ?? null;
     } else if (task_type === "collection") {
       const { data, error } = await supabase
         .from("collections")
         .select(
           `id, status, assigned_rider_id,
            loan:loans!collections_loan_id_fkey(
-             borrower:borrowers!loans_borrower_id_fkey(address)
+             lender:lenders!loans_lender_id_fkey(address)
            )`
         )
         .eq("id", task_id)
@@ -123,29 +116,19 @@ Deno.serve(async (req: Request) => {
       }
 
       task = data;
-      // @ts-expect-error nested join typing
-      targetAddress = data.loan?.borrower?.address ?? null;
+      targetAddress = data.loan?.lender?.address ?? null;
     }
 
-    // Geocode the target address if available
-    // In production, use a geocoding service (Google Maps, Mapbox, etc.)
-    // For now, we accept the check-in and log the coordinates
     let distanceMeters: number | null = null;
     let withinRange = true;
 
-    // If we had target coordinates:
-    // const targetCoords = await geocodeAddress(targetAddress);
-    // distanceMeters = haversineDistance(latitude, longitude, targetCoords.lat, targetCoords.lng);
-    // withinRange = distanceMeters <= GPS_THRESHOLD_METERS;
 
-    // Update task status to in_transit
     const tableName = task_type === "disbursement" ? "disbursements" : "collections";
     await supabase
       .from(tableName)
       .update({ status: "in_transit", updated_at: new Date().toISOString() })
       .eq("id", task_id);
 
-    // Audit log
     await supabase.from("audit_logs").insert({
       user_id: payload.sub,
       user_role: payload.role,

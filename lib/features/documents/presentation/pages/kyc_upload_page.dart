@@ -1,20 +1,13 @@
+// lib/features/documents/presentation/pages/kyc_upload_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/documents/domain/entities/kyc_document.dart';
-import 'package:lendflow/features/documents/presentation/providers/document_notifier.dart';
-import 'package:lendflow/features/documents/presentation/widgets/document_type_card.dart';
-import 'package:lendflow/features/documents/presentation/widgets/document_upload_button.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-/// Mobile page for uploading KYC documents.
-///
-/// Features:
-/// - Four document type cards (Government ID, Proof of Billing, Selfie, Proof of Income)
-/// - Each card shows upload status and allows camera/picker selection
-/// - Upload progress indicator
-/// - Pull-to-refresh to reload document status
+import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
+import 'package:jireta_loan/features/documents/presentation/providers/document_notifier.dart';
+import 'package:jireta_loan/features/documents/presentation/widgets/document_type_card.dart';
+
 class KycUploadPage extends ConsumerStatefulWidget {
   const KycUploadPage({super.key});
 
@@ -48,7 +41,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
             ref.read(documentFeatureProvider.notifier).loadDocuments(),
         child: CustomScrollView(
           slivers: [
-            // Introduction text
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -74,7 +66,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
               ),
             ),
 
-            // Upload progress
             if (docState is DocumentUploading)
               SliverToBoxAdapter(
                 child: Padding(
@@ -86,7 +77,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                 ),
               ),
 
-            // Document type cards
             SliverPadding(
               padding: const EdgeInsets.all(16),
               sliver: SliverList(
@@ -114,7 +104,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
               ),
             ),
 
-            // Error message
             if (docState is DocumentError)
               SliverToBoxAdapter(
                 child: Padding(
@@ -122,10 +111,10 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: ColorTokens.lightError.withOpacity(0.05),
+                      color: ColorTokens.lightError.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: ColorTokens.lightError.withOpacity(0.2),
+                        color: ColorTokens.lightError.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -147,7 +136,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                 ),
               ),
 
-            // Upload success
             if (docState is DocumentUploaded)
               SliverToBoxAdapter(
                 child: Padding(
@@ -155,10 +143,10 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: ColorTokens.lightSuccess.withOpacity(0.05),
+                      color: ColorTokens.lightSuccess.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: ColorTokens.lightSuccess.withOpacity(0.2),
+                        color: ColorTokens.lightSuccess.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -178,7 +166,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                 ),
               ),
 
-            // Tips section
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
@@ -195,7 +182,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
     DocumentType type,
     DocumentFeatureState docState,
   ) {
-    // Find the existing document for this type (if any)
     KycDocument? existingDoc;
     if (docState is DocumentsLoaded) {
       existingDoc = docState.findByType(type);
@@ -215,7 +201,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
   }
 
   Future<void> _handleUpload(DocumentType type) async {
-    // Show source selection dialog
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
       builder: (context) => SafeArea(
@@ -287,7 +272,6 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
   }
 }
 
-/// Upload progress card widget.
 class _UploadProgressCard extends StatelessWidget {
   final DocumentType documentType;
   final double progress;
@@ -301,7 +285,7 @@ class _UploadProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
-      color: ColorTokens.accent.withOpacity(0.05),
+      color: ColorTokens.accent.withValues(alpha: 0.05),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -351,7 +335,6 @@ class _UploadProgressCard extends StatelessWidget {
   }
 }
 
-/// Tips card for document upload guidance.
 class _TipsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -415,7 +398,6 @@ class _TipsCard extends StatelessWidget {
   }
 }
 
-/// Wrapper for document preview navigation.
 class _DocumentPreviewWrapper extends ConsumerWidget {
   final KycDocument document;
 

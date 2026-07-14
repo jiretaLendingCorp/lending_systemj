@@ -1,38 +1,19 @@
+// lib/shared/widgets/confirm_dialog.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// Confirmation dialog with title, message, confirm (destructive) and cancel buttons.
-///
-/// Designed for destructive or irreversible actions such as deleting
-/// records, rejecting loans, or cancelling operations.
-///
-/// ```dart
-/// final confirmed = await showConfirmDialog(
-///   context,
-///   title: 'Delete User',
-///   message: 'This action cannot be undone. Are you sure?',
-/// );
-/// if (confirmed == true) { ... }
-/// ```
 class ConfirmDialog extends StatelessWidget {
-  /// Dialog title.
   final String title;
 
-  /// Descriptive message explaining the consequence of the action.
   final String message;
 
-  /// Label for the confirm button. Defaults to 'Confirm'.
   final String confirmLabel;
 
-  /// Label for the cancel button. Defaults to 'Cancel'.
   final String cancelLabel;
 
-  /// Whether the confirm button should use a destructive (red) style.
-  /// Defaults to `true`.
   final bool isDestructive;
 
-  /// Optional icon displayed above the title.
   final IconData? icon;
 
   const ConfirmDialog({
@@ -45,10 +26,6 @@ class ConfirmDialog extends StatelessWidget {
     this.icon,
   });
 
-  /// Convenience method to show the dialog and return a `bool?`.
-  ///
-  /// Returns `true` when the confirm button is pressed, `false` or
-  /// `null` when cancelled or dismissed.
   static Future<bool?> show(
     BuildContext context, {
     required String title,

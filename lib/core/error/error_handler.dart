@@ -1,20 +1,22 @@
+// lib/core/error/error_handler.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
 
-/// Maps [DioExceptionType]s and HTTP status codes to typed [Failure]s.
-///
-/// Every data-source call should go through [handleDioError] so the
-/// repository layer always receives a predictable [Failure] subtype.
 class ErrorHandler {
   ErrorHandler._();
 
-  /// Convert a [DioException] into a domain [Failure].
   static Failure handleDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+        return NetworkFailure(
+          message: 'Connection timed out. Please try again.',
+          code: error.response?.statusCode,
+        );
+
+      case DioExceptionType.transformTimeout:
         return NetworkFailure(
           message: 'Connection timed out. Please try again.',
           code: error.response?.statusCode,
@@ -52,7 +54,6 @@ class ErrorHandler {
     }
   }
 
-  /// Map an [AppException] to a [Failure].
   static Failure handleAppException(AppException exception) {
     return switch (exception) {
       ServerException(:final message, :final statusCode) => ServerFailure(
@@ -64,7 +65,7 @@ class ErrorHandler {
           message: message,
           code: statusCode,
         ),
-      AuthException(:final message, :final statusCode, :final requiresReAuth) =>
+      AppAuthException(:final message, :final statusCode, :final requiresReAuth) =>
         AuthFailure(
           message: message,
           code: statusCode,
@@ -142,7 +143,6 @@ class ErrorHandler {
     }
   }
 
-  /// Attempt to pull a human-readable message from the response body.
   static String? _extractMessage(dynamic data) {
     if (data is Map<String, dynamic>) {
       return data['message'] as String? ??
@@ -155,7 +155,6 @@ class ErrorHandler {
     return null;
   }
 
-  /// Attempt to extract field-level validation errors from the response.
   static Map<String, String> _extractFieldErrors(dynamic data) {
     if (data is Map<String, dynamic>) {
       final errors = data['errors'];

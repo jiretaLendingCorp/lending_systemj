@@ -1,11 +1,8 @@
+// lib/features/reports/presentation/widgets/report_summary_card.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
 
-/// KPI summary card widget for report pages.
-///
-/// Displays a key metric with label, value, and optional
-/// subtitle or trend indicator.
 class ReportSummaryCard extends StatelessWidget {
   final String label;
   final String value;
@@ -56,7 +53,7 @@ class ReportSummaryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: effectiveIconColor.withOpacity(0.1),
+                  color: effectiveIconColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, size: 20, color: effectiveIconColor),
@@ -67,8 +64,8 @@ class ReportSummaryCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: trendUp
-                        ? ColorTokens.lightSuccess.withOpacity(0.1)
-                        : ColorTokens.lightError.withOpacity(0.1),
+                        ? ColorTokens.lightSuccess.withValues(alpha: 0.1)
+                        : ColorTokens.lightError.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(

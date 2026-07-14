@@ -1,30 +1,33 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+// test/widget_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:lending_systemj/main.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('AppConstants expose correct app name', (tester) async {
+    expect(AppConstants.appName, 'Jireta Loan');
+    expect(AppConstants.currencySymbol, '₱');
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('Role constants are renamed correctly', (tester) async {
+    expect(AppConstants.roleHeadManager, 'head_manager');
+    expect(AppConstants.roleEmployee, 'employee');
+    expect(AppConstants.roleRider, 'rider');
+    expect(AppConstants.roleLender, 'lender');
+    expect(AppConstants.validRoles, contains('head_manager'));
+    expect(AppConstants.validRoles, contains('employee'));
+    expect(AppConstants.validRoles, contains('lender'));
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('MaterialApp smoke test', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: Center(child: Text('Jireta Loan')),
+        ),
+      ),
+    );
+    expect(find.text('Jireta Loan'), findsOneWidget);
   });
 }

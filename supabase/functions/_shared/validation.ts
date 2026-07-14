@@ -1,10 +1,6 @@
-/**
- * Zod validation schemas for all LendFlow request bodies.
- */
-
+// supabase/functions/_shared/validation.ts
 import { z } from "https://esm.sh/zod@3.22.4";
 
-// ─── Auth ────────────────────────────────────────────────────────
 
 export const otpSendSchema = z.object({
   phone: z
@@ -24,7 +20,6 @@ export const googleCallbackSchema = z.object({
   state: z.string().optional(),
 });
 
-// ─── Loans ───────────────────────────────────────────────────────
 
 export const loanCreateSchema = z
   .object({
@@ -58,7 +53,6 @@ export const loanRejectSchema = z.object({
   reason: z.string().min(5, "Rejection reason is required").max(1000),
 });
 
-// ─── Payments ────────────────────────────────────────────────────
 
 export const paymentCreateSchema = z.object({
   loan_id: z.string().uuid("Invalid loan ID"),
@@ -68,7 +62,6 @@ export const paymentCreateSchema = z.object({
   idempotency_key: z.string().min(1, "Idempotency key is required"),
 });
 
-// ─── GPS Check-in ────────────────────────────────────────────────
 
 export const gpsCheckinSchema = z.object({
   task_id: z.string().uuid("Invalid task ID"),
@@ -84,13 +77,11 @@ export const gpsCheckinSchema = z.object({
   accuracy: z.number().positive().optional(),
 });
 
-// ─── Assign Rider ────────────────────────────────────────────────
 
 export const assignRiderSchema = z.object({
   rider_id: z.string().uuid("Invalid rider ID"),
 });
 
-// ─── Mark Delivered ──────────────────────────────────────────────
 
 export const markDeliveredSchema = z.object({
   latitude: z
@@ -104,7 +95,6 @@ export const markDeliveredSchema = z.object({
   receipt_url: z.string().url("Invalid receipt URL").optional(),
 });
 
-// ─── Mark Collected ──────────────────────────────────────────────
 
 export const markCollectedSchema = z.object({
   latitude: z
@@ -120,7 +110,6 @@ export const markCollectedSchema = z.object({
   method: z.enum(["gcash", "office", "cash"]),
 });
 
-// ─── Settings ────────────────────────────────────────────────────
 
 export const settingsUpdateSchema = z.object({
   interest_rate: z.number().min(0).max(1).optional(),
@@ -131,7 +120,6 @@ export const settingsUpdateSchema = z.object({
   system_flags: z.record(z.unknown()).optional(),
 });
 
-// ─── List Query Params ───────────────────────────────────────────
 
 export const loanListQuerySchema = z.object({
   status: z
@@ -150,7 +138,6 @@ export const paymentListQuerySchema = z.object({
   page_size: z.coerce.number().int().min(1).max(100).default(20),
 });
 
-// ─── Webhook schemas ─────────────────────────────────────────────
 
 export const xenditWebhookSchema = z.object({
   id: z.string(),

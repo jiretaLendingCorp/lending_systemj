@@ -1,7 +1,7 @@
-import 'package:lendflow/features/borrowers/domain/entities/borrower_profile.dart';
+// lib/features/lenders/data/models/borrower_profile_model.dart
+import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
 
-/// Data-layer representation of a [BorrowerProfile], with JSON serialization.
-class BorrowerProfileModel extends BorrowerProfile {
+class BorrowerProfileModel extends LenderProfile {
   const BorrowerProfileModel({
     required super.id,
     required super.userId,

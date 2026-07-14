@@ -1,6 +1,6 @@
-import 'package:lendflow/features/reports/domain/entities/report_data.dart';
+// lib/features/reports/data/models/report_models.dart
+import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
 
-/// Data-layer representation of [PortfolioReport], with JSON serialization.
 class PortfolioReportModel extends PortfolioReport {
   const PortfolioReportModel({
     super.totalDisbursed = 0.0,
@@ -46,7 +46,6 @@ class PortfolioReportModel extends PortfolioReport {
   }
 }
 
-/// Data-layer representation of [OverdueReport], with JSON serialization.
 class OverdueReportModel extends OverdueReport {
   const OverdueReportModel({
     super.days1to7 = 0,
@@ -55,7 +54,7 @@ class OverdueReportModel extends OverdueReport {
     super.amount1to7 = 0.0,
     super.amount8to30 = 0.0,
     super.amount30Plus = 0.0,
-    super.overdueBorrowers = const [],
+    super.overdueLenders = const [],
     super.generatedAt,
   });
 
@@ -67,7 +66,7 @@ class OverdueReportModel extends OverdueReport {
       amount1to7: _parseDouble(json['amount_1_to_7'] ?? json['amount1to7']),
       amount8to30: _parseDouble(json['amount_8_to_30'] ?? json['amount8to30']),
       amount30Plus: _parseDouble(json['amount_30_plus'] ?? json['amount30Plus']),
-      overdueBorrowers: (json['overdue_borrowers'] as List<dynamic>? ?? [])
+      overdueLenders: (json['overdue_lenders'] as List<dynamic>? ?? [])
           .map((e) => OverdueBorrowerModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       generatedAt: _parseDateTime(json['generated_at'] ?? json['generatedAt']),
@@ -82,7 +81,7 @@ class OverdueReportModel extends OverdueReport {
       'amount_1_to_7': amount1to7,
       'amount_8_to_30': amount8to30,
       'amount_30_plus': amount30Plus,
-      'overdue_borrowers': overdueBorrowers
+      'overdue_lenders': overdueLenders
           .map((e) => (e as OverdueBorrowerModel).toJson())
           .toList(),
       'generated_at': generatedAt.toIso8601String(),
@@ -90,11 +89,10 @@ class OverdueReportModel extends OverdueReport {
   }
 }
 
-/// Data-layer representation of [OverdueBorrower], with JSON serialization.
-class OverdueBorrowerModel extends OverdueBorrower {
+class OverdueBorrowerModel extends OverdueLender {
   const OverdueBorrowerModel({
-    required super.borrowerId,
-    required super.borrowerName,
+    required super.lenderId,
+    required super.lenderName,
     required super.loanId,
     required super.overdueAmount,
     required super.daysOverdue,
@@ -103,8 +101,8 @@ class OverdueBorrowerModel extends OverdueBorrower {
 
   factory OverdueBorrowerModel.fromJson(Map<String, dynamic> json) {
     return OverdueBorrowerModel(
-      borrowerId: json['borrower_id'] as String? ?? json['borrowerId'] as String? ?? '',
-      borrowerName: json['borrower_name'] as String? ?? json['borrowerName'] as String? ?? '',
+      lenderId: json['lender_id'] as String? ?? json['lenderId'] as String? ?? '',
+      lenderName: json['lender_name'] as String? ?? json['lenderName'] as String? ?? '',
       loanId: json['loan_id'] as String? ?? json['loanId'] as String? ?? '',
       overdueAmount: _parseDouble(json['overdue_amount'] ?? json['overdueAmount']),
       daysOverdue: json['days_overdue'] as int? ?? json['daysOverdue'] as int? ?? 0,
@@ -114,8 +112,8 @@ class OverdueBorrowerModel extends OverdueBorrower {
 
   Map<String, dynamic> toJson() {
     return {
-      'borrower_id': borrowerId,
-      'borrower_name': borrowerName,
+      'lender_id': lenderId,
+      'lender_name': lenderName,
       'loan_id': loanId,
       'overdue_amount': overdueAmount,
       'days_overdue': daysOverdue,
@@ -124,7 +122,6 @@ class OverdueBorrowerModel extends OverdueBorrower {
   }
 }
 
-/// Data-layer representation of [CollectionEfficiencyReport], with JSON serialization.
 class CollectionEfficiencyReportModel extends CollectionEfficiencyReport {
   const CollectionEfficiencyReportModel({
     super.totalExpected = 0.0,
@@ -172,7 +169,6 @@ class CollectionEfficiencyReportModel extends CollectionEfficiencyReport {
   }
 }
 
-// ── Shared parsing helpers ──────────────────────────────────────
 
 double _parseDouble(dynamic value, {double fallback = 0.0}) {
   if (value == null) return fallback;

@@ -1,39 +1,32 @@
+// lib/features/payments/presentation/providers/payment_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/core/network/dio_client.dart';
-import 'package:lendflow/features/payments/data/datasources/payment_remote_datasource.dart';
-import 'package:lendflow/features/payments/data/repositories/payment_repository_impl.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
-import 'package:lendflow/features/payments/domain/repositories/payment_repository.dart';
-import 'package:lendflow/features/payments/domain/usecases/create_payment_usecase.dart';
-import 'package:lendflow/features/payments/domain/usecases/get_payments_usecase.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/features/payments/data/datasources/payment_remote_datasource.dart';
+import 'package:jireta_loan/features/payments/data/repositories/payment_repository_impl.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/features/payments/domain/repositories/payment_repository.dart';
+import 'package:jireta_loan/features/payments/domain/usecases/create_payment_usecase.dart';
+import 'package:jireta_loan/features/payments/domain/usecases/get_payments_usecase.dart';
 
-// ─────────────────────────────────────────────────────────────────
-// Payment state model
-// ─────────────────────────────────────────────────────────────────
 
-/// Represents the feature-level payment state managed by [PaymentNotifier].
 sealed class PaymentFeatureState {
   const PaymentFeatureState();
 }
 
-/// Initial state.
 class PaymentInitial extends PaymentFeatureState {
   const PaymentInitial();
 }
 
-/// Payments are being loaded.
 class PaymentsLoading extends PaymentFeatureState {
   const PaymentsLoading();
 }
 
-/// Creating a payment.
 class PaymentCreating extends PaymentFeatureState {
   const PaymentCreating();
 }
 
-/// Payments loaded successfully.
 class PaymentsLoaded extends PaymentFeatureState {
   final List<Payment> payments;
   final int total;
@@ -49,18 +42,15 @@ class PaymentsLoaded extends PaymentFeatureState {
     this.currentPage = 1,
   });
 
-  /// Whether there are more pages to load.
   bool get hasMore => payments.length < total;
 }
 
-/// Single payment detail loaded.
 class PaymentDetailLoaded extends PaymentFeatureState {
   final Payment payment;
 
   const PaymentDetailLoaded({required this.payment});
 }
 
-/// Payment operation succeeded (create, verify, reject).
 class PaymentOperationSuccess extends PaymentFeatureState {
   final Payment payment;
   final String message;
@@ -71,7 +61,6 @@ class PaymentOperationSuccess extends PaymentFeatureState {
   });
 }
 
-/// An error occurred.
 class PaymentError extends PaymentFeatureState {
   final String message;
   final Failure? failure;
@@ -79,34 +68,26 @@ class PaymentError extends PaymentFeatureState {
   const PaymentError(this.message, {this.failure});
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Providers
-// ─────────────────────────────────────────────────────────────────
 
-/// Provides the [PaymentRemoteDataSource].
 final paymentRemoteDataSourceProvider =
     Provider<PaymentRemoteDataSource>((ref) {
   return PaymentRemoteDataSource(dio: ref.watch(dioProvider));
 });
 
-/// Provides the [PaymentRepository] implementation.
 final paymentRepositoryProvider = Provider<PaymentRepository>((ref) {
   return PaymentRepositoryImpl(
     remoteDataSource: ref.watch(paymentRemoteDataSourceProvider),
   );
 });
 
-/// Provides the [CreatePaymentUseCase].
 final createPaymentUseCaseProvider = Provider<CreatePaymentUseCase>((ref) {
   return CreatePaymentUseCase(repository: ref.watch(paymentRepositoryProvider));
 });
 
-/// Provides the [GetPaymentsUseCase].
 final getPaymentsUseCaseProvider = Provider<GetPaymentsUseCase>((ref) {
   return GetPaymentsUseCase(repository: ref.watch(paymentRepositoryProvider));
 });
 
-/// Provides the [PaymentNotifier] for payment feature screens.
 final paymentFeatureProvider =
     StateNotifierProvider<PaymentNotifier, PaymentFeatureState>((ref) {
   return PaymentNotifier(
@@ -116,20 +97,15 @@ final paymentFeatureProvider =
   );
 });
 
-/// Provider for the current user's role (for role-based payment UI).
 final paymentUserRoleProvider = Provider<String?>((ref) {
   final authState = ref.watch(authProvider);
-  if (authState is AuthAuthenticated) {
+  if (authState is AppAuthAuthenticated) {
     return authState.role;
   }
   return null;
 });
 
-// ─────────────────────────────────────────────────────────────────
-// Payment notifier
-// ─────────────────────────────────────────────────────────────────
 
-/// Riverpod [StateNotifier] managing payment feature UI state.
 class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
   final CreatePaymentUseCase _createPaymentUseCase;
   final GetPaymentsUseCase _getPaymentsUseCase;
@@ -144,10 +120,9 @@ class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
         _repository = repository,
         super(const PaymentInitial());
 
-  /// Load payments with optional filters.
   Future<void> loadPayments({
     String? loanId,
-    String? borrowerId,
+    String? lenderId,
     String? status,
     String? method,
     int page = 1,
@@ -159,7 +134,7 @@ class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
     final result = await _getPaymentsUseCase(
       GetPaymentsParams(
         loanId: loanId,
-        borrowerId: borrowerId,
+        lenderId: lenderId,
         status: status,
         method: method,
         page: page,
@@ -184,10 +159,9 @@ class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
     );
   }
 
-  /// Load more payments (pagination).
   Future<void> loadMore({
     String? loanId,
-    String? borrowerId,
+    String? lenderId,
   }) async {
     if (state is! PaymentsLoaded) return;
     final current = state as PaymentsLoaded;
@@ -195,14 +169,13 @@ class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
 
     await loadPayments(
       loanId: loanId,
-      borrowerId: borrowerId,
+      lenderId: lenderId,
       status: current.activeStatusFilter,
       method: current.activeMethodFilter,
       page: current.currentPage + 1,
     );
   }
 
-  /// Load a single payment's detail.
   Future<void> loadPaymentDetail(String paymentId) async {
     state = const PaymentsLoading();
 
@@ -213,7 +186,6 @@ class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
     );
   }
 
-  /// Create a new payment.
   Future<void> createPayment({
     required String loanId,
     required double amount,
@@ -242,7 +214,6 @@ class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
     );
   }
 
-  /// Verify a payment (admin/manager).
   Future<void> verifyPayment(String paymentId) async {
     final result = await _repository.verify(paymentId);
     state = result.fold(
@@ -254,7 +225,6 @@ class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
     );
   }
 
-  /// Reject a payment (admin/manager).
   Future<void> rejectPayment(String paymentId, {String? reason}) async {
     final result = await _repository.reject(paymentId, reason: reason);
     state = result.fold(
@@ -266,7 +236,6 @@ class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
     );
   }
 
-  /// Reset state to initial.
   void resetState() {
     state = const PaymentInitial();
   }

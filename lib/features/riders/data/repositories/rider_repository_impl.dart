@@ -1,14 +1,11 @@
+// lib/features/riders/data/repositories/rider_repository_impl.dart
 import 'package:dartz/dartz.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/features/riders/data/datasources/rider_remote_datasource.dart';
-import 'package:lendflow/features/riders/domain/entities/rider_task.dart';
-import 'package:lendflow/features/riders/domain/repositories/rider_repository.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/features/riders/data/datasources/rider_remote_datasource.dart';
+import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
+import 'package:jireta_loan/features/riders/domain/repositories/rider_repository.dart';
 
-/// Concrete implementation of [RiderRepository].
-///
-/// Delegates to [RiderRemoteDataSource] for all network operations
-/// and maps [AppException] subtypes to [Failure] subtypes.
 class RiderRepositoryImpl implements RiderRepository {
   final RiderRemoteDataSource _remoteDataSource;
 
@@ -20,7 +17,7 @@ class RiderRepositoryImpl implements RiderRepository {
     try {
       final tasks = await _remoteDataSource.getTodayTasks(type: type);
       return Right(tasks);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -55,7 +52,7 @@ class RiderRepositoryImpl implements RiderRepository {
         longitude: longitude,
       );
       return Right(task);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -92,7 +89,7 @@ class RiderRepositoryImpl implements RiderRepository {
         photoReceiptUrl: photoReceiptUrl,
       );
       return Right(task);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -131,7 +128,7 @@ class RiderRepositoryImpl implements RiderRepository {
         photoReceiptUrl: photoReceiptUrl,
       );
       return Right(task);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,
@@ -168,7 +165,7 @@ class RiderRepositoryImpl implements RiderRepository {
         pageSize: pageSize,
       );
       return Right(tasks);
-    } on AuthException catch (e) {
+    } on AppAuthException catch (e) {
       return Left(AuthFailure(
         message: e.message,
         requiresReAuth: e.requiresReAuth,

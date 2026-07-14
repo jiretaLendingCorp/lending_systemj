@@ -1,27 +1,21 @@
+// lib/features/lenders/presentation/pages/borrower_payments_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/borrowers/presentation/providers/borrower_notifier.dart';
-import 'package:lendflow/features/payments/domain/entities/payment.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/lenders/presentation/providers/borrower_notifier.dart';
+import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 
-/// Mobile page displaying the borrower's payment history and payment options.
-///
-/// Features:
-/// - Make a payment button
-/// - Payment history list with status indicators
-/// - Filter by loan
-/// - Pull-to-refresh
-class BorrowerPaymentsPage extends ConsumerStatefulWidget {
-  const BorrowerPaymentsPage({super.key});
+class LenderPaymentsPage extends ConsumerStatefulWidget {
+  const LenderPaymentsPage({super.key});
 
   @override
-  ConsumerState<BorrowerPaymentsPage> createState() =>
+  ConsumerState<LenderPaymentsPage> createState() =>
       _BorrowerPaymentsPageState();
 }
 
-class _BorrowerPaymentsPageState extends ConsumerState<BorrowerPaymentsPage> {
+class _BorrowerPaymentsPageState extends ConsumerState<LenderPaymentsPage> {
   @override
   void initState() {
     super.initState();
@@ -53,7 +47,6 @@ class _BorrowerPaymentsPageState extends ConsumerState<BorrowerPaymentsPage> {
             ref.read(borrowerFeatureProvider.notifier).loadPayments(),
         child: CustomScrollView(
           slivers: [
-            // Make Payment Banner
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -69,7 +62,6 @@ class _BorrowerPaymentsPageState extends ConsumerState<BorrowerPaymentsPage> {
               ),
             ),
 
-            // Content
             if (borrowerState is BorrowerLoading)
               const SliverFillRemaining(
                 child: Center(child: CircularProgressIndicator()),
@@ -178,7 +170,6 @@ class _BorrowerPaymentsPageState extends ConsumerState<BorrowerPaymentsPage> {
   }
 }
 
-/// Card widget for displaying a payment record.
 class _PaymentCard extends StatelessWidget {
   final Payment payment;
 
@@ -198,7 +189,7 @@ class _PaymentCard extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.1),
+                color: statusColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -231,7 +222,7 @@ class _PaymentCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.1),
+                color: statusColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(

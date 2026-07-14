@@ -1,34 +1,28 @@
+// lib/features/collections/presentation/providers/collection_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/core/network/dio_client.dart';
-import 'package:lendflow/features/collections/data/datasources/collection_remote_datasource.dart';
-import 'package:lendflow/features/collections/data/repositories/collection_repository_impl.dart';
-import 'package:lendflow/features/collections/domain/entities/collection.dart';
-import 'package:lendflow/features/collections/domain/repositories/collection_repository.dart';
-import 'package:lendflow/features/collections/domain/usecases/assign_rider_collection_usecase.dart';
-import 'package:lendflow/features/collections/domain/usecases/mark_collected_usecase.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/features/collections/data/datasources/collection_remote_datasource.dart';
+import 'package:jireta_loan/features/collections/data/repositories/collection_repository_impl.dart';
+import 'package:jireta_loan/features/collections/domain/entities/collection.dart';
+import 'package:jireta_loan/features/collections/domain/repositories/collection_repository.dart';
+import 'package:jireta_loan/features/collections/domain/usecases/assign_rider_collection_usecase.dart';
+import 'package:jireta_loan/features/collections/domain/usecases/mark_collected_usecase.dart';
 
-// ─────────────────────────────────────────────────────────────────
-// Collection state model
-// ─────────────────────────────────────────────────────────────────
 
-/// Represents the feature-level collection state.
 sealed class CollectionFeatureState {
   const CollectionFeatureState();
 }
 
-/// Initial state.
 class CollectionInitial extends CollectionFeatureState {
   const CollectionInitial();
 }
 
-/// Collections are being loaded.
 class CollectionsLoading extends CollectionFeatureState {
   const CollectionsLoading();
 }
 
-/// Collections loaded successfully.
 class CollectionsLoaded extends CollectionFeatureState {
   final List<Collection> collections;
   final int total;
@@ -47,14 +41,12 @@ class CollectionsLoaded extends CollectionFeatureState {
   bool get hasMore => collections.length < total;
 }
 
-/// Single collection detail loaded.
 class CollectionDetailLoaded extends CollectionFeatureState {
   final Collection collection;
 
   const CollectionDetailLoaded({required this.collection});
 }
 
-/// Collection operation succeeded.
 class CollectionOperationSuccess extends CollectionFeatureState {
   final Collection collection;
   final String message;
@@ -65,7 +57,6 @@ class CollectionOperationSuccess extends CollectionFeatureState {
   });
 }
 
-/// An error occurred.
 class CollectionError extends CollectionFeatureState {
   final String message;
   final Failure? failure;
@@ -73,17 +64,12 @@ class CollectionError extends CollectionFeatureState {
   const CollectionError(this.message, {this.failure});
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Providers
-// ─────────────────────────────────────────────────────────────────
 
-/// Provides the [CollectionRemoteDataSource].
 final collectionRemoteDataSourceProvider =
     Provider<CollectionRemoteDataSource>((ref) {
   return CollectionRemoteDataSource(dio: ref.watch(dioProvider));
 });
 
-/// Provides the [CollectionRepository] implementation.
 final collectionRepositoryProvider =
     Provider<CollectionRepository>((ref) {
   return CollectionRepositoryImpl(
@@ -91,7 +77,6 @@ final collectionRepositoryProvider =
   );
 });
 
-/// Provides the [AssignRiderCollectionUseCase].
 final assignRiderCollectionUseCaseProvider =
     Provider<AssignRiderCollectionUseCase>((ref) {
   return AssignRiderCollectionUseCase(
@@ -99,7 +84,6 @@ final assignRiderCollectionUseCaseProvider =
   );
 });
 
-/// Provides the [MarkCollectedUseCase].
 final markCollectedUseCaseProvider =
     Provider<MarkCollectedUseCase>((ref) {
   return MarkCollectedUseCase(
@@ -107,7 +91,6 @@ final markCollectedUseCaseProvider =
   );
 });
 
-/// Provides the [CollectionNotifier].
 final collectionFeatureProvider = StateNotifierProvider<
     CollectionNotifier, CollectionFeatureState>((ref) {
   return CollectionNotifier(
@@ -117,20 +100,15 @@ final collectionFeatureProvider = StateNotifierProvider<
   );
 });
 
-/// Provider for the current user's role.
 final collectionUserRoleProvider = Provider<String?>((ref) {
   final authState = ref.watch(authProvider);
-  if (authState is AuthAuthenticated) {
+  if (authState is AppAuthAuthenticated) {
     return authState.role;
   }
   return null;
 });
 
-// ─────────────────────────────────────────────────────────────────
-// Collection notifier
-// ─────────────────────────────────────────────────────────────────
 
-/// Riverpod [StateNotifier] managing collection feature UI state.
 class CollectionNotifier
     extends StateNotifier<CollectionFeatureState> {
   final AssignRiderCollectionUseCase _assignRiderUseCase;
@@ -146,12 +124,11 @@ class CollectionNotifier
         _repository = repository,
         super(const CollectionInitial());
 
-  /// Load collections with optional filters.
   Future<void> loadCollections({
     String? status,
     String? method,
     String? riderId,
-    String? borrowerId,
+    String? lenderId,
     String? date,
     int page = 1,
   }) async {
@@ -163,7 +140,7 @@ class CollectionNotifier
       status: status,
       method: method,
       riderId: riderId,
-      borrowerId: borrowerId,
+      lenderId: lenderId,
       date: date,
       page: page,
     );
@@ -186,7 +163,6 @@ class CollectionNotifier
     );
   }
 
-  /// Load more collections (pagination).
   Future<void> loadMore({String? riderId}) async {
     if (state is! CollectionsLoaded) return;
     final current = state as CollectionsLoaded;
@@ -200,7 +176,6 @@ class CollectionNotifier
     );
   }
 
-  /// Load a single collection's detail.
   Future<void> loadCollectionDetail(String collectionId) async {
     state = const CollectionsLoading();
 
@@ -213,7 +188,6 @@ class CollectionNotifier
     );
   }
 
-  /// Assign a rider to a collection.
   Future<void> assignRider({
     required String collectionId,
     required String riderId,
@@ -235,7 +209,6 @@ class CollectionNotifier
     );
   }
 
-  /// Mark a collection as collected (rider action).
   Future<void> markCollected({
     required String collectionId,
     required double latitude,
@@ -261,7 +234,6 @@ class CollectionNotifier
     );
   }
 
-  /// Mark a collection as failed.
   Future<void> markFailed(String collectionId, {String? reason}) async {
     final result =
         await _repository.markFailed(collectionId, reason: reason);
@@ -275,7 +247,6 @@ class CollectionNotifier
     );
   }
 
-  /// Load today's collections for a specific rider.
   Future<void> loadTodayCollections(String riderId) async {
     state = const CollectionsLoading();
 
@@ -294,7 +265,6 @@ class CollectionNotifier
     );
   }
 
-  /// Reset state to initial.
   void resetState() {
     state = const CollectionInitial();
   }

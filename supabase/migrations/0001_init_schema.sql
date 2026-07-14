@@ -1,11 +1,5 @@
--- ============================================================================
--- LendFlow: Initial Schema
--- Migration 0001_init_schema.sql
--- ============================================================================
-
--- ─── Enums ──────────────────────────────────────────────────────────────────
-
-CREATE TYPE user_role AS ENUM ('borrower', 'rider', 'manager', 'admin');
+-- supabase/migrations/0001_init_schema.sql
+CREATE TYPE user_role AS ENUM ('lender', 'rider', 'employee', 'head_manager');
 
 CREATE TYPE kyc_status AS ENUM (
   'pending',
@@ -78,21 +72,16 @@ CREATE TYPE notification_type AS ENUM (
 
 CREATE TYPE disbursement_method AS ENUM ('gcash', 'office', 'cash');
 
--- ─── Extensions ─────────────────────────────────────────────────────────────
-
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE EXTENSION IF NOT EXISTS "pg_net" SCHEMA "extensions";
 CREATE EXTENSION IF NOT EXISTS "pg_cron" SCHEMA "extensions";
-
--- ─── Users Table ────────────────────────────────────────────────────────────
--- Note: Supabase Auth manages auth.users. This is our application users table.
 
 CREATE TABLE users (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid() REFERENCES auth.users(id) ON DELETE CASCADE,
   email       TEXT NOT NULL UNIQUE,
   phone       TEXT,
   full_name   TEXT NOT NULL,
-  role        user_role NOT NULL DEFAULT 'borrower',
+  role        user_role NOT NULL DEFAULT 'lender',
   is_active   BOOLEAN NOT NULL DEFAULT true,
   last_login_at TIMESTAMPTZ,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -103,9 +92,7 @@ CREATE TABLE users (
 CREATE INDEX idx_users_email ON users(email) WHERE deleted_at IS NULL;
 CREATE INDEX idx_users_role ON users(role) WHERE deleted_at IS NULL;
 
--- ─── Borrowers Table ────────────────────────────────────────────────────────
-
-CREATE TABLE borrowers (
+CREATE TABLE lenders (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id         UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   address         TEXT,
@@ -117,10 +104,8 @@ CREATE TABLE borrowers (
   deleted_at      TIMESTAMPTZ
 );
 
-CREATE INDEX idx_borrowers_user_id ON borrowers(user_id) WHERE deleted_at IS NULL;
-CREATE INDEX idx_borrowers_kyc_status ON borrowers(kyc_status) WHERE deleted_at IS NULL;
-
--- ─── Co-Makers Table ────────────────────────────────────────────────────────
+CREATE INDEX idx_lenders_user_id ON lenders(user_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_lenders_kyc_status ON lenders(kyc_status) WHERE deleted_at IS NULL;
 
 CREATE TABLE co_makers (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -132,17 +117,15 @@ CREATE TABLE co_makers (
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ─── Borrower Phones ────────────────────────────────────────────────────────
-
-CREATE TABLE borrower_phones (
+CREATE TABLE lender_phones (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  borrower_id   UUID NOT NULL REFERENCES borrowers(id) ON DELETE CASCADE,
-  phone_number  TEXT NOT NULL
+  lender_id     UUID NOT NULL REFERENCES lenders(id) ON DELETE CASCADE,
+  phone_number  TEXT NOT NULL,
+  is_primary    BOOLEAN NOT NULL DEFAULT false,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX idx_borrower_phones_borrower_id ON borrower_phones(borrower_id);
-
--- ─── Riders Table ──────────────────────────────────────────────────────────
+CREATE INDEX idx_lender_phones_lender_id ON lender_phones(lender_id);
 
 CREATE TABLE riders (
   id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -157,11 +140,9 @@ CREATE TABLE riders (
 CREATE INDEX idx_riders_user_id ON riders(user_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_riders_available ON riders(is_available) WHERE deleted_at IS NULL;
 
--- ─── Loans Table ────────────────────────────────────────────────────────────
-
 CREATE TABLE loans (
   id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  borrower_id      UUID NOT NULL REFERENCES borrowers(id) ON DELETE RESTRICT,
+  lender_id        UUID NOT NULL REFERENCES lenders(id) ON DELETE RESTRICT,
   co_maker_id      UUID REFERENCES co_makers(id) ON DELETE SET NULL,
   principal        NUMERIC(12, 2) NOT NULL CHECK (principal >= 3000 AND principal <= 500000),
   interest_rate    NUMERIC(5, 4) NOT NULL DEFAULT 0.2000 CHECK (interest_rate = 0.2000),
@@ -183,12 +164,10 @@ CREATE TABLE loans (
   deleted_at       TIMESTAMPTZ
 );
 
-CREATE INDEX idx_loans_borrower_id ON loans(borrower_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_loans_lender_id ON loans(lender_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_loans_status ON loans(status) WHERE deleted_at IS NULL;
 CREATE INDEX idx_loans_due_at ON loans(due_at) WHERE deleted_at IS NULL;
 CREATE INDEX idx_loans_idempotency_key ON loans(idempotency_key) WHERE deleted_at IS NULL;
-
--- ─── Loan Co-Makers Junction Table ──────────────────────────────────────────
 
 CREATE TABLE loan_co_makers (
   id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -199,8 +178,6 @@ CREATE TABLE loan_co_makers (
 
 CREATE INDEX idx_loan_co_makers_loan_id ON loan_co_makers(loan_id);
 CREATE INDEX idx_loan_co_makers_co_maker_id ON loan_co_makers(co_maker_id);
-
--- ─── Loan Schedules Table ──────────────────────────────────────────────────
 
 CREATE TABLE loan_schedules (
   id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -217,12 +194,10 @@ CREATE INDEX idx_loan_schedules_loan_id ON loan_schedules(loan_id);
 CREATE INDEX idx_loan_schedules_due_date ON loan_schedules(due_date) WHERE status = 'pending';
 CREATE INDEX idx_loan_schedules_status ON loan_schedules(status);
 
--- ─── Payments Table ─────────────────────────────────────────────────────────
-
 CREATE TABLE payments (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   loan_id             UUID NOT NULL REFERENCES loans(id) ON DELETE RESTRICT,
-  borrower_id         UUID NOT NULL REFERENCES borrowers(id) ON DELETE RESTRICT,
+  lender_id           UUID NOT NULL REFERENCES lenders(id) ON DELETE RESTRICT,
   amount              NUMERIC(12, 2) NOT NULL CHECK (amount > 0),
   method              payment_method NOT NULL,
   status              payment_status NOT NULL DEFAULT 'pending',
@@ -237,12 +212,10 @@ CREATE TABLE payments (
 );
 
 CREATE INDEX idx_payments_loan_id ON payments(loan_id) WHERE deleted_at IS NULL;
-CREATE INDEX idx_payments_borrower_id ON payments(borrower_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_payments_lender_id ON payments(lender_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_payments_status ON payments(status) WHERE deleted_at IS NULL;
 CREATE INDEX idx_payments_idempotency_key ON payments(idempotency_key) WHERE deleted_at IS NULL;
 CREATE INDEX idx_payments_xendit_id ON payments(xendit_payment_id) WHERE xendit_payment_id IS NOT NULL;
-
--- ─── Disbursements Table ────────────────────────────────────────────────────
 
 CREATE TABLE disbursements (
   id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -264,12 +237,10 @@ CREATE INDEX idx_disbursements_loan_id ON disbursements(loan_id) WHERE deleted_a
 CREATE INDEX idx_disbursements_rider_id ON disbursements(assigned_rider_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_disbursements_status ON disbursements(status) WHERE deleted_at IS NULL;
 
--- ─── Collections Table ──────────────────────────────────────────────────────
-
 CREATE TABLE collections (
   id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   loan_id             UUID NOT NULL REFERENCES loans(id) ON DELETE CASCADE,
-  borrower_id         UUID NOT NULL REFERENCES borrowers(id) ON DELETE RESTRICT,
+  lender_id           UUID NOT NULL REFERENCES lenders(id) ON DELETE RESTRICT,
   amount              NUMERIC(12, 2) NOT NULL,
   method              payment_method NOT NULL DEFAULT 'office',
   status              collection_status NOT NULL DEFAULT 'pending',
@@ -284,15 +255,13 @@ CREATE TABLE collections (
 );
 
 CREATE INDEX idx_collections_loan_id ON collections(loan_id) WHERE deleted_at IS NULL;
-CREATE INDEX idx_collections_borrower_id ON collections(borrower_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_collections_lender_id ON collections(lender_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_collections_rider_id ON collections(assigned_rider_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_collections_status ON collections(status) WHERE deleted_at IS NULL;
 
--- ─── Documents Table ────────────────────────────────────────────────────────
-
 CREATE TABLE documents (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  borrower_id     UUID NOT NULL REFERENCES borrowers(id) ON DELETE CASCADE,
+  lender_id       UUID NOT NULL REFERENCES lenders(id) ON DELETE CASCADE,
   document_type   document_type NOT NULL,
   file_url        TEXT NOT NULL,
   status          document_status NOT NULL DEFAULT 'pending',
@@ -302,11 +271,9 @@ CREATE TABLE documents (
   deleted_at      TIMESTAMPTZ
 );
 
-CREATE INDEX idx_documents_borrower_id ON documents(borrower_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_documents_lender_id ON documents(lender_id) WHERE deleted_at IS NULL;
 CREATE INDEX idx_documents_type ON documents(document_type) WHERE deleted_at IS NULL;
 CREATE INDEX idx_documents_status ON documents(status) WHERE deleted_at IS NULL;
-
--- ─── OTP Codes Table ────────────────────────────────────────────────────────
 
 CREATE TABLE otp_codes (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -321,24 +288,24 @@ CREATE TABLE otp_codes (
 CREATE INDEX idx_otp_codes_user_id ON otp_codes(user_id);
 CREATE INDEX idx_otp_codes_expires ON otp_codes(expires_at) WHERE is_used = false;
 
--- ─── Audit Logs Table ───────────────────────────────────────────────────────
-
 CREATE TABLE audit_logs (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id     UUID REFERENCES users(id) ON DELETE SET NULL,
   user_role   TEXT,
   action      VARCHAR(100) NOT NULL,
+  entity_type VARCHAR(50),
+  entity_id   UUID,
   old_value   JSONB,
   new_value   JSONB,
   ip_address  INET,
+  user_agent  TEXT,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE INDEX idx_audit_logs_user_id ON audit_logs(user_id);
 CREATE INDEX idx_audit_logs_action ON audit_logs(action);
+CREATE INDEX idx_audit_logs_entity ON audit_logs(entity_type, entity_id);
 CREATE INDEX idx_audit_logs_created_at ON audit_logs(created_at);
-
--- ─── Notifications Table ────────────────────────────────────────────────────
 
 CREATE TABLE notifications (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -346,6 +313,7 @@ CREATE TABLE notifications (
   type       notification_type NOT NULL,
   title      TEXT NOT NULL,
   body       TEXT NOT NULL,
+  data       JSONB,
   is_read    BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -353,20 +321,17 @@ CREATE TABLE notifications (
 CREATE INDEX idx_notifications_user_id ON notifications(user_id) WHERE is_read = false;
 CREATE INDEX idx_notifications_type ON notifications(type);
 
--- ─── Idempotency Keys Table ─────────────────────────────────────────────────
-
 CREATE TABLE idempotency_keys (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   key           VARCHAR(255) NOT NULL UNIQUE,
   response_body JSONB,
+  status_code   INTEGER NOT NULL DEFAULT 200,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   expires_at    TIMESTAMPTZ NOT NULL
 );
 
 CREATE INDEX idx_idempotency_keys_key ON idempotency_keys(key);
 CREATE INDEX idx_idempotency_keys_expires ON idempotency_keys(expires_at);
-
--- ─── System Settings Table ──────────────────────────────────────────────────
 
 CREATE TABLE system_settings (
   id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -380,13 +345,10 @@ CREATE TABLE system_settings (
   updated_by              UUID REFERENCES users(id) ON DELETE SET NULL
 );
 
--- Insert default system settings
 INSERT INTO system_settings (interest_rate, penalty_rate, penalty_threshold_days)
 VALUES (0.2000, 0.2000, 30);
 
--- ─── Updated_at Trigger Function ────────────────────────────────────────────
-
-CREATE OR REPLACE FUNCTION update_updated_at_column()
+CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
   NEW.updated_at = now();
@@ -394,28 +356,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Apply updated_at trigger to relevant tables
 CREATE TRIGGER trg_users_updated_at
   BEFORE UPDATE ON users
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 CREATE TRIGGER trg_loans_updated_at
   BEFORE UPDATE ON loans
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 CREATE TRIGGER trg_disbursements_updated_at
   BEFORE UPDATE ON disbursements
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 CREATE TRIGGER trg_collections_updated_at
   BEFORE UPDATE ON collections
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 CREATE TRIGGER trg_system_settings_updated_at
   BEFORE UPDATE ON system_settings
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
--- ─── Auto-create user record on auth.users insert ───────────────────────────
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -425,7 +384,7 @@ BEGIN
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', split_part(NEW.email, '@', 1)),
-    COALESCE((NEW.raw_app_meta_data->>'role')::user_role, 'borrower')
+    COALESCE((NEW.raw_app_meta_data->>'role')::user_role, 'lender')
   )
   ON CONFLICT (id) DO NOTHING;
   RETURN NEW;

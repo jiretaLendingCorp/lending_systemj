@@ -1,25 +1,19 @@
+// lib/features/settings/data/datasources/settings_remote_datasource.dart
 import 'package:dio/dio.dart';
-import 'package:lendflow/core/error/exceptions.dart';
-import 'package:lendflow/core/network/api_endpoints.dart';
-import 'package:lendflow/features/settings/data/models/system_settings_model.dart';
+import 'package:jireta_loan/core/error/exceptions.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
+import 'package:jireta_loan/features/settings/data/models/system_settings_model.dart';
 
-/// Remote data source for system settings operations using Dio.
-///
-/// Provides get and update operations for system settings.
-/// Sensitive changes (interest rate, penalty rate) require
-/// forced re-authentication via a separate re-auth endpoint.
 class SettingsRemoteDataSource {
   final Dio _dio;
 
   SettingsRemoteDataSource({required Dio dio}) : _dio = dio;
 
-  /// Fetch the current system settings.
   Future<SystemSettingsModel> get() async {
     try {
       final response = await _dio.get(ApiEndpoints.settings);
       final data = response.data;
 
-      // Handle both single object and nested response
       if (data is List && data.isNotEmpty) {
         return SystemSettingsModel.fromJson(
           data.first as Map<String, dynamic>,
@@ -31,11 +25,6 @@ class SettingsRemoteDataSource {
     }
   }
 
-  /// Update system settings.
-  ///
-  /// The [reAuthToken] is required for sensitive changes like
-  /// interest rate or penalty rate modifications. The server
-  /// validates this token against a recent authentication.
   Future<SystemSettingsModel> update({
     required Map<String, dynamic> data,
     String? reAuthToken,
@@ -59,9 +48,6 @@ class SettingsRemoteDataSource {
     }
   }
 
-  /// Update interest rate (requires re-authentication).
-  ///
-  /// Calls the dedicated interest rate endpoint with re-auth verification.
   Future<SystemSettingsModel> updateInterestRate({
     required double interestRate,
     required String reAuthToken,
@@ -80,7 +66,6 @@ class SettingsRemoteDataSource {
     }
   }
 
-  /// Update penalty rate (requires re-authentication).
   Future<SystemSettingsModel> updatePenaltyRate({
     required double penaltyRate,
     required int penaltyThresholdDays,
@@ -103,7 +88,6 @@ class SettingsRemoteDataSource {
     }
   }
 
-  /// Update SMS template (no re-auth required).
   Future<SystemSettingsModel> updateSmsTemplate({
     required String smsTemplate,
   }) async {
@@ -120,7 +104,6 @@ class SettingsRemoteDataSource {
     }
   }
 
-  /// Update notification preferences (no re-auth required).
   Future<SystemSettingsModel> updateNotificationPreferences({
     required Map<String, dynamic> preferences,
   }) async {
@@ -137,7 +120,6 @@ class SettingsRemoteDataSource {
     }
   }
 
-  /// Update system flags (requires re-auth for maintenance mode).
   Future<SystemSettingsModel> updateSystemFlags({
     required Map<String, dynamic> flags,
     String? reAuthToken,
@@ -161,7 +143,6 @@ class SettingsRemoteDataSource {
     }
   }
 
-  // ── Private helpers ─────────────────────────────────────────────
 
   AppException _mapDioException(DioException e) {
     switch (e.type) {
@@ -181,14 +162,14 @@ class SettingsRemoteDataSource {
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         if (statusCode == 401) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Session expired. Please sign in again.',
             tokenExpired: true,
             requiresReAuth: true,
           );
         }
         if (statusCode == 403) {
-          return const AuthException(
+          return const AppAuthException(
             message: 'Re-authentication required for this action.',
             requiresReAuth: true,
           );

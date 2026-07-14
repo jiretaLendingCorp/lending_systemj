@@ -1,16 +1,12 @@
+// lib/features/disbursements/presentation/pages/disbursement_detail_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/disbursements/domain/entities/disbursement.dart';
-import 'package:lendflow/features/disbursements/presentation/providers/disbursement_notifier.dart';
-import 'package:lendflow/features/disbursements/presentation/widgets/assign_rider_dialog.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
+import 'package:jireta_loan/features/disbursements/presentation/providers/disbursement_notifier.dart';
+import 'package:jireta_loan/features/disbursements/presentation/widgets/assign_rider_dialog.dart';
 
-/// Disbursement detail page with assignment info, delivery proof.
-///
-/// Shows comprehensive disbursement details including current status,
-/// rider assignment information, GPS delivery proof, and action buttons
-/// for assigning riders, marking in transit, or marking as delivered.
 class DisbursementDetailPage extends ConsumerStatefulWidget {
   final String disbursementId;
 
@@ -141,7 +137,6 @@ class _DisbursementDetailPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Status header
             Center(
               child: Column(
                 children: [
@@ -178,7 +173,6 @@ class _DisbursementDetailPageState
             ),
             const SizedBox(height: 24),
 
-            // Disbursement info
             _DetailSection(
               title: 'Disbursement Info',
               children: [
@@ -214,7 +208,6 @@ class _DisbursementDetailPageState
             ),
             const SizedBox(height: 16),
 
-            // Rider assignment info
             _DetailSection(
               title: 'Rider Assignment',
               children: [
@@ -246,7 +239,6 @@ class _DisbursementDetailPageState
             ),
             const SizedBox(height: 16),
 
-            // Delivery proof (for delivered disbursements)
             if (disbursement.isDelivered) ...[
               _DetailSection(
                 title: 'Delivery Proof',
@@ -286,7 +278,6 @@ class _DisbursementDetailPageState
               const SizedBox(height: 16),
             ],
 
-            // Xendit reference (for GCash disbursements)
             if (disbursement.xenditDisbursementId != null) ...[
               _DetailSection(
                 title: 'Xendit Reference',
@@ -302,7 +293,6 @@ class _DisbursementDetailPageState
               const SizedBox(height: 16),
             ],
 
-            // Action buttons
             if (disbursement.status.isActionable) ...[
               if (disbursement.status ==
                   DisbursementStatus.pending) ...[
@@ -425,8 +415,6 @@ class _DisbursementDetailPageState
   }
 
   void _markDelivered() {
-    // In production, get GPS from Geolocator
-    // For now, we simulate with Makati City coordinates
     ref.read(disbursementFeatureProvider.notifier).markDelivered(
           disbursementId: widget.disbursementId,
           latitude: 14.5547,
@@ -437,7 +425,7 @@ class _DisbursementDetailPageState
   void _markFailed() {
     ref.read(disbursementFeatureProvider.notifier).markFailed(
           widget.disbursementId,
-          reason: 'Unable to deliver to borrower.',
+          reason: 'Unable to deliver to lender.',
         );
   }
 
@@ -469,7 +457,6 @@ class _DisbursementDetailPageState
       };
 }
 
-/// Detail section with title and rows.
 class _DetailSection extends StatelessWidget {
   final String title;
   final List<Widget> children;
@@ -513,7 +500,6 @@ class _DetailSection extends StatelessWidget {
   }
 }
 
-/// Single row in the detail section.
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
@@ -574,7 +560,6 @@ class _DetailRow extends StatelessWidget {
   }
 }
 
-/// Status badge for detail page.
 class _DetailStatusBadge extends StatelessWidget {
   final DisbursementStatus status;
 

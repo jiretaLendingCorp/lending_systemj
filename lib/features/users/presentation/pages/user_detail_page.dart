@@ -1,21 +1,18 @@
+// lib/features/users/presentation/pages/user_detail_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/date_formatter.dart';
-import 'package:lendflow/features/auth/domain/entities/user.dart';
-import 'package:lendflow/features/users/domain/entities/user_management.dart';
-import 'package:lendflow/features/users/presentation/providers/user_notifier.dart';
-import 'package:lendflow/shared/widgets/avatar_widget.dart';
-import 'package:lendflow/shared/widgets/confirm_dialog.dart';
-import 'package:lendflow/shared/widgets/currency_text.dart';
-import 'package:lendflow/shared/widgets/status_chip.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:jireta_loan/features/users/domain/entities/user_management.dart';
+import 'package:jireta_loan/features/users/presentation/providers/user_notifier.dart';
+import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
+import 'package:jireta_loan/shared/widgets/confirm_dialog.dart';
 
-/// Web: User detail page with admin actions.
-///
-/// Displays full user profile information and provides admin
-/// actions: reset password, force logout, deactivate/reactivate.
+import 'package:jireta_loan/shared/widgets/status_chip.dart';
+
 class UserDetailPage extends ConsumerWidget {
   final String userId;
 
@@ -29,13 +26,11 @@ class UserDetailPage extends ConsumerWidget {
     final state = ref.watch(userFeatureProvider);
     final theme = Theme.of(context);
 
-    // Find user from loaded state, or show loading
     UserManagement? user;
     if (state is UsersLoaded) {
       try {
         user = state.users.firstWhere((u) => u.id == userId);
       } catch (_) {
-        // User not in current list, need to load
       }
     } else if (state is UserOperationSuccess && state.user != null) {
       user = state.user;
@@ -77,13 +72,10 @@ class UserDetailPage extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Profile header
                 _ProfileHeader(user: user, roleColor: roleColor),
                 const SizedBox(height: 24),
-                // Info cards
                 _InfoSection(user: user),
                 const SizedBox(height: 24),
-                // Action buttons
                 _ActionSection(user: user),
               ],
             ),
@@ -95,10 +87,10 @@ class UserDetailPage extends ConsumerWidget {
 
   Color _roleColor(UserRole role) {
     return switch (role) {
-      UserRole.admin => ColorTokens.roleAdmin,
-      UserRole.manager => ColorTokens.roleManager,
+      UserRole.headManager => ColorTokens.roleHeadManager,
+      UserRole.employee => ColorTokens.roleEmployee,
       UserRole.rider => ColorTokens.roleRider,
-      UserRole.borrower => ColorTokens.roleBorrower,
+      UserRole.lender => ColorTokens.roleLender,
     };
   }
 }
@@ -150,7 +142,7 @@ class _ProfileHeader extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: roleColor.withOpacity(0.1),
+                        color: roleColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -164,9 +156,9 @@ class _ProfileHeader extends StatelessWidget {
                     const SizedBox(width: 8),
                     StatusChip(
                       label: user.statusLabel,
-                      color: user.isActive
-                          ? ColorTokens.lightSuccess
-                          : ColorTokens.lightError,
+                      statusColor: user.isActive
+                          ? StatusColor.success
+                          : StatusColor.error,
                     ),
                   ],
                 ),
@@ -287,7 +279,7 @@ class _ActionSection extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Admin Actions', style: TextStyles.titleMedium(context)),
+          Text('HeadManager Actions', style: TextStyles.titleMedium(context)),
           const SizedBox(height: 16),
           Wrap(
             spacing: 12,

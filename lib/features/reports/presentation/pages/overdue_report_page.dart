@@ -1,19 +1,16 @@
+// lib/features/reports/presentation/pages/overdue_report_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/core/theme/text_styles.dart';
-import 'package:lendflow/core/utils/currency_formatter.dart';
-import 'package:lendflow/features/reports/domain/entities/report_data.dart';
-import 'package:lendflow/features/reports/presentation/providers/report_notifier.dart';
-import 'package:lendflow/features/reports/presentation/widgets/aging_table.dart';
-import 'package:lendflow/features/reports/presentation/widgets/report_summary_card.dart';
-import 'package:lendflow/shared/widgets/error_banner.dart';
-import 'package:lendflow/shared/widgets/loading_overlay.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:jireta_loan/core/utils/currency_formatter.dart';
 
-/// Web: Overdue aging report page.
-///
-/// Displays overdue loans grouped by aging buckets
-/// (1-7 days, 8-30 days, 30+ days) with borrower list.
+import 'package:jireta_loan/features/reports/presentation/providers/report_notifier.dart';
+import 'package:jireta_loan/features/reports/presentation/widgets/aging_table.dart';
+import 'package:jireta_loan/features/reports/presentation/widgets/report_summary_card.dart';
+import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
+
 class OverdueReportPage extends ConsumerStatefulWidget {
   const OverdueReportPage({super.key});
 
@@ -44,7 +41,6 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
                 Row(
                   children: [
                     Expanded(
@@ -76,7 +72,6 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                 if (state is ReportError)
                   ErrorBanner(message: state.message),
                 if (state is OverdueLoaded) ...[
-                  // KPI cards
                   Row(
                     children: [
                       Expanded(
@@ -121,7 +116,6 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  // Aging table with borrower list
                   AgingTable(report: state.report),
                 ],
                 if (state is ReportLoading)

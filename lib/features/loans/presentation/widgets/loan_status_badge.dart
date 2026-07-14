@@ -1,11 +1,8 @@
+// lib/features/loans/presentation/widgets/loan_status_badge.dart
 import 'package:flutter/material.dart';
-import 'package:lendflow/core/theme/color_tokens.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 
-/// Color-coded loan status badge widget.
-///
-/// Displays the loan's current status with a distinctive background
-/// color and icon, providing visual status indication at a glance.
 class LoanStatusBadge extends StatelessWidget {
   final LoanStatus status;
   final double fontSize;

@@ -1,38 +1,32 @@
+// lib/features/loans/presentation/providers/loan_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lendflow/core/auth/auth_provider.dart';
-import 'package:lendflow/core/error/failures.dart';
-import 'package:lendflow/core/network/dio_client.dart';
-import 'package:lendflow/core/utils/constants.dart';
-import 'package:lendflow/features/loans/data/datasources/loan_remote_datasource.dart';
-import 'package:lendflow/features/loans/data/repositories/loan_repository_impl.dart';
-import 'package:lendflow/features/loans/domain/entities/loan.dart';
-import 'package:lendflow/features/loans/domain/entities/loan_schedule.dart';
-import 'package:lendflow/features/loans/domain/repositories/loan_repository.dart';
-import 'package:lendflow/features/loans/domain/usecases/approve_loan_usecase.dart';
-import 'package:lendflow/features/loans/domain/usecases/create_loan_usecase.dart';
-import 'package:lendflow/features/loans/domain/usecases/get_loans_usecase.dart';
-import 'package:lendflow/features/loans/domain/usecases/reject_loan_usecase.dart';
+import 'package:jireta_loan/core/auth/auth_provider.dart';
+import 'package:jireta_loan/core/error/failures.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:jireta_loan/features/loans/data/datasources/loan_remote_datasource.dart';
+import 'package:jireta_loan/features/loans/data/repositories/loan_repository_impl.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:jireta_loan/features/loans/domain/entities/loan_schedule.dart';
+import 'package:jireta_loan/features/loans/domain/repositories/loan_repository.dart';
+import 'package:jireta_loan/features/loans/domain/usecases/approve_loan_usecase.dart';
+import 'package:jireta_loan/features/loans/domain/usecases/create_loan_usecase.dart';
+import 'package:jireta_loan/features/loans/domain/usecases/get_loans_usecase.dart';
+import 'package:jireta_loan/features/loans/domain/usecases/reject_loan_usecase.dart';
 
-// ─────────────────────────────────────────────────────────────────
-// Loan state model
-// ─────────────────────────────────────────────────────────────────
 
-/// Represents the feature-level loan state managed by [LoanNotifier].
 sealed class LoanFeatureState {
   const LoanFeatureState();
 }
 
-/// Initial state.
 class LoanInitial extends LoanFeatureState {
   const LoanInitial();
 }
 
-/// Loans are being loaded.
 class LoansLoading extends LoanFeatureState {
   const LoansLoading();
 }
 
-/// Loans loaded successfully.
 class LoansLoaded extends LoanFeatureState {
   final List<Loan> loans;
   final int total;
@@ -46,11 +40,9 @@ class LoansLoaded extends LoanFeatureState {
     this.currentPage = 1,
   });
 
-  /// Whether there are more pages to load.
   bool get hasMore => loans.length < total;
 }
 
-/// Single loan detail loaded.
 class LoanDetailLoaded extends LoanFeatureState {
   final Loan loan;
   final List<LoanSchedule> schedule;
@@ -61,7 +53,6 @@ class LoanDetailLoaded extends LoanFeatureState {
   });
 }
 
-/// Loan operation succeeded (create, approve, reject).
 class LoanOperationSuccess extends LoanFeatureState {
   final Loan loan;
   final String message;
@@ -72,7 +63,6 @@ class LoanOperationSuccess extends LoanFeatureState {
   });
 }
 
-/// An error occurred.
 class LoanError extends LoanFeatureState {
   final String message;
   final Failure? failure;
@@ -80,43 +70,33 @@ class LoanError extends LoanFeatureState {
   const LoanError(this.message, {this.failure});
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Providers
-// ─────────────────────────────────────────────────────────────────
 
-/// Provides the [LoanRemoteDataSource].
 final loanRemoteDataSourceProvider = Provider<LoanRemoteDataSource>((ref) {
   return LoanRemoteDataSource(dio: ref.watch(dioProvider));
 });
 
-/// Provides the [LoanRepository] implementation.
 final loanRepositoryProvider = Provider<LoanRepository>((ref) {
   return LoanRepositoryImpl(
     remoteDataSource: ref.watch(loanRemoteDataSourceProvider),
   );
 });
 
-/// Provides the [GetLoansUseCase].
 final getLoansUseCaseProvider = Provider<GetLoansUseCase>((ref) {
   return GetLoansUseCase(repository: ref.watch(loanRepositoryProvider));
 });
 
-/// Provides the [CreateLoanUseCase].
 final createLoanUseCaseProvider = Provider<CreateLoanUseCase>((ref) {
   return CreateLoanUseCase(repository: ref.watch(loanRepositoryProvider));
 });
 
-/// Provides the [ApproveLoanUseCase].
 final approveLoanUseCaseProvider = Provider<ApproveLoanUseCase>((ref) {
   return ApproveLoanUseCase(repository: ref.watch(loanRepositoryProvider));
 });
 
-/// Provides the [RejectLoanUseCase].
 final rejectLoanUseCaseProvider = Provider<RejectLoanUseCase>((ref) {
   return RejectLoanUseCase(repository: ref.watch(loanRepositoryProvider));
 });
 
-/// Provides the [LoanNotifier] for loan feature screens.
 final loanFeatureProvider =
     StateNotifierProvider<LoanNotifier, LoanFeatureState>((ref) {
   return LoanNotifier(
@@ -128,26 +108,20 @@ final loanFeatureProvider =
   );
 });
 
-/// Provider for the current user's role (for role-based UI).
 final loanUserRoleProvider = Provider<String?>((ref) {
   final authState = ref.watch(authProvider);
-  if (authState is AuthAuthenticated) {
+  if (authState is AppAuthAuthenticated) {
     return authState.role;
   }
   return null;
 });
 
-/// Whether the current user can approve/reject loans.
 final canApproveLoansProvider = Provider<bool>((ref) {
   final role = ref.watch(loanUserRoleProvider);
-  return role == AppConstants.roleAdmin || role == AppConstants.roleManager;
+  return role == AppConstants.roleHeadManager || role == AppConstants.roleEmployee;
 });
 
-// ─────────────────────────────────────────────────────────────────
-// Loan notifier
-// ─────────────────────────────────────────────────────────────────
 
-/// Riverpod [StateNotifier] managing loan feature UI state.
 class LoanNotifier extends StateNotifier<LoanFeatureState> {
   final GetLoansUseCase _getLoansUseCase;
   final CreateLoanUseCase _createLoanUseCase;
@@ -168,7 +142,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
         _repository = repository,
         super(const LoanInitial());
 
-  /// Load loans with optional status filter.
   Future<void> loadLoans({
     String? status,
     int page = 1,
@@ -202,7 +175,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
     );
   }
 
-  /// Load more loans (pagination).
   Future<void> loadMore({String? search}) async {
     if (state is! LoansLoaded) return;
     final current = state as LoansLoaded;
@@ -215,7 +187,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
     );
   }
 
-  /// Load a single loan's detail and schedule.
   Future<void> loadLoanDetail(String loanId) async {
     state = const LoansLoading();
 
@@ -233,7 +204,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
     final scheduleResult = await _repository.schedule(loanId);
     scheduleResult.fold(
       (failure) {
-        // Schedule load failure is non-fatal — show loan detail without schedule
         state = LoanDetailLoaded(loan: result as Loan);
       },
       (schedule) {
@@ -245,7 +215,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
     );
   }
 
-  /// Create a new loan application.
   Future<void> createLoan({
     required double principal,
     required int termDays,
@@ -278,7 +247,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
     );
   }
 
-  /// Approve a loan.
   Future<void> approveLoan(String loanId) async {
     final result = await _approveLoanUseCase(
       ApproveLoanParams(loanId: loanId),
@@ -293,7 +261,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
     );
   }
 
-  /// Reject a loan.
   Future<void> rejectLoan(String loanId, {String? reason}) async {
     final result = await _rejectLoanUseCase(
       RejectLoanParams(loanId: loanId, reason: reason),
@@ -308,7 +275,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
     );
   }
 
-  /// Compute penalty for an overdue loan.
   Future<void> computePenalty(String loanId) async {
     final result = await _repository.computePenalty(loanId);
     state = result.fold(
@@ -328,7 +294,6 @@ class LoanNotifier extends StateNotifier<LoanFeatureState> {
     );
   }
 
-  /// Reset state to initial.
   void resetState() {
     state = const LoanInitial();
   }
