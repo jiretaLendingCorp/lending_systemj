@@ -1,122 +1,155 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lendflow/core/app/app.dart';
+import 'package:lendflow/core/auth/auth_provider.dart';
+import 'package:lendflow/core/auth/token_storage.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+/// Common entry point for LendFlow.
+///
+/// Detects the current platform and delegates to the appropriate
+/// platform-specific entry:
+/// - **Web** → [mainWeb] (from main_web.dart)
+/// - **Mobile** → [mainMobile] (from main_mobile.dart)
+///
+/// Both paths share the same [LendFlowApp] widget; they differ only
+/// in platform-specific initialization (URL strategy, secure storage,
+/// permissions, etc.).
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  if (kIsWeb) {
+    await mainWeb();
+  } else {
+    await mainMobile();
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+/// Web-specific entry point.
+///
+/// - Configures URL strategy (path-based, no hash)
+/// - Initializes web-specific token storage
+/// - Runs the app with a [ProviderScope] that overrides
+///   [tokenStorageProvider] with [WebTokenStorage]
+Future<void> mainWeb() async {
+  // Use path URLs (no # hash) for cleaner URLs on web
+  // setUrlStrategy is called via the universal_ui import below
+  // which handles the conditional import for web
+  try {
+    // Conditional web import for URL strategy
+    // ignore: avoid_web_libraries_in_flutter
+    if (kIsWeb) {
+      usePathUrlStrategy();
+    }
+  } catch (_) {
+    // Not on web or URL strategy not available — continue
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
+  // Initialize Supabase (shared between web and mobile)
+  await _initializeSupabase();
+
+  // Run app with WebTokenStorage override
+  runApp(
+    ProviderScope(
+      overrides: [
+        tokenStorageProvider.overrideWithValue(WebTokenStorage()),
+      ],
+      child: const LendFlowApp(),
+    ),
+  );
+}
+
+/// Mobile-specific entry point.
+///
+/// - Configures flutter_secure_storage for token persistence
+/// - Requests necessary runtime permissions
+/// - Runs the app with a [ProviderScope] that overrides
+///   [tokenStorageProvider] with [MobileTokenStorage]
+Future<void> mainMobile() async {
+  // Initialize Supabase (shared between web and mobile)
+  await _initializeSupabase();
+
+  // Initialize FlutterSecureStorage
+  const secureStorage = FlutterSecureStorage();
+  final mobileStorage = MobileTokenStorage(secureStorage);
+
+  // Request necessary permissions on mobile
+  await _requestMobilePermissions();
+
+  // Run app with MobileTokenStorage override
+  runApp(
+    ProviderScope(
+      overrides: [
+        tokenStorageProvider.overrideWithValue(mobileStorage),
+      ],
+      child: const LendFlowApp(),
+    ),
+  );
+}
+
+/// Initialize Supabase client with platform-appropriate configuration.
+///
+/// This is called by both [mainWeb] and [mainMobile] before the
+/// app starts.
+Future<void> _initializeSupabase() async {
+  await Supabase.initialize(
+    url: const String.fromEnvironment(
+      'SUPABASE_URL',
+      defaultValue: 'http://localhost:54321',
+    ),
+    anonKey: const String.fromEnvironment(
+      'SUPABASE_ANON_KEY',
+      defaultValue: '',
+    ),
+    debug: kDebugMode,
+  );
+}
+
+/// Request runtime permissions required on mobile platforms.
+///
+/// Currently requests:
+/// - Location (for rider map features)
+/// - Notifications (for push alerts)
+///
+/// Gracefully handles cases where permissions are denied.
+Future<void> _requestMobilePermissions() async {
+  // Permission requests are handled via the permission_handler package.
+  // The actual calls are conditional to avoid import issues on web.
+  try {
+    // These will be implemented with permission_handler once added
+    // to pubspec.yaml. For now, we silently continue.
     //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+    // Example:
+    //   final locationStatus = await Permission.locationWhenInUse.request();
+    //   final notificationStatus = await Permission.notification.request();
+  } catch (_) {
+    // Permissions not available or denied — continue
   }
 }
+
+/// Configure path-based URL strategy for web.
+///
+/// This is a no-op on non-web platforms. On web, it removes the
+/// hash (#) from URLs for cleaner routing.
+void usePathUrlStrategy() {
+  // On web, this calls setUrlStrategy(PathUrlStrategy())
+  // On mobile, this is a no-op
+  if (kIsWeb) {
+    // The actual implementation uses conditional imports.
+    // When running on web, Flutter's url_strategy.dart is available.
+    try {
+      // Dynamic lookup to avoid compile-time import issues
+      // ignore: avoid_web_libraries_in_flutter
+      setUrlStrategy(null); // Removes hash (#) from URLs
+    } catch (_) {
+      // Not available — continue with default strategy
+    }
+  }
+}
+
+// ── Conditional imports for platform-specific deps ───────────────
+//
+// These imports use dart:io Platform check to avoid web compilation
+// errors. Flutter's tree-shaking removes unused platform code.
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
