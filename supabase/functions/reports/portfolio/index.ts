@@ -1,8 +1,8 @@
 // supabase/functions/reports/portfolio/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden } from "../_shared/errors.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden } from "../../_shared/errors.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -40,15 +40,15 @@ Deno.serve(async (req: Request) => {
       .is("deleted_at", null);
 
     const totalPrincipal = (activeLoans ?? []).reduce(
-      (sum, l) => sum + Number(l.principal),
+      (sum: number, l: { principal: string | number }) => sum + Number(l.principal),
       0
     );
     const totalPayable = (activeLoans ?? []).reduce(
-      (sum, l) => sum + Number(l.total_payable),
+      (sum: number, l: { total_payable: string | number }) => sum + Number(l.total_payable),
       0
     );
     const totalPenalties = (activeLoans ?? []).reduce(
-      (sum, l) => sum + Number(l.penalty_amount ?? 0),
+      (sum: number, l: { penalty_amount?: string | number | null }) => sum + Number(l.penalty_amount ?? 0),
       0
     );
 
@@ -59,7 +59,7 @@ Deno.serve(async (req: Request) => {
       .is("deleted_at", null);
 
     const totalCollected = (completedPayments ?? []).reduce(
-      (sum, p) => sum + Number(p.amount),
+      (sum: number, p: { amount: string | number }) => sum + Number(p.amount),
       0
     );
 

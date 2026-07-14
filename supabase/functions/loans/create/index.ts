@@ -1,9 +1,9 @@
 // supabase/functions/loans/create/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden, conflict, unprocessable } from "../_shared/errors.ts";
-import { loanCreateSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden, conflict, unprocessable } from "../../_shared/errors.ts";
+import { loanCreateSchema } from "../../_shared/validation.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -79,8 +79,8 @@ Deno.serve(async (req: Request) => {
 
     const requiredDocTypes = ["government_id", "proof_of_billing", "selfie"];
     const uploadedDocTypes = (documents ?? [])
-      .filter((d) => d.status === "verified" || d.status === "pending")
-      .map((d) => d.document_type);
+      .filter((d: { status: string; document_type: string }) => d.status === "verified" || d.status === "pending")
+      .map((d: { document_type: string }) => d.document_type);
     const missingDocs = requiredDocTypes.filter((t) => !uploadedDocTypes.includes(t));
 
     if (missingDocs.length > 0) {

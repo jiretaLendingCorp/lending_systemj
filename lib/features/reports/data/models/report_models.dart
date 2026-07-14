@@ -169,7 +169,6 @@ class CollectionEfficiencyReportModel extends CollectionEfficiencyReport {
   }
 }
 
-
 double _parseDouble(dynamic value, {double fallback = 0.0}) {
   if (value == null) return fallback;
   if (value is double) return value;

@@ -10,7 +10,6 @@ import 'package:jireta_loan/features/disbursements/domain/repositories/disbursem
 import 'package:jireta_loan/features/disbursements/domain/usecases/assign_rider_usecase.dart';
 import 'package:jireta_loan/features/disbursements/domain/usecases/mark_delivered_usecase.dart';
 
-
 sealed class DisbursementFeatureState {
   const DisbursementFeatureState();
 }
@@ -64,7 +63,6 @@ class DisbursementError extends DisbursementFeatureState {
   const DisbursementError(this.message, {this.failure});
 }
 
-
 final disbursementRemoteDataSourceProvider =
     Provider<DisbursementRemoteDataSource>((ref) {
   return DisbursementRemoteDataSource(dio: ref.watch(dioProvider));
@@ -106,7 +104,6 @@ final disbursementUserRoleProvider = Provider<String?>((ref) {
   }
   return null;
 });
-
 
 class DisbursementNotifier
     extends StateNotifier<DisbursementFeatureState> {

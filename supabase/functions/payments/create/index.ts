@@ -1,9 +1,9 @@
 // supabase/functions/payments/create/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden, conflict, unprocessable } from "../_shared/errors.ts";
-import { paymentCreateSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden, conflict, unprocessable } from "../../_shared/errors.ts";
+import { paymentCreateSchema } from "../../_shared/validation.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -133,7 +133,7 @@ Deno.serve(async (req: Request) => {
             body: JSON.stringify({
               external_id: payment.id,
               amount,
-              description: `Loan payment - $loan_id`,
+              description: `Loan payment - ${loan_id}`,
               payment_methods: ["GCASH"],
               success_redirect_url: `${Deno.env.get("FRONTEND_URL")}/payment/success`,
               failure_redirect_url: `${Deno.env.get("FRONTEND_URL")}/payment/failed`,
@@ -163,7 +163,7 @@ Deno.serve(async (req: Request) => {
     await supabase.from("idempotency_keys").insert({
       key: idempotency_key,
       response_body: responseBody,
-      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24h TTL
+      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     });
 
     await supabase.from("audit_logs").insert({
@@ -185,7 +185,7 @@ Deno.serve(async (req: Request) => {
         user_id: lender.user_id,
         type: "payment_received",
         title: "Payment Received",
-        body: `Your payment of ₱${amount.toLocaleString()} via $method has been recorded.`,
+        body: `Your payment of ₱${amount.toLocaleString()} via ${method} has been recorded.`,
       });
     }
 

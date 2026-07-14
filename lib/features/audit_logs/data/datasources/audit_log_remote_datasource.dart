@@ -87,7 +87,6 @@ class AuditLogRemoteDataSource {
     }
   }
 
-
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:

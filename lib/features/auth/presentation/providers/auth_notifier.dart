@@ -12,7 +12,6 @@ import 'package:jireta_loan/features/auth/domain/usecases/otp_verify_usecase.dar
 import 'package:jireta_loan/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
-
 sealed class AuthFeatureState {
   const AuthFeatureState();
 }
@@ -44,7 +43,6 @@ class AuthError extends AuthFeatureState {
   final Failure? failure;
   const AuthError(this.message, {this.failure});
 }
-
 
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
   return AuthRemoteDataSource(
@@ -85,7 +83,6 @@ final authFeatureProvider =
     repository: ref.watch(authRepositoryProvider),
   );
 });
-
 
 class AuthFeatureNotifier extends StateNotifier<AuthFeatureState> {
   final LoginUseCase _loginUseCase;

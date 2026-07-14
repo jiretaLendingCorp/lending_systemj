@@ -7,7 +7,6 @@ import 'package:jireta_loan/features/settings/data/repositories/settings_reposit
 import 'package:jireta_loan/features/settings/domain/entities/system_settings.dart';
 import 'package:jireta_loan/features/settings/domain/repositories/settings_repository.dart';
 
-
 sealed class SettingsFeatureState {
   const SettingsFeatureState();
 }
@@ -43,7 +42,6 @@ class SettingsError extends SettingsFeatureState {
   const SettingsError(this.message, {this.failure});
 }
 
-
 final settingsRemoteDataSourceProvider =
     Provider<SettingsRemoteDataSource>((ref) {
   return SettingsRemoteDataSource(dio: ref.watch(dioProvider));
@@ -61,7 +59,6 @@ final settingsFeatureProvider =
     repository: ref.watch(settingsRepositoryProvider),
   );
 });
-
 
 class SettingsNotifier extends StateNotifier<SettingsFeatureState> {
   final SettingsRepository _repository;

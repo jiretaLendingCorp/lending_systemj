@@ -226,7 +226,6 @@ class AppRouter {
   }
 }
 
-
 class _PlaceholderPage extends StatelessWidget {
   final String title;
 

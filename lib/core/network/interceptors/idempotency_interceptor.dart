@@ -1,17 +1,40 @@
 // lib/core/network/interceptors/idempotency_interceptor.dart
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
 
 class IdempotencyInterceptor extends Interceptor {
-  final Random _random = Random();
+  final Random _random = Random.secure();
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (options.method.toUpperCase() == 'POST') {
-      options.headers.putIfAbsent('Idempotency-Key', () => _generateUuidV4());
+      final key = _generateUuidV4();
+      options.headers.putIfAbsent('Idempotency-Key', () => key);
+      options.headers.putIfAbsent('X-Idempotency-Key', () => key);
+      _injectIntoBody(options, key);
     }
     handler.next(options);
+  }
+
+  void _injectIntoBody(RequestOptions options, String key) {
+    final data = options.data;
+    if (data is Map<String, dynamic>) {
+      data.putIfAbsent('idempotency_key', () => key);
+      options.data = data;
+      return;
+    }
+    if (data is String && data.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(data);
+        if (decoded is Map<String, dynamic>) {
+          decoded.putIfAbsent('idempotency_key', () => key);
+          options.data = jsonEncode(decoded);
+        }
+      } catch (_) {
+      }
+    }
   }
 
   String _generateUuidV4() {

@@ -10,7 +10,6 @@ import 'package:jireta_loan/features/collections/domain/repositories/collection_
 import 'package:jireta_loan/features/collections/domain/usecases/assign_rider_collection_usecase.dart';
 import 'package:jireta_loan/features/collections/domain/usecases/mark_collected_usecase.dart';
 
-
 sealed class CollectionFeatureState {
   const CollectionFeatureState();
 }
@@ -64,7 +63,6 @@ class CollectionError extends CollectionFeatureState {
   const CollectionError(this.message, {this.failure});
 }
 
-
 final collectionRemoteDataSourceProvider =
     Provider<CollectionRemoteDataSource>((ref) {
   return CollectionRemoteDataSource(dio: ref.watch(dioProvider));
@@ -107,7 +105,6 @@ final collectionUserRoleProvider = Provider<String?>((ref) {
   }
   return null;
 });
-
 
 class CollectionNotifier
     extends StateNotifier<CollectionFeatureState> {

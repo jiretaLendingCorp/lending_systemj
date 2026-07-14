@@ -43,7 +43,6 @@ abstract class TokenStorage {
   }
 }
 
-
 class MobileTokenStorage extends TokenStorage {
   final dynamic _secureStorage;
 
@@ -101,7 +100,6 @@ class MobileTokenStorage extends TokenStorage {
     await _delete(AppConstants.userRoleKey);
   }
 }
-
 
 class WebTokenStorage extends TokenStorage {
   String? _encryptionKey;

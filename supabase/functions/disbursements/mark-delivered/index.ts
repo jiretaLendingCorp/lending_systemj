@@ -1,17 +1,17 @@
 // supabase/functions/disbursements/mark-delivered/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden, notFound, conflict, unprocessable } from "../_shared/errors.ts";
-import { markDeliveredSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden, notFound, conflict, unprocessable } from "../../_shared/errors.ts";
+import { markDeliveredSchema } from "../../_shared/validation.ts";
 
-const GPS_THRESHOLD_METERS = 200; // Allow 200m radius from target
+const GPS_THRESHOLD_METERS = 200;
 
 function haversineDistance(
   lat1: number, lon1: number,
   lat2: number, lon2: number
 ): number {
-  const R = 6371000; // Earth radius in meters
+  const R = 6371000;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
   const a =
@@ -94,7 +94,6 @@ Deno.serve(async (req: Request) => {
       .select("lender_id, lenders(address)")
       .eq("id", disbursement.loan_id)
       .single();
-
 
     const now = new Date().toISOString();
 

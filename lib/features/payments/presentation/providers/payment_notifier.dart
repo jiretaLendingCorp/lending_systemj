@@ -10,7 +10,6 @@ import 'package:jireta_loan/features/payments/domain/repositories/payment_reposi
 import 'package:jireta_loan/features/payments/domain/usecases/create_payment_usecase.dart';
 import 'package:jireta_loan/features/payments/domain/usecases/get_payments_usecase.dart';
 
-
 sealed class PaymentFeatureState {
   const PaymentFeatureState();
 }
@@ -68,7 +67,6 @@ class PaymentError extends PaymentFeatureState {
   const PaymentError(this.message, {this.failure});
 }
 
-
 final paymentRemoteDataSourceProvider =
     Provider<PaymentRemoteDataSource>((ref) {
   return PaymentRemoteDataSource(dio: ref.watch(dioProvider));
@@ -104,7 +102,6 @@ final paymentUserRoleProvider = Provider<String?>((ref) {
   }
   return null;
 });
-
 
 class PaymentNotifier extends StateNotifier<PaymentFeatureState> {
   final CreatePaymentUseCase _createPaymentUseCase;

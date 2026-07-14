@@ -7,7 +7,6 @@ import 'package:jireta_loan/features/reports/data/repositories/report_repository
 import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
 import 'package:jireta_loan/features/reports/domain/repositories/report_repository.dart';
 
-
 sealed class ReportFeatureState {
   const ReportFeatureState();
 }
@@ -51,7 +50,6 @@ class ReportError extends ReportFeatureState {
   const ReportError(this.message, {this.failure});
 }
 
-
 final reportRemoteDataSourceProvider =
     Provider<ReportRemoteDataSource>((ref) {
   return ReportRemoteDataSource(dio: ref.watch(dioProvider));
@@ -69,7 +67,6 @@ final reportFeatureProvider =
     repository: ref.watch(reportRepositoryProvider),
   );
 });
-
 
 class ReportNotifier extends StateNotifier<ReportFeatureState> {
   final ReportRepository _repository;

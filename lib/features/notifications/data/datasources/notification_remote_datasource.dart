@@ -103,7 +103,6 @@ class NotificationRemoteDataSource {
         .unsubscribe();
   }
 
-
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:

@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 
-
 enum StatusColor {
   success,
   warning,

@@ -1,9 +1,9 @@
 // supabase/functions/auth/otp-verify/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, unauthorized, conflict } from "../_shared/errors.ts";
-import { otpVerifySchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, unauthorized, conflict } from "../../_shared/errors.ts";
+import { otpVerifySchema } from "../../_shared/validation.ts";
 
 const MAX_OTP_ATTEMPTS = 3;
 
@@ -25,7 +25,9 @@ Deno.serve(async (req: Request) => {
       return badRequest("Method not allowed");
     }
 
-    const { payload } = await authenticateRequest(req);
+    const authResult = await authenticateRequest(req);
+    if ("error" in authResult) return authResult.error;
+    const { payload } = authResult;
     const body = await req.json();
     const parsed = otpVerifySchema.safeParse(body);
     if (!parsed.success) {
@@ -69,7 +71,7 @@ Deno.serve(async (req: Request) => {
         .eq("id", otpRecord.id);
 
       return conflict(
-        `Maximum verification attempts ($MAX_OTP_ATTEMPTS) exceeded. Please request a new OTP.`
+        `Maximum verification attempts (${MAX_OTP_ATTEMPTS}) exceeded. Please request a new OTP.`
       );
     }
 
@@ -82,7 +84,7 @@ Deno.serve(async (req: Request) => {
 
       const remaining = MAX_OTP_ATTEMPTS - (otpRecord.attempts + 1);
       return unauthorized(
-        `Invalid OTP. $remaining attempt${remaining !== 1 ? "s" : ""} remaining.`
+        `Invalid OTP. ${remaining} attempt${remaining !== 1 ? "s" : ""} remaining.`
       );
     }
 

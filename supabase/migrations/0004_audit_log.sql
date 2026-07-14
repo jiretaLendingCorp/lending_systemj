@@ -1,4 +1,6 @@
 -- supabase/migrations/0004_audit_log.sql
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS pg_net;
 CREATE INDEX idx_loans_lender_status ON loans(lender_id, status) WHERE deleted_at IS NULL;
 CREATE INDEX idx_loans_status_due ON loans(status, due_at) WHERE deleted_at IS NULL;
 CREATE INDEX idx_payments_loan_status ON payments(loan_id, status) WHERE deleted_at IS NULL;
@@ -176,31 +178,31 @@ JOIN lenders b ON c.lender_id = b.id
 JOIN users u ON b.user_id = u.id
 WHERE c.deleted_at IS NULL AND r.deleted_at IS NULL;
 
-SELECT extensions.cron_schedule(
+SELECT cron.schedule(
   'mark-overdue-installments',
   '5 0 * * *',
   $$SELECT public.mark_overdue_installments();$$
 );
 
-SELECT extensions.cron_schedule(
+SELECT cron.schedule(
   'cleanup-idempotency-keys',
   '0 2 * * *',
   $$SELECT public.cleanup_expired_idempotency_keys();$$
 );
 
-SELECT extensions.cron_schedule(
+SELECT cron.schedule(
   'cleanup-expired-otps',
   '30 2 * * *',
   $$SELECT public.cleanup_expired_otps();$$
 );
 
-SELECT extensions.cron_schedule(
+SELECT cron.schedule(
   'refresh-portfolio-summary',
   '0 * * * *',
   $$SELECT public.refresh_portfolio_summary();$$
 );
 
-SELECT extensions.cron_schedule(
+SELECT cron.schedule(
   'compute-penalties',
   '0 1 * * *',
   $$
@@ -215,7 +217,7 @@ SELECT extensions.cron_schedule(
   $$
 );
 
-SELECT extensions.cron_schedule(
+SELECT cron.schedule(
   'send-sms-reminders',
   '0 9 * * *',
   $$

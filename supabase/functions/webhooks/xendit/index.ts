@@ -1,8 +1,8 @@
 // supabase/functions/webhooks/xendit/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError } from "../_shared/errors.ts";
-import { xenditWebhookSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError } from "../../_shared/errors.ts";
+import { xenditWebhookSchema } from "../../_shared/validation.ts";
 
 const XENDIT_WEBHOOK_TOKEN = Deno.env.get("XENDIT_WEBHOOK_TOKEN") ?? "";
 
@@ -48,11 +48,12 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    const targetPayment = payment ?? (await supabase
+    const { data: refetchedPayment } = await supabase
       .from("payments")
       .select("id, loan_id, amount, status, lender_id")
       .eq("reference_number", external_id)
-      .maybeSingle());
+      .maybeSingle();
+    const targetPayment = payment ?? refetchedPayment;
 
     if (!targetPayment) {
       return new Response(JSON.stringify({ received: true }), {
@@ -104,8 +105,8 @@ Deno.serve(async (req: Request) => {
         .eq("loan_id", targetPayment.loan_id);
 
       const totalPaid = (allPayments ?? [])
-        .filter((p) => p.status === "completed")
-        .reduce((sum, p) => sum + Number(p.amount), 0);
+        .filter((p: { status: string }) => p.status === "completed")
+        .reduce((sum: number, p: { amount: string | number }) => sum + Number(p.amount), 0);
 
       const { data: loan } = await supabase
         .from("loans")

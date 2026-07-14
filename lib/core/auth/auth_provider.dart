@@ -6,7 +6,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:jireta_loan/core/auth/token_storage.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
 
-
 sealed class AppAuthState {
   const AppAuthState();
 }
@@ -42,7 +41,6 @@ class AppAuthAuthenticated extends AppAuthState {
   @override
   String toString() => 'AppAuthAuthenticated(userId: $userId, email: $email, role: $role)';
 }
-
 
 class AuthNotifier extends StateNotifier<AppAuthState> {
   final SupabaseClient _supabase;
@@ -96,12 +94,6 @@ class AuthNotifier extends StateNotifier<AppAuthState> {
     if (appRole != null && AppConstants.validRoles.contains(appRole)) {
       return appRole;
     }
-
-    final userRole = user.userMetadata?['role'] as String?;
-    if (userRole != null && AppConstants.validRoles.contains(userRole)) {
-      return userRole;
-    }
-
     return AppConstants.roleLender;
   }
 
@@ -113,7 +105,6 @@ class AuthNotifier extends StateNotifier<AppAuthState> {
       userRole: _extractRole(session.user),
     );
   }
-
 
   Future<void> signIn({
     required String email,
@@ -136,7 +127,6 @@ class AuthNotifier extends StateNotifier<AppAuthState> {
       password: password,
       data: {
         'full_name': fullName,
-        'role': role,
       },
     );
   }
@@ -177,7 +167,6 @@ class AuthNotifier extends StateNotifier<AppAuthState> {
     super.dispose();
   }
 }
-
 
 final tokenStorageProvider = Provider<TokenStorage>((ref) {
   throw UnimplementedError(

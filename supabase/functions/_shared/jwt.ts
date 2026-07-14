@@ -1,5 +1,5 @@
 // supabase/functions/_shared/jwt.ts
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "supabase";
 
 export interface JwtPayload {
   sub: string;
@@ -17,7 +17,6 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
 const JWT_SECRET = Deno.env.get("JWT_SECRET") ?? "";
 
-
 export async function verifyJwt(authHeader: string | null): Promise<JwtPayload | null> {
   if (!authHeader) return null;
 
@@ -27,7 +26,7 @@ export async function verifyJwt(authHeader: string | null): Promise<JwtPayload |
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       global: {
-        headers: { Authorization: `Bearer $token` },
+        headers: { Authorization: `Bearer ${token}` },
       },
     });
 
@@ -41,18 +40,16 @@ export async function verifyJwt(authHeader: string | null): Promise<JwtPayload |
       sub: user.id,
       email: user.email ?? "",
       role,
-      app_metadata: user.app_metadata,
+      app_metadata: user.app_metadata as { role?: string } | undefined,
     };
   } catch {
     return null;
   }
 }
 
-
 export function hasRole(payload: JwtPayload, ...roles: UserRole[]): boolean {
   return roles.includes(payload.role as UserRole);
 }
-
 
 export function requireRole(payload: JwtPayload, ...roles: UserRole[]): UserRole | null {
   if (hasRole(payload, ...roles)) {
@@ -60,7 +57,6 @@ export function requireRole(payload: JwtPayload, ...roles: UserRole[]): UserRole
   }
   return null;
 }
-
 
 export async function authenticateRequest(
   req: Request

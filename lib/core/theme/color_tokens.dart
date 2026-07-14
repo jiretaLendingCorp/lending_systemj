@@ -26,10 +26,10 @@ class ColorTokens {
   static const Color darkWarning = Color(0xFFFFA726);
   static const Color darkInfo = Color(0xFF42A5F5);
 
-  static const Color accent = Color(0xFF4CA5D2); // Cyan
+  static const Color accent = Color(0xFF4CA5D2);
   static const Color accentLight = Color(0xFF7DBDE3);
   static const Color accentDark = Color(0xFF3A8BB8);
-  static const Color secondaryAccent = Color(0xFFC3603F); // Warm orange
+  static const Color secondaryAccent = Color(0xFFC3603F);
   static const Color secondaryAccentLight = Color(0xFFD4805F);
   static const Color secondaryAccentDark = Color(0xFFA44E30);
 

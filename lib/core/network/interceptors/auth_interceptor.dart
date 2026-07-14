@@ -3,8 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/auth/auth_provider.dart';
 
-import 'package:jireta_loan/core/utils/constants.dart';
-
 class AuthInterceptor extends Interceptor {
   final Ref _ref;
 
@@ -82,7 +80,6 @@ class AuthInterceptor extends Interceptor {
 
   bool _isPublicEndpoint(String path) {
     const publicPaths = [
-      AppConstants.accessTokenKey, // not a path, but keeps lint happy
       '/auth/login',
       '/auth/signup',
       '/auth/otp-verify',

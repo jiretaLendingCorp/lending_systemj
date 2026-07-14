@@ -50,7 +50,6 @@ class RiderRemoteDataSource {
         data: {
           'latitude': latitude,
           'longitude': longitude,
-          'checked_in_at': DateTime.now().toIso8601String(),
         },
       );
       return RiderTaskModel.fromJson(response.data as Map<String, dynamic>);
@@ -69,7 +68,6 @@ class RiderRemoteDataSource {
       final data = <String, dynamic>{
         'latitude': latitude,
         'longitude': longitude,
-        'delivered_at': DateTime.now().toIso8601String(),
       };
       if (photoReceiptUrl != null) {
         data['photo_receipt_url'] = photoReceiptUrl;
@@ -97,7 +95,6 @@ class RiderRemoteDataSource {
         'amount': amount,
         'latitude': latitude,
         'longitude': longitude,
-        'collected_at': DateTime.now().toIso8601String(),
       };
       if (photoReceiptUrl != null) {
         data['photo_receipt_url'] = photoReceiptUrl;
@@ -156,7 +153,6 @@ class RiderRemoteDataSource {
   }
 
   String _currentRiderId() => 'me';
-
 
   AppException _mapDioException(DioException e) {
     switch (e.type) {

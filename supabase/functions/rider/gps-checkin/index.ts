@@ -1,9 +1,9 @@
 // supabase/functions/rider/gps-checkin/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden, notFound, unprocessable } from "../_shared/errors.ts";
-import { gpsCheckinSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden, notFound, unprocessable } from "../../_shared/errors.ts";
+import { gpsCheckinSchema } from "../../_shared/validation.ts";
 
 const GPS_THRESHOLD_METERS = 200;
 
@@ -93,7 +93,7 @@ Deno.serve(async (req: Request) => {
       }
 
       task = data;
-      targetAddress = data.loan?.lender?.address ?? null;
+      targetAddress = (data as any)?.loan?.lender?.address ?? (data as any)?.loan?.lender?.[0]?.address ?? null;
     } else if (task_type === "collection") {
       const { data, error } = await supabase
         .from("collections")
@@ -116,12 +116,11 @@ Deno.serve(async (req: Request) => {
       }
 
       task = data;
-      targetAddress = data.loan?.lender?.address ?? null;
+      targetAddress = (data as any)?.loan?.lender?.address ?? (data as any)?.loan?.lender?.[0]?.address ?? null;
     }
 
     let distanceMeters: number | null = null;
     let withinRange = true;
-
 
     const tableName = task_type === "disbursement" ? "disbursements" : "collections";
     await supabase

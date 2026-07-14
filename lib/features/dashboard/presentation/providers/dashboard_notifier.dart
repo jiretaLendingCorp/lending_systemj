@@ -9,7 +9,6 @@ import 'package:jireta_loan/features/dashboard/data/repositories/dashboard_repos
 import 'package:jireta_loan/features/dashboard/domain/entities/dashboard_stats.dart';
 import 'package:jireta_loan/features/dashboard/domain/repositories/dashboard_repository.dart';
 
-
 sealed class DashboardFeatureState {
   const DashboardFeatureState();
 }
@@ -39,7 +38,6 @@ class DashboardError extends DashboardFeatureState {
   const DashboardError(this.message, {this.failure});
 }
 
-
 final dashboardRemoteDataSourceProvider =
     Provider<DashboardRemoteDataSource>((ref) {
   return DashboardRemoteDataSource(dio: ref.watch(dioProvider));
@@ -65,7 +63,6 @@ final isAdminProvider = Provider<bool>((ref) {
   }
   return false;
 });
-
 
 class DashboardNotifier extends StateNotifier<DashboardFeatureState> {
   final DashboardRepository _repository;

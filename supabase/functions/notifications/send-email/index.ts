@@ -1,8 +1,8 @@
 // supabase/functions/notifications/send-email/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden } from "../_shared/errors.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden } from "../../_shared/errors.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const FRONTEND_URL = Deno.env.get("FRONTEND_URL") ?? "http://localhost:3000";
@@ -50,7 +50,7 @@ Deno.serve(async (req: Request) => {
 
     switch (email_type) {
       case "email_verification": {
-        verificationUrl = `$FRONTEND_URL/auth/verify-email?token=${encodeURIComponent(tokenData.properties?.hashed_token ?? "")}&type=email_verification`;
+        verificationUrl = `${FRONTEND_URL}/auth/verify-email?token=${encodeURIComponent(tokenData.properties?.hashed_token ?? "")}&type=email_verification`;
         subject = "Verify Your Email - Jireta Loan";
         htmlBody = `
           <!DOCTYPE html>
@@ -59,7 +59,7 @@ Deno.serve(async (req: Request) => {
           <body style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h2 style="color: #1a56db;">Jireta Loan Email Verification</h2>
             <p>Please verify your email address by clicking the link below:</p>
-            <a href="$verificationUrl" style="display: inline-block; padding: 12px 24px; background-color: #1a56db; color: white; text-decoration: none; border-radius: 6px;">
+            <a href="${verificationUrl}" style="display: inline-block; padding: 12px 24px; background-color: #1a56db; color: white; text-decoration: none; border-radius: 6px;">
               Verify Email
             </a>
             <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">
@@ -72,7 +72,7 @@ Deno.serve(async (req: Request) => {
       }
 
       case "password_reset": {
-        verificationUrl = `$FRONTEND_URL/auth/reset-password?token=${encodeURIComponent(tokenData.properties?.hashed_token ?? "")}&type=recovery`;
+        verificationUrl = `${FRONTEND_URL}/auth/reset-password?token=${encodeURIComponent(tokenData.properties?.hashed_token ?? "")}&type=recovery`;
         subject = "Reset Your Password - Jireta Loan";
         htmlBody = `
           <!DOCTYPE html>
@@ -81,7 +81,7 @@ Deno.serve(async (req: Request) => {
           <body style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h2 style="color: #1a56db;">Jireta Loan Password Reset</h2>
             <p>You requested a password reset. Click below to set a new password:</p>
-            <a href="$verificationUrl" style="display: inline-block; padding: 12px 24px; background-color: #1a56db; color: white; text-decoration: none; border-radius: 6px;">
+            <a href="${verificationUrl}" style="display: inline-block; padding: 12px 24px; background-color: #1a56db; color: white; text-decoration: none; border-radius: 6px;">
               Reset Password
             </a>
             <p style="color: #6b7280; font-size: 14px; margin-top: 20px;">
@@ -103,7 +103,7 @@ Deno.serve(async (req: Request) => {
           <head><meta charset="utf-8"></head>
           <body style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <h2 style="color: #1a56db;">Jireta Loan Loan Update</h2>
-            <p>Your loan application for ₱$formattedAmount has been <strong>$loan_status</strong>.</p>
+            <p>Your loan application for ₱${formattedAmount} has been <strong>${loan_status}</strong>.</p>
             <p>Log in to your Jireta Loan account for more details.</p>
           </body>
           </html>
@@ -112,14 +112,14 @@ Deno.serve(async (req: Request) => {
       }
 
       default:
-        return badRequest(`Unknown email type: $email_type`);
+        return badRequest(`Unknown email type: ${email_type}`);
     }
 
     if (RESEND_API_KEY) {
       const response = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
-          Authorization: `Bearer $RESEND_API_KEY`,
+          Authorization: `Bearer ${RESEND_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -140,7 +140,7 @@ Deno.serve(async (req: Request) => {
     await supabase.from("audit_logs").insert({
       user_id: user_id,
       user_role: "system",
-      action: `email_sent_$email_type`,
+      action: `email_sent_${email_type}`,
       new_value: { email_type, email },
     });
 

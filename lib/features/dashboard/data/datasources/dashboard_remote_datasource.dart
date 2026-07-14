@@ -42,7 +42,6 @@ class DashboardRemoteDataSource {
     }
   }
 
-
   AppException _mapDioException(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:

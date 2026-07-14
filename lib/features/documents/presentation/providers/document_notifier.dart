@@ -9,7 +9,6 @@ import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart
 import 'package:jireta_loan/features/documents/domain/repositories/document_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 sealed class DocumentFeatureState {
   const DocumentFeatureState();
 }
@@ -79,7 +78,6 @@ class DocumentError extends DocumentFeatureState {
   const DocumentError(this.message, {this.failure});
 }
 
-
 final documentSupabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
 });
@@ -105,7 +103,6 @@ final documentFeatureProvider =
     authProvider: ref.watch(authProvider),
   );
 });
-
 
 class DocumentNotifier extends StateNotifier<DocumentFeatureState> {
   final DocumentRepository _repository;

@@ -26,8 +26,8 @@ enum ScheduleType {
   int installmentCount(int termDays) {
     return switch (this) {
       ScheduleType.daily => termDays,
-      ScheduleType.weekly => (termDays / 7).ceil(),
-      ScheduleType.monthly => (termDays / 30).ceil(),
+      ScheduleType.weekly => (termDays / 7).floor() < 1 ? 1 : (termDays / 7).floor(),
+      ScheduleType.monthly => (termDays / 30).floor() < 1 ? 1 : (termDays / 30).floor(),
     };
   }
 }

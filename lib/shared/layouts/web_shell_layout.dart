@@ -9,7 +9,6 @@ import 'package:jireta_loan/core/utils/constants.dart';
 import 'package:jireta_loan/features/notifications/presentation/providers/notification_notifier.dart';
 import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
 
-
 class _NavItem {
   final String label;
   final IconData icon;
@@ -21,7 +20,6 @@ class _NavItem {
     required this.route,
   });
 }
-
 
 const _adminNavItems = [
   _NavItem(label: 'Dashboard', icon: Icons.dashboard_rounded, route: '/head-employee/dashboard'),
@@ -44,12 +42,9 @@ const _managerNavItems = [
   _NavItem(label: 'Profile', icon: Icons.person_rounded, route: '/employee/profile'),
 ];
 
-
 final _sidebarCollapsedProvider = StateProvider<bool>((ref) => false);
 
-
 final _themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
-
 
 class WebShellLayout extends ConsumerWidget {
   final Widget child;
@@ -94,7 +89,6 @@ class WebShellLayout extends ConsumerWidget {
     );
   }
 }
-
 
 class _Sidebar extends ConsumerWidget {
   final List<_NavItem> navItems;
@@ -157,7 +151,6 @@ class _Sidebar extends ConsumerWidget {
     );
   }
 }
-
 
 class _SidebarHeader extends StatelessWidget {
   final bool isCollapsed;
@@ -224,7 +217,6 @@ class _SidebarHeader extends StatelessWidget {
     );
   }
 }
-
 
 class _NavItemTile extends StatelessWidget {
   final _NavItem item;
@@ -324,7 +316,6 @@ class _NavItemTile extends StatelessWidget {
     return tile;
   }
 }
-
 
 class _SidebarFooter extends StatelessWidget {
   final AppAuthAuthenticated user;
@@ -448,7 +439,6 @@ class _SidebarFooter extends StatelessWidget {
     });
   }
 }
-
 
 class _TopBar extends ConsumerWidget {
   final AppAuthAuthenticated user;

@@ -1,9 +1,9 @@
 // supabase/functions/loans/reject/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden, notFound, conflict } from "../_shared/errors.ts";
-import { loanRejectSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden, notFound, conflict } from "../../_shared/errors.ts";
+import { loanRejectSchema } from "../../_shared/validation.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -64,7 +64,7 @@ Deno.serve(async (req: Request) => {
         updated_at: now,
       })
       .eq("id", loanId)
-      .in("status", ["draft", "under_review"]); // Optimistic lock
+      .in("status", ["draft", "under_review"]);
 
     if (updateError) {
       return serverError("Failed to reject loan");
@@ -81,7 +81,7 @@ Deno.serve(async (req: Request) => {
         user_id: lender.user_id,
         type: "loan_rejected",
         title: "Loan Application Rejected",
-        body: `Your loan application for ₱${Number(loan.principal).toLocaleString()} has been rejected. Reason: $reason`,
+        body: `Your loan application for ₱${Number(loan.principal).toLocaleString()} has been rejected. Reason: ${reason}`,
       });
     }
 

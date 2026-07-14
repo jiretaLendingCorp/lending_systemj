@@ -178,10 +178,10 @@ class LoanStatusTimeline extends StatelessWidget {
     if (statusIndex >= 0) return statusIndex;
 
     if (loan.status == LoanStatus.rejected) {
-      return 2; // After under_review
+      return 2;
     }
     if (loan.status == LoanStatus.defaulted) {
-      return 5; // After active
+      return 5;
     }
     return 0;
   }

@@ -1,7 +1,7 @@
 // supabase/functions/auth/google-callback/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError } from "../_shared/errors.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError } from "../../_shared/errors.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
@@ -19,13 +19,13 @@ Deno.serve(async (req: Request) => {
 
     if (error) {
       return Response.redirect(
-        `$FRONTEND_URL/auth/error?message=${encodeURIComponent(error)}`
+        `${FRONTEND_URL}/auth/error?message=${encodeURIComponent(error)}`
       );
     }
 
     if (!code) {
       return Response.redirect(
-        `$FRONTEND_URL/auth/error?message=${encodeURIComponent("Missing authorization code")}`
+        `${FRONTEND_URL}/auth/error?message=${encodeURIComponent("Missing authorization code")}`
       );
     }
 
@@ -36,7 +36,7 @@ Deno.serve(async (req: Request) => {
     if (exchangeError || !data.user) {
       console.error("OAuth code exchange failed:", exchangeError);
       return Response.redirect(
-        `$FRONTEND_URL/auth/error?message=${encodeURIComponent("Authentication failed")}`
+        `${FRONTEND_URL}/auth/error?message=${encodeURIComponent("Authentication failed")}`
       );
     }
 
@@ -76,14 +76,14 @@ Deno.serve(async (req: Request) => {
       .eq("id", user.id);
 
     const redirectUrl = state
-      ? `$FRONTEND_URL/auth/callback?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}&state=$state`
-      : `$FRONTEND_URL/auth/callback?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}`;
+      ? `${FRONTEND_URL}/auth/callback?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}&state=${state}`
+      : `${FRONTEND_URL}/auth/callback?access_token=${data.session.access_token}&refresh_token=${data.session.refresh_token}`;
 
     return Response.redirect(redirectUrl);
   } catch (err) {
     console.error("Google callback error:", err);
     return Response.redirect(
-      `$FRONTEND_URL/auth/error?message=${encodeURIComponent("Internal server error")}`
+      `${FRONTEND_URL}/auth/error?message=${encodeURIComponent("Internal server error")}`
     );
   }
 });

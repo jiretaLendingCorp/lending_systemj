@@ -219,7 +219,6 @@ class AuthRemoteDataSource {
     }
   }
 
-
   UserModel _userFromSupabaseResponse(supabase.User user) {
     final metadata = user.userMetadata;
     final appMetadata = user.appMetadata;

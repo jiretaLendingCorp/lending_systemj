@@ -8,7 +8,6 @@ import 'package:jireta_loan/features/users/domain/entities/user_management.dart'
 import 'package:jireta_loan/features/users/domain/repositories/user_repository.dart'
     as domain;
 
-
 sealed class UserFeatureState {
   const UserFeatureState();
 }
@@ -56,7 +55,6 @@ class UserError extends UserFeatureState {
   const UserError(this.message, {this.failure});
 }
 
-
 final userRemoteDataSourceProvider = Provider<UserRemoteDataSource>((ref) {
   return UserRemoteDataSource(dio: ref.watch(dioProvider));
 });
@@ -73,7 +71,6 @@ final userFeatureProvider =
     repository: ref.watch(userRepositoryProvider),
   );
 });
-
 
 class UserNotifier extends StateNotifier<UserFeatureState> {
   final domain.UserRepository _repository;

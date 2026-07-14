@@ -10,7 +10,6 @@ import 'package:jireta_loan/features/borrowers/domain/usecases/get_borrower_prof
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 
-
 sealed class BorrowerFeatureState {
   const BorrowerFeatureState();
 }
@@ -64,7 +63,6 @@ class BorrowerError extends BorrowerFeatureState {
   const BorrowerError(this.message, {this.failure});
 }
 
-
 final borrowerRemoteDataSourceProvider =
     Provider<BorrowerRemoteDataSource>((ref) {
   return BorrowerRemoteDataSource(dio: ref.watch(dioProvider));
@@ -89,7 +87,6 @@ final borrowerFeatureProvider =
     repository: ref.watch(borrowerRepositoryProvider),
   );
 });
-
 
 class LenderNotifier extends StateNotifier<BorrowerFeatureState> {
   final GetBorrowerProfileUseCase _getBorrowerProfileUseCase;

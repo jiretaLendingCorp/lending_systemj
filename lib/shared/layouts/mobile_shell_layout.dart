@@ -13,7 +13,6 @@ import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_payme
 import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_notifications_page.dart';
 import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_profile_page.dart';
 
-
 class _MobileNavItem {
   final String label;
   final IconData icon;
@@ -27,7 +26,6 @@ class _MobileNavItem {
     required this.route,
   });
 }
-
 
 const _riderNavItems = [
   _MobileNavItem(
@@ -82,7 +80,6 @@ const _borrowerNavItems = [
     route: '/lender/profile',
   ),
 ];
-
 
 class MobileShellLayout extends ConsumerStatefulWidget {
   final Widget child;
@@ -215,7 +212,6 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
     );
   }
 }
-
 
 class _FloatingNavItem extends StatelessWidget {
   final _MobileNavItem item;

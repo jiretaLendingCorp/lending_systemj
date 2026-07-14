@@ -1,9 +1,9 @@
 // supabase/functions/auth/otp-send/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, conflict } from "../_shared/errors.ts";
-import { otpSendSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, conflict } from "../../_shared/errors.ts";
+import { otpSendSchema } from "../../_shared/validation.ts";
 
 const OTP_RATE_LIMIT = 3;
 const OTP_TTL_MINUTES = 5;
@@ -33,7 +33,9 @@ Deno.serve(async (req: Request) => {
       return badRequest("Method not allowed");
     }
 
-    const { payload } = await authenticateRequest(req);
+    const authResult = await authenticateRequest(req);
+    if ("error" in authResult) return authResult.error;
+    const { payload } = authResult;
     const body = await req.json();
     const parsed = otpSendSchema.safeParse(body);
     if (!parsed.success) {
@@ -86,7 +88,7 @@ Deno.serve(async (req: Request) => {
           body: JSON.stringify({
             apikey: smsApiKey,
             number: phone,
-            message: `Your Jireta Loan verification code is: $code. Valid for $OTP_TTL_MINUTES minutes. Do not share this code.`,
+            message: `Your Jireta Loan verification code is: ${code}. Valid for ${OTP_TTL_MINUTES} minutes. Do not share this code.`,
             sendername: "Jireta Loan",
           }),
         });

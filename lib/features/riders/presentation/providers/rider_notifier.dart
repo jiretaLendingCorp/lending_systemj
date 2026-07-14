@@ -10,7 +10,6 @@ import 'package:jireta_loan/features/riders/domain/usecases/complete_task_usecas
 import 'package:jireta_loan/features/riders/domain/usecases/get_today_tasks_usecase.dart';
 import 'package:jireta_loan/features/riders/domain/usecases/gps_checkin_usecase.dart';
 
-
 sealed class RiderFeatureState {
   const RiderFeatureState();
 }
@@ -87,7 +86,6 @@ class RiderError extends RiderFeatureState {
   const RiderError(this.message, {this.failure});
 }
 
-
 final riderRemoteDataSourceProvider = Provider<RiderRemoteDataSource>((ref) {
   return RiderRemoteDataSource(dio: ref.watch(dioProvider));
 });
@@ -119,7 +117,6 @@ final riderFeatureProvider =
     repository: ref.watch(riderRepositoryProvider),
   );
 });
-
 
 class RiderNotifier extends StateNotifier<RiderFeatureState> {
   final GetTodayTasksUseCase _getTodayTasksUseCase;

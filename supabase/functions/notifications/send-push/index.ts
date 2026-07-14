@@ -1,8 +1,8 @@
 // supabase/functions/notifications/send-push/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden } from "../_shared/errors.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden } from "../../_shared/errors.ts";
 
 const FCM_SERVER_KEY = Deno.env.get("FCM_SERVER_KEY") ?? "";
 
@@ -29,7 +29,7 @@ Deno.serve(async (req: Request) => {
     if (!isCron) {
       const authResult = await authenticateRequest(req);
       if ("error" in authResult) return authResult.error;
-      if (!hasRole(authResult.payload, "head_manager", "employee", "system")) {
+      if (!hasRole(authResult.payload, "head_manager", "employee")) {
         return forbidden("Insufficient permissions");
       }
     }
@@ -70,7 +70,7 @@ Deno.serve(async (req: Request) => {
         const fcmResponse = await fetch("https://fcm.googleapis.com/fcm/send", {
           method: "POST",
           headers: {
-            Authorization: `key=$FCM_SERVER_KEY`,
+            Authorization: `key=${FCM_SERVER_KEY}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({

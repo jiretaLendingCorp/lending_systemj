@@ -6,7 +6,7 @@ class SystemSettingsModel extends SystemSettings {
     required super.id,
     super.interestRate = 0.20,
     super.penaltyRate = 0.20,
-    super.penaltyThresholdDays = 3,
+    super.penaltyThresholdDays = 30,
     super.smsTemplate =
         'Hi {lender_name}, your payment of {amount} is due on {due_date}. - Jireta Loan',
     super.notificationPreferences = const NotificationPreferences(),
@@ -21,7 +21,7 @@ class SystemSettingsModel extends SystemSettings {
       penaltyRate: _parseDouble(json['penalty_rate'] ?? json['penaltyRate'], fallback: 0.20),
       penaltyThresholdDays: json['penalty_threshold_days'] as int? ??
           json['penaltyThresholdDays'] as int? ??
-          3,
+          30,
       smsTemplate: json['sms_template'] as String? ??
           json['smsTemplate'] as String? ??
           'Hi {lender_name}, your payment of {amount} is due on {due_date}. - Jireta Loan',

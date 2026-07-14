@@ -395,7 +395,6 @@ class AppTheme {
     );
   }
 
-
   static TextTheme _buildTextTheme(Color mainColor, Color secondaryColor) {
     return TextTheme(
       displayLarge: TextStyle(fontSize: 57, fontWeight: FontWeight.w400, height: 1.12, color: mainColor),

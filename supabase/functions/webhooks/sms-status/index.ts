@@ -1,8 +1,8 @@
 // supabase/functions/webhooks/sms-status/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError } from "../_shared/errors.ts";
-import { smsStatusWebhookSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError } from "../../_shared/errors.ts";
+import { smsStatusWebhookSchema } from "../../_shared/validation.ts";
 
 const SMS_WEBHOOK_SECRET = Deno.env.get("SMS_WEBHOOK_SECRET") ?? "";
 
@@ -29,7 +29,7 @@ Deno.serve(async (req: Request) => {
     await supabase.from("audit_logs").insert({
       user_id: null,
       user_role: "system",
-      action: `sms_$status`,
+      action: `sms_${status}`,
       new_value: {
         message_id,
         status,
@@ -39,7 +39,7 @@ Deno.serve(async (req: Request) => {
     });
 
     if (status === "failed" || status === "undelivered") {
-      console.warn(`SMS delivery failed: message_id=$message_id, error=$error_code`);
+      console.warn(`SMS delivery failed: message_id=${message_id}, error=${error_code}`);
 
       const { data: admins } = await supabase
         .from("users")
@@ -49,11 +49,11 @@ Deno.serve(async (req: Request) => {
 
       if (admins && admins.length > 0) {
         await supabase.from("notifications").insert(
-          admins.map((admin) => ({
+          admins.map((admin: { id: string }) => ({
             user_id: admin.id,
             type: "sms_delivery_failed",
             title: "SMS Delivery Failed",
-            body: `SMS message $message_id failed to deliver. Error: ${error_code ?? "Unknown"}`,
+            body: `SMS message ${message_id} failed to deliver. Error: ${error_code ?? "Unknown"}`,
           }))
         );
       }

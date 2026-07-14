@@ -1,7 +1,7 @@
 // supabase/functions/notifications/send-sms/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError } from "../_shared/errors.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError } from "../../_shared/errors.ts";
 
 const CRON_SECRET = Deno.env.get("CRON_SECRET") ?? "";
 const SMS_API_KEY = Deno.env.get("SMS_API_KEY") ?? "";
@@ -49,18 +49,19 @@ Deno.serve(async (req: Request) => {
 
     for (const loan of upcomingLoans ?? []) {
       try {
-        const phones = loan.lender_phones ?? [];
+        const loanAny = loan as any;
+        const phones = loanAny.lender_phones ?? [];
         const phone = phones.length > 0 ? phones[0].phone_number : null;
 
         if (!phone) {
-          results.push({ loan_id: loan.id, sent: false, error: "No phone number" });
+          results.push({ loan_id: loanAny.id, sent: false, error: "No phone number" });
           continue;
         }
 
-        const amountDue = Number(loan.total_payable).toLocaleString();
-        const dueDate = new Date(loan.due_at).toLocaleDateString("en-PH");
+        const amountDue = Number(loanAny.total_payable).toLocaleString();
+        const dueDate = new Date(loanAny.due_at).toLocaleDateString("en-PH");
 
-        const message = `Jireta Loan Reminder: Your loan payment of ₱$amountDue is due on $dueDate. Please ensure timely payment to avoid penalties.`;
+        const message = `Jireta Loan Reminder: Your loan payment of ₱${amountDue} is due on ${dueDate}. Please ensure timely payment to avoid penalties.`;
 
         let smsSent = false;
         if (SMS_API_KEY && SMS_PROVIDER === "semaphore") {
@@ -77,19 +78,19 @@ Deno.serve(async (req: Request) => {
           smsSent = response.ok;
         }
 
-        if (loan.lender?.user_id) {
+        if (loanAny.lender?.user_id) {
           await supabase.from("notifications").insert({
-            user_id: loan.lender.user_id,
+            user_id: loanAny.lender.user_id,
             type: "payment_reminder",
             title: "Payment Due Soon",
             body: message,
           });
         }
 
-        results.push({ loan_id: loan.id, sent: smsSent });
+        results.push({ loan_id: loanAny.id, sent: smsSent });
       } catch (err) {
         results.push({
-          loan_id: loan.id,
+          loan_id: (loan as any).id,
           sent: false,
           error: err instanceof Error ? err.message : "Unknown error",
         });

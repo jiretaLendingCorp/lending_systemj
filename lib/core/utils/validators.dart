@@ -4,7 +4,6 @@ import 'package:jireta_loan/core/utils/constants.dart';
 class Validators {
   Validators._();
 
-
   static String? email(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Email is required';
@@ -18,7 +17,6 @@ class Validators {
     return null;
   }
 
-
   static String? phone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
@@ -30,7 +28,6 @@ class Validators {
     }
     return null;
   }
-
 
   static String? password(String? value) {
     if (value == null || value.isEmpty) {
@@ -64,7 +61,6 @@ class Validators {
     return null;
   }
 
-
   static String? otp(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'OTP is required';
@@ -78,7 +74,6 @@ class Validators {
     }
     return null;
   }
-
 
   static String? loanAmount(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -114,7 +109,6 @@ class Validators {
     return null;
   }
 
-
   static String? name(String? value, {String fieldName = 'Name'}) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
@@ -132,14 +126,12 @@ class Validators {
 
   static String? lastName(String? value) => name(value, fieldName: 'Last name');
 
-
   static String? required(String? value, {String fieldName = 'This field'}) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
     }
     return null;
   }
-
 
   static String? notPastDate(DateTime? date, {String fieldName = 'Date'}) {
     if (date == null) {
@@ -166,7 +158,6 @@ class Validators {
     }
     return null;
   }
-
 
   static String? combine(String? value, List<String? Function(String?)> validators) {
     for (final validator in validators) {

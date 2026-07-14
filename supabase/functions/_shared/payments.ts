@@ -55,7 +55,7 @@ export async function processPayment(ctx: PaymentContext): Promise<PaymentResult
     .is("deleted_at", null);
 
   const totalPaid = (totalPaidRow ?? []).reduce(
-    (sum, p) => sum + Number(p.amount),
+    (sum: number, p: { amount: string | number }) => sum + Number(p.amount),
     0
   );
 

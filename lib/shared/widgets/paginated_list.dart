@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
 
-
 class PaginatedList<T> extends StatelessWidget {
   final List<T> items;
 

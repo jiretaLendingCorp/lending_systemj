@@ -8,7 +8,6 @@ import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
 import 'package:jireta_loan/features/audit_logs/domain/repositories/audit_log_repository.dart'
     as domain;
 
-
 sealed class AuditLogFeatureState {
   const AuditLogFeatureState();
 }
@@ -48,7 +47,6 @@ class AuditLogError extends AuditLogFeatureState {
   const AuditLogError(this.message, {this.failure});
 }
 
-
 final auditLogRemoteDataSourceProvider =
     Provider<AuditLogRemoteDataSource>((ref) {
   return AuditLogRemoteDataSource(dio: ref.watch(dioProvider));
@@ -66,7 +64,6 @@ final auditLogFeatureProvider =
     repository: ref.watch(auditLogRepositoryProvider),
   );
 });
-
 
 class AuditLogNotifier extends StateNotifier<AuditLogFeatureState> {
   final domain.AuditLogRepository _repository;

@@ -230,7 +230,6 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
   }
 }
 
-
 class _QuickActionButton extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -265,7 +264,6 @@ class _QuickActionButton extends StatelessWidget {
     );
   }
 }
-
 
 class _MonthlyBarChart extends StatelessWidget {
   final DashboardStats stats;
@@ -444,7 +442,6 @@ class _MonthlyBarChart extends StatelessWidget {
   }
 }
 
-
 class _LoanStatusPieChart extends StatelessWidget {
   final DashboardStats stats;
 
@@ -591,7 +588,6 @@ class _ChartLegend extends StatelessWidget {
     );
   }
 }
-
 
 class _RecentActivityList extends StatelessWidget {
   final List<RecentActivity> activities;

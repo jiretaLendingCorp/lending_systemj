@@ -1,8 +1,8 @@
 // supabase/functions/loans/compute-penalty/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden } from "../_shared/errors.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden } from "../../_shared/errors.ts";
 
 const PENALTY_THRESHOLD_DAYS = 30;
 const PENALTY_RATE = 0.20;
@@ -59,12 +59,12 @@ Deno.serve(async (req: Request) => {
       return serverError("Failed to fetch overdue loans");
     }
 
-    const results: Array<{ loan_id: string; penalty_applied: boolean; error?: string }> = [];
+    const results: Array<{ loan_id: string; penalty_applied: boolean; error?: string; penalty_amount?: number; final_balance?: number; days_overdue?: number; skipped?: boolean; reason?: string }> = [];
 
     for (const loan of overdueLoans ?? []) {
       try {
         const result = await processLoanPenalty(supabase, loan.id);
-        results.push({ loan_id: loan.id, penalty_applied: true, ...result });
+        results.push(result);
       } catch (err) {
         results.push({
           loan_id: loan.id,
@@ -103,7 +103,15 @@ Deno.serve(async (req: Request) => {
 async function processLoanPenalty(
   supabase: ReturnType<typeof getServiceClient>,
   loanId: string
-) {
+): Promise<{
+  loan_id: string;
+  penalty_applied: boolean;
+  penalty_amount?: number;
+  final_balance?: number;
+  days_overdue?: number;
+  skipped?: boolean;
+  reason?: string;
+}> {
   const { data: loan, error: loanError } = await supabase
     .from("loans")
     .select("id, status, total_payable, due_at, penalty_amount, lender_id")
@@ -112,11 +120,11 @@ async function processLoanPenalty(
     .single();
 
   if (loanError || !loan) {
-    throw new Error(`Loan $loanId not found`);
+    throw new Error(`Loan ${loanId} not found`);
   }
 
   if (loan.status !== "disbursed") {
-    return { loan_id: loanId, skipped: true, reason: `Loan status is '${loan.status}', not 'disbursed'` };
+    return { loan_id: loanId, penalty_applied: false, skipped: true, reason: `Loan status is '${loan.status}', not 'disbursed'` };
   }
 
   const dueDate = new Date(loan.due_at);
@@ -126,11 +134,11 @@ async function processLoanPenalty(
   );
 
   if (daysOverdue < PENALTY_THRESHOLD_DAYS) {
-    return { loan_id: loanId, skipped: true, reason: `Only $daysOverdue days overdue (threshold: $PENALTY_THRESHOLD_DAYS)` };
+    return { loan_id: loanId, penalty_applied: false, skipped: true, reason: `Only ${daysOverdue} days overdue (threshold: ${PENALTY_THRESHOLD_DAYS})` };
   }
 
   if (loan.penalty_amount && Number(loan.penalty_amount) > 0) {
-    return { loan_id: loanId, skipped: true, reason: "Penalty already applied" };
+    return { loan_id: loanId, penalty_applied: false, skipped: true, reason: "Penalty already applied" };
   }
 
   const penaltyAmount = Number(loan.total_payable) * PENALTY_RATE;
@@ -146,10 +154,10 @@ async function processLoanPenalty(
       updated_at: now.toISOString(),
     })
     .eq("id", loanId)
-    .eq("status", "disbursed"); // Optimistic lock
+    .eq("status", "disbursed");
 
   if (updateError) {
-    throw new Error(`Failed to update loan $loanId: ${updateError.message}`);
+    throw new Error(`Failed to update loan ${loanId}: ${updateError.message}`);
   }
 
   const { data: lender } = await supabase
@@ -163,7 +171,7 @@ async function processLoanPenalty(
       user_id: lender.user_id,
       type: "loan_defaulted",
       title: "Loan Defaulted",
-      body: `Your loan has been marked as defaulted due to $daysOverdue days overdue. A penalty of ₱${penaltyAmount.toLocaleString()} has been applied.`,
+      body: `Your loan has been marked as defaulted due to ${daysOverdue} days overdue. A penalty of ₱${penaltyAmount.toLocaleString()} has been applied.`,
     });
   }
 

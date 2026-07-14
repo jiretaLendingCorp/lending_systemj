@@ -1,8 +1,8 @@
 // supabase/functions/rider/today/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden } from "../_shared/errors.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden } from "../../_shared/errors.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -71,7 +71,7 @@ Deno.serve(async (req: Request) => {
     }
 
     const tasks = [
-      ...(disbursements ?? []).map((d) => ({
+      ...(disbursements ?? []).map((d: any) => ({
         task_type: "disbursement" as const,
         task_id: d.id,
         status: d.status,
@@ -80,7 +80,7 @@ Deno.serve(async (req: Request) => {
         lender: d.loan?.lender ?? null,
         created_at: d.created_at,
       })),
-      ...(collections ?? []).map((c) => ({
+      ...(collections ?? []).map((c: any) => ({
         task_type: "collection" as const,
         task_id: c.id,
         status: c.status,

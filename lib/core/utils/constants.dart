@@ -11,8 +11,8 @@ class AppConstants {
 
   static const double minLoanAmount = 3000.0;
   static const double maxLoanAmount = 500000.0;
-  static const double interestRate = 0.20; // 20% per term
-  static const double penaltyRate = 0.20; // 20% of overdue amount
+  static const double interestRate = 0.20;
+  static const double penaltyRate = 0.20;
   static const int loanTermDays = 30;
   static const int gracePeriodDays = 3;
 

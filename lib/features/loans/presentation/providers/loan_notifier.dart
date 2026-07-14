@@ -14,7 +14,6 @@ import 'package:jireta_loan/features/loans/domain/usecases/create_loan_usecase.d
 import 'package:jireta_loan/features/loans/domain/usecases/get_loans_usecase.dart';
 import 'package:jireta_loan/features/loans/domain/usecases/reject_loan_usecase.dart';
 
-
 sealed class LoanFeatureState {
   const LoanFeatureState();
 }
@@ -70,7 +69,6 @@ class LoanError extends LoanFeatureState {
   const LoanError(this.message, {this.failure});
 }
 
-
 final loanRemoteDataSourceProvider = Provider<LoanRemoteDataSource>((ref) {
   return LoanRemoteDataSource(dio: ref.watch(dioProvider));
 });
@@ -120,7 +118,6 @@ final canApproveLoansProvider = Provider<bool>((ref) {
   final role = ref.watch(loanUserRoleProvider);
   return role == AppConstants.roleHeadManager || role == AppConstants.roleEmployee;
 });
-
 
 class LoanNotifier extends StateNotifier<LoanFeatureState> {
   final GetLoansUseCase _getLoansUseCase;

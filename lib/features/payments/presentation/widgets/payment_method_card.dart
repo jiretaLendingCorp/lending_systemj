@@ -129,7 +129,7 @@ class PaymentMethodCard extends StatelessWidget {
       };
 
   Color get _methodAccentColor => switch (method) {
-        PaymentMethod.gcash => const Color(0xFF007BFF), // GCash blue
+        PaymentMethod.gcash => const Color(0xFF007BFF),
         PaymentMethod.office => ColorTokens.secondaryAccent,
         PaymentMethod.cash => ColorTokens.lightSuccess,
       };

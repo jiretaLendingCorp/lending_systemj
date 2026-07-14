@@ -8,7 +8,6 @@ import 'package:jireta_loan/features/borrowers/presentation/widgets/kyc_status_c
 import 'package:jireta_loan/features/borrowers/presentation/widgets/loan_balance_card.dart';
 import 'package:jireta_loan/features/borrowers/presentation/widgets/next_payment_card.dart';
 
-
 class LenderLoanPage extends ConsumerStatefulWidget {
   const LenderLoanPage({super.key});
 

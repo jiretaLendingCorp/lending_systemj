@@ -11,7 +11,6 @@ import 'package:jireta_loan/features/notifications/domain/entities/app_notificat
 import 'package:jireta_loan/features/notifications/domain/repositories/notification_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 sealed class NotificationFeatureState {
   const NotificationFeatureState();
 }
@@ -53,7 +52,6 @@ class NotificationError extends NotificationFeatureState {
   const NotificationError(this.message, {this.failure});
 }
 
-
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
 });
@@ -89,7 +87,6 @@ final unreadNotificationCountProvider = Provider<int>((ref) {
   }
   return 0;
 });
-
 
 class NotificationNotifier extends StateNotifier<NotificationFeatureState> {
   final NotificationRepository _repository;

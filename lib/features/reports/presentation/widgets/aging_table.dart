@@ -153,7 +153,6 @@ class AgingTable extends StatelessWidget {
   }
 }
 
-
 class _AgingRow extends StatelessWidget {
   final String bucket;
   final int count;

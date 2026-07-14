@@ -1,9 +1,9 @@
 // supabase/functions/loans/approve/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden, notFound, conflict } from "../_shared/errors.ts";
-import { loanApproveSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden, notFound, conflict } from "../../_shared/errors.ts";
+import { loanApproveSchema } from "../../_shared/validation.ts";
 
 const VALID_TRANSITIONS: Record<string, string[]> = {
   draft: ["under_review"],
@@ -81,7 +81,7 @@ Deno.serve(async (req: Request) => {
           updated_at: now,
         })
         .eq("id", loanId)
-        .eq("status", "under_review"); // Optimistic lock
+        .eq("status", "under_review");
 
       if (updateError) {
         return serverError("Failed to approve loan");
@@ -90,7 +90,7 @@ Deno.serve(async (req: Request) => {
 
     await supabase.from("disbursements").insert({
       loan_id: loanId,
-      method: "office", // Default, can be changed later
+      method: "office",
       status: "pending",
     });
 

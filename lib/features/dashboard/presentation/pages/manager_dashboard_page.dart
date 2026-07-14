@@ -185,7 +185,6 @@ class _ManagerDashboardPageState extends ConsumerState<EmployeeDashboardPage> {
   }
 }
 
-
 class _PendingApprovalsLink extends StatelessWidget {
   final int count;
 
@@ -233,7 +232,6 @@ class _PendingApprovalsLink extends StatelessWidget {
     );
   }
 }
-
 
 class _BranchPerformanceChart extends StatelessWidget {
   final DashboardStats stats;
@@ -482,7 +480,6 @@ class _SummaryMetric extends StatelessWidget {
     );
   }
 }
-
 
 class _RecentCollectionsPanel extends StatelessWidget {
   final List<RecentActivity> activities;

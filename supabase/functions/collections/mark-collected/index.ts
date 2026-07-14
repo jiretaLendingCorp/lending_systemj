@@ -1,9 +1,9 @@
 // supabase/functions/collections/mark-collected/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden, notFound, conflict } from "../_shared/errors.ts";
-import { markCollectedSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden, notFound, conflict } from "../../_shared/errors.ts";
+import { markCollectedSchema } from "../../_shared/validation.ts";
 
 const GPS_THRESHOLD_METERS = 200;
 
@@ -134,7 +134,7 @@ Deno.serve(async (req: Request) => {
         user_id: lender.user_id,
         type: "payment_collected",
         title: "Payment Collected",
-        body: `A payment of ₱${amount.toLocaleString()} has been collected from you via $method.`,
+        body: `A payment of ₱${amount.toLocaleString()} has been collected from you via ${method}.`,
       });
     }
 

@@ -1,6 +1,5 @@
 // supabase/functions/_shared/validation.ts
-import { z } from "https://esm.sh/zod@3.22.4";
-
+import { z } from "zod";
 
 export const otpSendSchema = z.object({
   phone: z
@@ -19,7 +18,6 @@ export const googleCallbackSchema = z.object({
   code: z.string().min(1, "Authorization code is required"),
   state: z.string().optional(),
 });
-
 
 export const loanCreateSchema = z
   .object({
@@ -53,7 +51,6 @@ export const loanRejectSchema = z.object({
   reason: z.string().min(5, "Rejection reason is required").max(1000),
 });
 
-
 export const paymentCreateSchema = z.object({
   loan_id: z.string().uuid("Invalid loan ID"),
   amount: z.number().positive("Amount must be positive"),
@@ -61,7 +58,6 @@ export const paymentCreateSchema = z.object({
   reference_number: z.string().optional(),
   idempotency_key: z.string().min(1, "Idempotency key is required"),
 });
-
 
 export const gpsCheckinSchema = z.object({
   task_id: z.string().uuid("Invalid task ID"),
@@ -77,11 +73,9 @@ export const gpsCheckinSchema = z.object({
   accuracy: z.number().positive().optional(),
 });
 
-
 export const assignRiderSchema = z.object({
   rider_id: z.string().uuid("Invalid rider ID"),
 });
-
 
 export const markDeliveredSchema = z.object({
   latitude: z
@@ -94,7 +88,6 @@ export const markDeliveredSchema = z.object({
     .max(180, "Invalid longitude"),
   receipt_url: z.string().url("Invalid receipt URL").optional(),
 });
-
 
 export const markCollectedSchema = z.object({
   latitude: z
@@ -110,7 +103,6 @@ export const markCollectedSchema = z.object({
   method: z.enum(["gcash", "office", "cash"]),
 });
 
-
 export const settingsUpdateSchema = z.object({
   interest_rate: z.number().min(0).max(1).optional(),
   penalty_rate: z.number().min(0).max(1).optional(),
@@ -119,7 +111,6 @@ export const settingsUpdateSchema = z.object({
   notification_preferences: z.record(z.boolean()).optional(),
   system_flags: z.record(z.unknown()).optional(),
 });
-
 
 export const loanListQuerySchema = z.object({
   status: z
@@ -137,7 +128,6 @@ export const paymentListQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   page_size: z.coerce.number().int().min(1).max(100).default(20),
 });
-
 
 export const xenditWebhookSchema = z.object({
   id: z.string(),

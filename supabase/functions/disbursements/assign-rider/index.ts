@@ -1,9 +1,9 @@
 // supabase/functions/disbursements/assign-rider/index.ts
-import { handleCors, corsHeaders } from "../_shared/cors.ts";
-import { authenticateRequest, hasRole } from "../_shared/jwt.ts";
-import { getServiceClient } from "../_shared/supabase.ts";
-import { badRequest, successResponse, serverError, forbidden, notFound, conflict } from "../_shared/errors.ts";
-import { assignRiderSchema } from "../_shared/validation.ts";
+import { handleCors, corsHeaders } from "../../_shared/cors.ts";
+import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
+import { getServiceClient } from "../../_shared/supabase.ts";
+import { badRequest, successResponse, serverError, forbidden, notFound, conflict } from "../../_shared/errors.ts";
+import { assignRiderSchema } from "../../_shared/validation.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);

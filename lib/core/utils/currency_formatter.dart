@@ -36,22 +36,6 @@ class CurrencyFormatter {
     return double.tryParse(cleaned) ?? 0.0;
   }
 
-  static double calculateTotalRepayment(double principal) {
-    return principal * (1 + AppConstants.interestRate);
-  }
-
-  static double calculateInterest(double principal) {
-    return principal * AppConstants.interestRate;
-  }
-
-  static double calculatePenalty(double overdueAmount) {
-    return overdueAmount * AppConstants.penaltyRate;
-  }
-
-  static double calculateTotalWithPenalty(double overdueAmount) {
-    return overdueAmount + calculatePenalty(overdueAmount);
-  }
-
   static bool isWithinLoanRange(double amount) {
     return amount >= AppConstants.minLoanAmount &&
         amount <= AppConstants.maxLoanAmount;
