@@ -132,8 +132,9 @@ class NotificationNotifier extends StateNotifier<NotificationFeatureState> {
   }
 
   String? get _currentUserId {
-    if (_authState is AppAuthAuthenticated) {
-      return (_authState as AppAuthAuthenticated).userId;
+    final auth = _authState;
+    if (auth is AppAuthAuthenticated) {
+      return auth.userId;
     }
     return null;
   }

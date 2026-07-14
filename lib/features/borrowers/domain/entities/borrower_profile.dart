@@ -1,4 +1,4 @@
-// lib/features/lenders/domain/entities/lender_profile.dart
+// lib/features/borrowers/domain/entities/borrower_profile.dart
 import 'package:equatable/equatable.dart';
 
 enum KycStatus {

@@ -1,7 +1,6 @@
 // lib/core/network/interceptors/error_interceptor.dart
 import 'package:dio/dio.dart';
 import 'package:jireta_loan/core/error/error_handler.dart';
-import 'package:jireta_loan/core/error/failures.dart';
 
 class ErrorInterceptor extends Interceptor {
   @override

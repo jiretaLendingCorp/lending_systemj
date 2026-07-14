@@ -1,12 +1,11 @@
-// lib/features/lenders/presentation/pages/borrower_profile_page.dart
+// lib/features/borrowers/presentation/pages/borrower_profile_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/auth/auth_provider.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
-import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
-import 'package:jireta_loan/features/lenders/presentation/providers/borrower_notifier.dart';
-import 'package:jireta_loan/features/lenders/presentation/widgets/kyc_status_card.dart';
+import 'package:jireta_loan/features/borrowers/presentation/providers/borrower_notifier.dart';
+import 'package:jireta_loan/features/borrowers/presentation/widgets/kyc_status_card.dart';
 
 class LenderProfilePage extends ConsumerStatefulWidget {
   const LenderProfilePage({super.key});

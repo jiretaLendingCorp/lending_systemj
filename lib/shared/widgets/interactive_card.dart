@@ -67,7 +67,7 @@ class _InteractiveCardState extends State<InteractiveCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOutCubic,
-          transform: Matrix4.identity()..scale(scale),
+          transform: Matrix4.diagonal3Values(scale, scale, 1.0),
           transformAlignment: Alignment.center,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),

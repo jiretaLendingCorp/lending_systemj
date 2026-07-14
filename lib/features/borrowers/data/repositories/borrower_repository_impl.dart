@@ -1,10 +1,10 @@
-// lib/features/lenders/data/repositories/borrower_repository_impl.dart
+// lib/features/borrowers/data/repositories/borrower_repository_impl.dart
 import 'package:dartz/dartz.dart';
 import 'package:jireta_loan/core/error/exceptions.dart';
 import 'package:jireta_loan/core/error/failures.dart';
-import 'package:jireta_loan/features/lenders/data/datasources/borrower_remote_datasource.dart';
-import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
-import 'package:jireta_loan/features/lenders/domain/repositories/borrower_repository.dart';
+import 'package:jireta_loan/features/borrowers/data/datasources/borrower_remote_datasource.dart';
+import 'package:jireta_loan/features/borrowers/domain/entities/borrower_profile.dart';
+import 'package:jireta_loan/features/borrowers/domain/repositories/borrower_repository.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 

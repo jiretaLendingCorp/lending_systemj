@@ -22,8 +22,6 @@ class LogDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return AlertDialog(
       title: Row(
         children: [
@@ -137,6 +135,7 @@ class _DiffView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bgColor = isOld
         ? ColorTokens.lightError.withValues(alpha: 0.06)
         : ColorTokens.lightSuccess.withValues(alpha: 0.06);

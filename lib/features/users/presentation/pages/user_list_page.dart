@@ -13,7 +13,6 @@ import 'package:jireta_loan/shared/widgets/empty_state.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
 import 'package:jireta_loan/shared/widgets/search_bar_widget.dart';
-import 'package:jireta_loan/shared/widgets/status_chip.dart';
 
 class UserListPage extends ConsumerStatefulWidget {
   const UserListPage({super.key});

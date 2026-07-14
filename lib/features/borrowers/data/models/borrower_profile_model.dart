@@ -1,5 +1,5 @@
-// lib/features/lenders/data/models/borrower_profile_model.dart
-import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
+// lib/features/borrowers/data/models/borrower_profile_model.dart
+import 'package:jireta_loan/features/borrowers/domain/entities/borrower_profile.dart';
 
 class BorrowerProfileModel extends LenderProfile {
   const BorrowerProfileModel({

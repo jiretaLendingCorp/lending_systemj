@@ -1,8 +1,8 @@
-// lib/features/lenders/data/datasources/borrower_remote_datasource.dart
+// lib/features/borrowers/data/datasources/borrower_remote_datasource.dart
 import 'package:dio/dio.dart';
 import 'package:jireta_loan/core/error/exceptions.dart';
 import 'package:jireta_loan/core/network/api_endpoints.dart';
-import 'package:jireta_loan/features/lenders/data/models/borrower_profile_model.dart';
+import 'package:jireta_loan/features/borrowers/data/models/borrower_profile_model.dart';
 import 'package:jireta_loan/features/loans/data/models/loan_model.dart';
 import 'package:jireta_loan/features/payments/data/models/payment_model.dart';
 

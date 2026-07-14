@@ -21,7 +21,6 @@ class AuditLogPage extends ConsumerStatefulWidget {
 
 class _AuditLogPageState extends ConsumerState<AuditLogPage> {
   String? _actionFilter;
-  String _searchQuery = '';
   DateTimeRange? _dateRange;
 
   @override
@@ -91,9 +90,6 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                       child: SearchBarWidget(
                         hintText: 'Search by user ID or action...',
                         onChanged: (value) {
-                          setState(() {
-                            _searchQuery = value;
-                          });
                           ref
                               .read(auditLogFeatureProvider.notifier)
                               .loadLogs(userId: value.isEmpty ? null : value);

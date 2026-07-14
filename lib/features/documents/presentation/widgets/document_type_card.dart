@@ -107,14 +107,13 @@ class DocumentTypeCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (existingDocument!.createdAt != null)
-                      Text(
-                        DateFormatter.formatRelative(
-                            existingDocument!.createdAt),
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.outline,
-                        ),
+                    Text(
+                      DateFormatter.formatRelative(
+                          existingDocument!.createdAt),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: theme.colorScheme.outline,
                       ),
+                    ),
                   ],
                 ),
               ),

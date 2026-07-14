@@ -2,7 +2,7 @@
 import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
 
 class PortfolioReportModel extends PortfolioReport {
-  const PortfolioReportModel({
+  PortfolioReportModel({
     super.totalDisbursed = 0.0,
     super.totalOutstanding = 0.0,
     super.totalCollected = 0.0,
@@ -47,7 +47,7 @@ class PortfolioReportModel extends PortfolioReport {
 }
 
 class OverdueReportModel extends OverdueReport {
-  const OverdueReportModel({
+  OverdueReportModel({
     super.days1to7 = 0,
     super.days8to30 = 0,
     super.days30Plus = 0,
@@ -123,7 +123,7 @@ class OverdueBorrowerModel extends OverdueLender {
 }
 
 class CollectionEfficiencyReportModel extends CollectionEfficiencyReport {
-  const CollectionEfficiencyReportModel({
+  CollectionEfficiencyReportModel({
     super.totalExpected = 0.0,
     super.totalCollected = 0.0,
     super.totalPartial = 0.0,

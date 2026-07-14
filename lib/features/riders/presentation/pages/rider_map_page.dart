@@ -142,13 +142,12 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
               right: 16,
               child: GpsCheckinButton(
                 task: _selectedTask!,
-                onCheckin: (latitude, longitude) {
-                  ref.read(riderFeatureProvider.notifier).gpsCheckin(
-                        taskId: _selectedTask!.id,
-                        latitude: latitude,
-                        longitude: longitude,
-                      );
-                },
+                onCheckin: (latitude, longitude) =>
+                    ref.read(riderFeatureProvider.notifier).gpsCheckin(
+                          taskId: _selectedTask!.id,
+                          latitude: latitude,
+                          longitude: longitude,
+                        ),
               ),
             ),
         ],

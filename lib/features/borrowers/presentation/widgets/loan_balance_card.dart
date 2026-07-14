@@ -1,4 +1,4 @@
-// lib/features/lenders/presentation/widgets/loan_balance_card.dart
+// lib/features/borrowers/presentation/widgets/loan_balance_card.dart
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';

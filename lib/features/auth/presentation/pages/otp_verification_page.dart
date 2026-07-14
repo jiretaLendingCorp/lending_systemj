@@ -293,7 +293,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
                   ),
                   _resendCountdown > 0
                       ? Text(
-                          'Resend in $_resendCountdowns',
+                          'Resend in $_resendCountdown',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

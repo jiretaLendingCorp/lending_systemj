@@ -39,13 +39,13 @@ class DateFormatter {
       return '${difference.inDays}d ago';
     } else if (difference.inDays < 30) {
       final weeks = (difference.inDays / 7).floor();
-      return '$weeksw ago';
+      return '${weeks}w ago';
     } else if (difference.inDays < 365) {
       final months = (difference.inDays / 30).floor();
-      return '$monthsmo ago';
+      return '${months}mo ago';
     } else {
       final years = (difference.inDays / 365).floor();
-      return '$yearsy ago';
+      return '${years}y ago';
     }
   }
 

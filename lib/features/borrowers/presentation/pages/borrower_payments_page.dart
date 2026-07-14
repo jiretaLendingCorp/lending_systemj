@@ -1,10 +1,10 @@
-// lib/features/lenders/presentation/pages/borrower_payments_page.dart
+// lib/features/borrowers/presentation/pages/borrower_payments_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
-import 'package:jireta_loan/features/lenders/presentation/providers/borrower_notifier.dart';
+import 'package:jireta_loan/features/borrowers/presentation/providers/borrower_notifier.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 
 class LenderPaymentsPage extends ConsumerStatefulWidget {

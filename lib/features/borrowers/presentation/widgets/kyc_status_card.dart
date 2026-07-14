@@ -1,7 +1,7 @@
-// lib/features/lenders/presentation/widgets/kyc_status_card.dart
+// lib/features/borrowers/presentation/widgets/kyc_status_card.dart
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
-import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
+import 'package:jireta_loan/features/borrowers/domain/entities/borrower_profile.dart';
 
 class KycStatusCard extends StatelessWidget {
   final KycStatus kycStatus;

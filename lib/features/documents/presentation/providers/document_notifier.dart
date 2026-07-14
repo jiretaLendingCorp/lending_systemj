@@ -1,6 +1,4 @@
 // lib/features/documents/presentation/providers/document_notifier.dart
-import 'dart:io';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/auth/auth_provider.dart';
 import 'package:jireta_loan/core/error/failures.dart';
@@ -121,8 +119,9 @@ class DocumentNotifier extends StateNotifier<DocumentFeatureState> {
         super(const DocumentInitial());
 
   String? get _currentBorrowerId {
-    if (_authState is AppAuthAuthenticated) {
-      return (_authState as AppAuthAuthenticated).userId;
+    final auth = _authState;
+    if (auth is AppAuthAuthenticated) {
+      return auth.userId;
     }
     return null;
   }

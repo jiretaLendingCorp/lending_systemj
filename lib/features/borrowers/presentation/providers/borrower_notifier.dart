@@ -1,12 +1,12 @@
-// lib/features/lenders/presentation/providers/borrower_notifier.dart
+// lib/features/borrowers/presentation/providers/borrower_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/error/failures.dart';
 import 'package:jireta_loan/core/network/dio_client.dart';
-import 'package:jireta_loan/features/lenders/data/datasources/borrower_remote_datasource.dart';
-import 'package:jireta_loan/features/lenders/data/repositories/borrower_repository_impl.dart';
-import 'package:jireta_loan/features/lenders/domain/entities/lender_profile.dart';
-import 'package:jireta_loan/features/lenders/domain/repositories/borrower_repository.dart';
-import 'package:jireta_loan/features/lenders/domain/usecases/get_borrower_profile_usecase.dart';
+import 'package:jireta_loan/features/borrowers/data/datasources/borrower_remote_datasource.dart';
+import 'package:jireta_loan/features/borrowers/data/repositories/borrower_repository_impl.dart';
+import 'package:jireta_loan/features/borrowers/domain/entities/borrower_profile.dart';
+import 'package:jireta_loan/features/borrowers/domain/repositories/borrower_repository.dart';
+import 'package:jireta_loan/features/borrowers/domain/usecases/get_borrower_profile_usecase.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 

@@ -1,5 +1,4 @@
 // lib/core/network/realtime_client.dart
-import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -25,21 +24,16 @@ class RealtimeClient {
     }
 
     var channel = _supabase.channel(channelId);
+    final parsedFilter = _parseFilter(filter);
 
-    if (filter != null) {
+    if (parsedFilter != null) {
       channel = channel.onPostgresChanges(
         event: PostgresChangeEvent.all,
         schema: schema,
         table: table,
-        filter: filter,
+        filter: parsedFilter,
         callback: (payload) {
-          onChanged({
-            'eventType': payload.eventType.name,
-            'table': payload.table,
-            'schema': payload.schema,
-            'oldRecord': payload.oldRecord,
-            'newRecord': payload.newRecord,
-          });
+          onChanged(_mapPayload(payload));
         },
       );
     } else {
@@ -48,13 +42,7 @@ class RealtimeClient {
         schema: schema,
         table: table,
         callback: (payload) {
-          onChanged({
-            'eventType': payload.eventType.name,
-            'table': payload.table,
-            'schema': payload.schema,
-            'oldRecord': payload.oldRecord,
-            'newRecord': payload.newRecord,
-          });
+          onChanged(_mapPayload(payload));
         },
       );
     }
@@ -128,5 +116,53 @@ class RealtimeClient {
 
   void dispose() {
     unsubscribeAll();
+  }
+
+  Map<String, dynamic> _mapPayload(PostgresChangePayload payload) {
+    return {
+      'eventType': payload.eventType.name,
+      'table': payload.table,
+      'schema': payload.schema,
+      'oldRecord': payload.oldRecord,
+      'newRecord': payload.newRecord,
+    };
+  }
+
+  PostgresChangeFilter? _parseFilter(String? filter) {
+    if (filter == null || filter.isEmpty) return null;
+
+    final match = RegExp(r'^(\w+)\s*=\s*(eq|neq|lt|lte|gt|gte|in)\.(.+)$')
+        .firstMatch(filter);
+    if (match == null) return null;
+
+    final column = match.group(1)!;
+    final op = match.group(2)!;
+    final rawValue = match.group(3)!;
+
+    final filterType = switch (op) {
+      'eq' => PostgresChangeFilterType.eq,
+      'neq' => PostgresChangeFilterType.neq,
+      'lt' => PostgresChangeFilterType.lt,
+      'lte' => PostgresChangeFilterType.lte,
+      'gt' => PostgresChangeFilterType.gt,
+      'gte' => PostgresChangeFilterType.gte,
+      'in' => PostgresChangeFilterType.inFilter,
+      _ => PostgresChangeFilterType.eq,
+    };
+
+    Object value = rawValue;
+    if (filterType == PostgresChangeFilterType.inFilter) {
+      value = rawValue
+          .split(',')
+          .map((s) => s.trim().replaceAll(RegExp(r'^\(|\)$'), ''))
+          .where((s) => s.isNotEmpty)
+          .toList();
+    }
+
+    return PostgresChangeFilter(
+      type: filterType,
+      column: column,
+      value: value,
+    );
   }
 }

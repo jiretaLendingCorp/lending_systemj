@@ -1,4 +1,4 @@
-// lib/features/lenders/presentation/pages/borrower_notifications_page.dart
+// lib/features/borrowers/presentation/pages/borrower_notifications_page.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';

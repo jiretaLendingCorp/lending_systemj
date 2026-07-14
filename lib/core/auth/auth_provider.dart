@@ -108,7 +108,7 @@ class AuthNotifier extends StateNotifier<AppAuthState> {
   Future<void> _persistSession(Session session) async {
     await _tokenStorage.saveAuthData(
       accessToken: session.accessToken,
-      refreshToken: session.refreshToken,
+      refreshToken: session.refreshToken ?? '',
       userId: session.user.id,
       userRole: _extractRole(session.user),
     );

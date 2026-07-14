@@ -8,10 +8,10 @@ import 'package:jireta_loan/features/riders/presentation/pages/rider_today_page.
 import 'package:jireta_loan/features/riders/presentation/pages/rider_map_page.dart';
 import 'package:jireta_loan/features/riders/presentation/pages/rider_history_page.dart';
 import 'package:jireta_loan/features/riders/presentation/pages/rider_profile_page.dart';
-import 'package:jireta_loan/features/lenders/presentation/pages/borrower_loan_page.dart';
-import 'package:jireta_loan/features/lenders/presentation/pages/borrower_payments_page.dart';
-import 'package:jireta_loan/features/lenders/presentation/pages/borrower_notifications_page.dart';
-import 'package:jireta_loan/features/lenders/presentation/pages/borrower_profile_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_loan_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_payments_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_notifications_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_profile_page.dart';
 
 
 class _MobileNavItem {
