@@ -29,7 +29,7 @@ class RiderProfilePage extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     radius: 48,
-                    backgroundColor: ColorTokens.roleRider.withOpacity(0.1),
+                    backgroundColor: ColorTokens.roleRider.withValues(alpha: 0.1),
                     child: Text(
                       userName.isNotEmpty
                           ? userName.substring(0, 1).toUpperCase()
@@ -54,7 +54,7 @@ class RiderProfilePage extends ConsumerWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: ColorTokens.roleRider.withOpacity(0.1),
+                      color: ColorTokens.roleRider.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -193,7 +193,7 @@ class RiderProfilePage extends ConsumerWidget {
                   style: TextStyle(color: theme.colorScheme.error),
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: theme.colorScheme.error.withOpacity(0.3)),
+                  side: BorderSide(color: theme.colorScheme.error.withValues(alpha: 0.3)),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),

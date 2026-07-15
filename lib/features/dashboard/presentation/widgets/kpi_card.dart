@@ -55,7 +55,7 @@ class KpiCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: effectiveIconColor.withOpacity(0.1),
+                    color: effectiveIconColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(icon, size: 22, color: effectiveIconColor),
@@ -66,8 +66,8 @@ class KpiCard extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: trendUp
-                          ? ColorTokens.lightSuccess.withOpacity(0.1)
-                          : ColorTokens.lightError.withOpacity(0.1),
+                          ? ColorTokens.lightSuccess.withValues(alpha: 0.1)
+                          : ColorTokens.lightError.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(

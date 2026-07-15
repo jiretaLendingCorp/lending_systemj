@@ -52,7 +52,7 @@ class AppTheme {
       drawerTheme: const DrawerThemeData(
         backgroundColor: ColorTokens.lightCanvas,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: ColorTokens.lightCanvas,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -155,7 +155,7 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: ColorTokens.lightSurface,
-        selectedColor: ColorTokens.accent.withOpacity(0.15),
+        selectedColor: ColorTokens.accent.withValues(alpha: 0.15),
         labelStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
@@ -165,7 +165,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: ColorTokens.lightCanvas,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -183,7 +183,7 @@ class AppTheme {
         color: ColorTokens.accent,
         linearTrackColor: ColorTokens.lightSurface,
       ),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: ColorTokens.accent,
         unselectedLabelColor: ColorTokens.lightTextSecondary,
         indicatorColor: ColorTokens.accent,
@@ -246,7 +246,7 @@ class AppTheme {
       drawerTheme: const DrawerThemeData(
         backgroundColor: ColorTokens.darkCanvas,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: ColorTokens.darkSurface,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -349,7 +349,7 @@ class AppTheme {
       ),
       chipTheme: ChipThemeData(
         backgroundColor: ColorTokens.darkSurface,
-        selectedColor: ColorTokens.accent.withOpacity(0.2),
+        selectedColor: ColorTokens.accent.withValues(alpha: 0.2),
         labelStyle: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w500,
@@ -360,7 +360,7 @@ class AppTheme {
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: ColorTokens.darkSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -378,7 +378,7 @@ class AppTheme {
         color: ColorTokens.accent,
         linearTrackColor: ColorTokens.darkSurface,
       ),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: ColorTokens.accentLight,
         unselectedLabelColor: ColorTokens.darkTextSecondary,
         indicatorColor: ColorTokens.accent,

@@ -205,7 +205,7 @@ class _NotificationCenterPageState
             .read(notificationFeatureProvider.notifier)
             .loadNotifications(type: type);
       },
-      selectedColor: ColorTokens.accent.withOpacity(0.15),
+      selectedColor: ColorTokens.accent.withValues(alpha: 0.15),
       checkmarkColor: ColorTokens.accent,
     );
   }

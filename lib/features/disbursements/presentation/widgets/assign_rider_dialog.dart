@@ -108,7 +108,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
             backgroundColor: ColorTokens.accent,
             foregroundColor: Colors.white,
             disabledBackgroundColor:
-                ColorTokens.accent.withOpacity(0.5),
+                ColorTokens.accent.withValues(alpha: 0.5),
           ),
           child: _isAssigning
               ? const SizedBox(
@@ -233,7 +233,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? ColorTokens.accent.withOpacity(0.08)
+                          ? ColorTokens.accent.withValues(alpha: 0.08)
                           : isDark
                               ? ColorTokens.darkSurface
                               : ColorTokens.lightSurface,
@@ -252,7 +252,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
                         CircleAvatar(
                           radius: 20,
                           backgroundColor: ColorTokens.roleRider
-                              .withOpacity(0.12),
+                              .withValues(alpha: 0.12),
                           child: Text(
                             rider.name.isNotEmpty
                                 ? rider.name[0].toUpperCase()

@@ -112,7 +112,7 @@ class _GpsCheckinButtonState extends State<GpsCheckinButton> {
       ),
       label: const Text('Checking in...'),
       style: FilledButton.styleFrom(
-        backgroundColor: ColorTokens.accent.withOpacity(0.7),
+        backgroundColor: ColorTokens.accent.withValues(alpha: 0.7),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -196,7 +196,7 @@ class _StatusDot extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.4),
+            color: color.withValues(alpha: 0.4),
             blurRadius: 6,
             spreadRadius: 2,
           ),

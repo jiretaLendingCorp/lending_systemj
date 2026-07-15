@@ -143,7 +143,7 @@ class _ScheduleRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: isOverdue
-            ? ColorTokens.lightError.withOpacity(isDark ? 0.08 : 0.04)
+            ? ColorTokens.lightError.withValues(alpha: isDark ? 0.08 : 0.04)
             : null,
         border: Border(
           bottom: BorderSide(
@@ -226,7 +226,7 @@ class _StatusChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         decoration: BoxDecoration(
-          color: color.withOpacity(isDark ? 0.15 : 0.1),
+          color: color.withValues(alpha: isDark ? 0.15 : 0.1),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(
@@ -258,7 +258,7 @@ class _SummaryChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Column(

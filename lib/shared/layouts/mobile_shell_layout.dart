@@ -4,14 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jireta_loan/core/auth/auth_provider.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
-import 'package:jireta_loan/features/riders/presentation/pages/rider_today_page.dart';
-import 'package:jireta_loan/features/riders/presentation/pages/rider_map_page.dart';
-import 'package:jireta_loan/features/riders/presentation/pages/rider_history_page.dart';
-import 'package:jireta_loan/features/riders/presentation/pages/rider_profile_page.dart';
-import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_loan_page.dart';
-import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_payments_page.dart';
-import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_notifications_page.dart';
-import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_profile_page.dart';
 
 class _MobileNavItem {
   final String label;
@@ -81,33 +73,12 @@ const _borrowerNavItems = [
   ),
 ];
 
-class MobileShellLayout extends ConsumerStatefulWidget {
+class MobileShellLayout extends ConsumerWidget {
   final Widget child;
 
   const MobileShellLayout({super.key, required this.child});
 
-  @override
-  ConsumerState<MobileShellLayout> createState() => _MobileShellLayoutState();
-}
-
-class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
-  late PageController _pageController;
-  int _currentIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: 0);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  List<_MobileNavItem> get _navItems {
-    final authState = ref.read(authProvider);
+  List<_MobileNavItem> _navItemsFor(AppAuthState authState) {
     if (authState is AppAuthAuthenticated) {
       if (authState.isRider) return _riderNavItems;
       if (authState.isLender) return _borrowerNavItems;
@@ -115,62 +86,24 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
     return _borrowerNavItems;
   }
 
-  List<Widget> get _pages {
-    final authState = ref.read(authProvider);
-    if (authState is AppAuthAuthenticated) {
-      if (authState.isRider) {
-        return const [
-          RiderTodayPage(),
-          RiderMapPage(),
-          RiderHistoryPage(),
-          RiderProfilePage(),
-        ];
-      }
-      if (authState.isLender) {
-        return const [
-          LenderLoanPage(),
-          LenderPaymentsPage(),
-          LenderNotificationsPage(),
-          LenderProfilePage(),
-        ];
-      }
+  int _currentIndexFor(String location, List<_MobileNavItem> items) {
+    for (int i = 0; i < items.length; i++) {
+      if (location.startsWith(items[i].route)) return i;
     }
-    return const [
-      LenderLoanPage(),
-      LenderPaymentsPage(),
-      LenderNotificationsPage(),
-      LenderProfilePage(),
-    ];
-  }
-
-  void _onPageChanged(int index) {
-    setState(() => _currentIndex = index);
-    final navItems = _navItems;
-    if (index < navItems.length) {
-      context.go(navItems[index].route);
-    }
-  }
-
-  void _onNavItemTapped(int index) {
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    return 0;
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final isLight = theme.brightness == Brightness.light;
-    final navItems = _navItems;
+    final authState = ref.watch(authProvider);
+    final navItems = _navItemsFor(authState);
+    final location = GoRouterState.of(context).matchedLocation;
+    final currentIndex = _currentIndexFor(location, navItems);
 
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        children: _pages,
-      ),
+      body: child,
       bottomNavigationBar: Container(
         margin: const EdgeInsets.fromLTRB(15, 0, 15, 15),
         height: 70,
@@ -180,13 +113,13 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(isLight ? 0.08 : 0.3),
+                color: Colors.black.withValues(alpha: isLight ? 0.08 : 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
                 spreadRadius: 0,
               ),
               BoxShadow(
-                color: Colors.black.withOpacity(isLight ? 0.04 : 0.15),
+                color: Colors.black.withValues(alpha: isLight ? 0.04 : 0.15),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
                 spreadRadius: 0,
@@ -197,13 +130,13 @@ class _MobileShellLayoutState extends ConsumerState<MobileShellLayout> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(navItems.length, (index) {
               final item = navItems[index];
-              final isActive = index == _currentIndex;
+              final isActive = index == currentIndex;
 
               return _FloatingNavItem(
                 item: item,
                 isActive: isActive,
                 isLight: isLight,
-                onTap: () => _onNavItemTapped(index),
+                onTap: () => context.go(item.route),
               );
             }),
           ),

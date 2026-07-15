@@ -349,7 +349,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
               end: Alignment.bottomRight,
               colors: isDark
                   ? [ColorTokens.darkCanvas, ColorTokens.darkSurface]
-                  : [ColorTokens.accent.withOpacity(0.05), Colors.white],
+                  : [ColorTokens.accent.withValues(alpha: 0.05), Colors.white],
             ),
           ),
           child: Center(
@@ -359,7 +359,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                 constraints: const BoxConstraints(maxWidth: 420),
                 child: Card(
                   elevation: 8,
-                  shadowColor: ColorTokens.accent.withOpacity(0.2),
+                  shadowColor: ColorTokens.accent.withValues(alpha: 0.2),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -405,7 +405,7 @@ class _AnimatedLogo extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: ColorTokens.accent.withOpacity(0.3),
+              color: ColorTokens.accent.withValues(alpha: 0.3),
               blurRadius: 16,
               offset: const Offset(0, 8),
             ),

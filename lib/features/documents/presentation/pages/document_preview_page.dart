@@ -167,10 +167,10 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: ColorTokens.lightError.withOpacity(0.05),
+                  color: ColorTokens.lightError.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: ColorTokens.lightError.withOpacity(0.2),
+                    color: ColorTokens.lightError.withValues(alpha: 0.2),
                   ),
                 ),
                 child: Row(
@@ -337,7 +337,7 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

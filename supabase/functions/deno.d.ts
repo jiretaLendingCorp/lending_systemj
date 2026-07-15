@@ -1,5 +1,4 @@
 // supabase/functions/deno.d.ts
-/// <reference types="https://esm.sh/@deno/types@2.0.0" />
 
 declare const Deno: {
   env: {

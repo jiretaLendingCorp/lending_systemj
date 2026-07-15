@@ -53,7 +53,7 @@ class ReportSummaryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: effectiveIconColor.withOpacity(0.1),
+                  color: effectiveIconColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(icon, size: 20, color: effectiveIconColor),
@@ -64,8 +64,8 @@ class ReportSummaryCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: trendUp
-                        ? ColorTokens.lightSuccess.withOpacity(0.1)
-                        : ColorTokens.lightError.withOpacity(0.1),
+                        ? ColorTokens.lightSuccess.withValues(alpha: 0.1)
+                        : ColorTokens.lightError.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(

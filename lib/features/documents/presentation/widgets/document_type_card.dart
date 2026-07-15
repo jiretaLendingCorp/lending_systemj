@@ -30,7 +30,7 @@ class DocumentTypeCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: _borderColor.withOpacity(0.3),
+          color: _borderColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -45,7 +45,7 @@ class DocumentTypeCard extends StatelessWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: _iconBackgroundColor.withOpacity(0.1),
+                    color: _iconBackgroundColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -91,7 +91,7 @@ class DocumentTypeCard extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: _statusBackgroundColor.withOpacity(0.05),
+                  color: _statusBackgroundColor.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -234,7 +234,7 @@ class _StatusIndicator extends StatelessWidget {
       width: 28,
       height: 28,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(icon, size: 16, color: color),

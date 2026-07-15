@@ -26,7 +26,7 @@ class LoanBalanceCard extends StatelessWidget {
                 Text(
                   'Current Loan Balance',
                   style: theme.textTheme.labelMedium?.copyWith(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                 ),
                 Container(
@@ -35,7 +35,7 @@ class LoanBalanceCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -64,7 +64,7 @@ class LoanBalanceCard extends StatelessWidget {
             Text(
               'of ${CurrencyFormatter.formatPhp(loan.totalPayable)} total',
               style: theme.textTheme.bodySmall?.copyWith(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
               ),
             ),
 
@@ -79,7 +79,7 @@ class LoanBalanceCard extends StatelessWidget {
                     Text(
                       'Repayment Progress',
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                     Text(
@@ -96,7 +96,7 @@ class LoanBalanceCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     value: loan.repaymentProgress,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor: Colors.white.withValues(alpha: 0.2),
                     color: Colors.white,
                     minHeight: 8,
                   ),

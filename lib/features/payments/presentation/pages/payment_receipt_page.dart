@@ -106,7 +106,7 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
                     height: 64,
                     decoration: BoxDecoration(
                       color: _statusColor(payment.status)
-                          .withOpacity(0.12),
+                          .withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -413,10 +413,10 @@ class _ReceiptStatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        color: color.withOpacity(isDark ? 0.2 : 0.12),
+        color: color.withValues(alpha: isDark ? 0.2 : 0.12),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

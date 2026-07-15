@@ -59,7 +59,7 @@ class _BorrowerProfilePageState extends ConsumerState<LenderProfilePage> {
                     CircleAvatar(
                       radius: 48,
                       backgroundColor:
-                          ColorTokens.roleLender.withOpacity(0.1),
+                          ColorTokens.roleLender.withValues(alpha: 0.1),
                       child: Text(
                         userName.isNotEmpty
                             ? userName.substring(0, 1).toUpperCase()
@@ -84,7 +84,7 @@ class _BorrowerProfilePageState extends ConsumerState<LenderProfilePage> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: ColorTokens.roleLender.withOpacity(0.1),
+                        color: ColorTokens.roleLender.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -184,7 +184,7 @@ class _BorrowerProfilePageState extends ConsumerState<LenderProfilePage> {
                   ),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(
-                        color: theme.colorScheme.error.withOpacity(0.3)),
+                        color: theme.colorScheme.error.withValues(alpha: 0.3)),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                 ),

@@ -104,7 +104,7 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
                       ? ColorTokens.darkSurface
                       : ColorTokens.lightSurface,
                   selectedColor:
-                      ColorTokens.accent.withOpacity(0.15),
+                      ColorTokens.accent.withValues(alpha: 0.15),
                   labelStyle: TextStyle(
                     fontSize: 12,
                     fontWeight:
@@ -147,7 +147,7 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
                       ? ColorTokens.darkSurface
                       : ColorTokens.lightSurface,
                   selectedColor: ColorTokens.secondaryAccent
-                      .withOpacity(0.15),
+                      .withValues(alpha: 0.15),
                   labelStyle: TextStyle(
                     fontSize: 12,
                     fontWeight:
@@ -400,10 +400,10 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(isDark ? 0.2 : 0.12),
+        color: color.withValues(alpha: isDark ? 0.2 : 0.12),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

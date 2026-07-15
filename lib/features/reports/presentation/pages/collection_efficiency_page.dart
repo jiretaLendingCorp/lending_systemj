@@ -217,7 +217,7 @@ class _CollectionEfficiencyPageState
                       child: LinearProgressIndicator(
                         value: report.efficiencyRate / 100,
                         minHeight: 12,
-                        backgroundColor: ColorTokens.accent.withOpacity(0.15),
+                        backgroundColor: ColorTokens.accent.withValues(alpha: 0.15),
                         valueColor:
                             const AlwaysStoppedAnimation(ColorTokens.accent),
                       ),

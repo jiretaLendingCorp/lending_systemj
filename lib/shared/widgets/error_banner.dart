@@ -31,10 +31,10 @@ class ErrorBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: ColorTokens.lightError.withOpacity(0.1),
+        color: ColorTokens.lightError.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: ColorTokens.lightError.withOpacity(0.3),
+          color: ColorTokens.lightError.withValues(alpha: 0.3),
         ),
       ),
       child: Row(

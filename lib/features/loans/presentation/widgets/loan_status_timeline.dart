@@ -295,7 +295,7 @@ class _TimelineNode extends StatelessWidget {
                 : isCompleted
                     ? color
                     : isCurrent
-                        ? color.withOpacity(0.2)
+                        ? color.withValues(alpha: 0.2)
                         : Colors.transparent,
             border: Border.all(
               color: isSkipped
@@ -354,7 +354,7 @@ class _TimelineConnector extends StatelessWidget {
       color: isCompleted
           ? ColorTokens.lightSuccess
           : isCurrent
-              ? ColorTokens.accent.withOpacity(0.5)
+              ? ColorTokens.accent.withValues(alpha: 0.5)
               : isDark
                   ? ColorTokens.darkBorder
                   : ColorTokens.lightBorder,
@@ -395,7 +395,7 @@ class _TimelineDot extends StatelessWidget {
         color: isCompleted
             ? color
             : isCurrent
-                ? color.withOpacity(0.2)
+                ? color.withValues(alpha: 0.2)
                 : Colors.transparent,
         border: Border.all(color: color, width: 2),
       ),

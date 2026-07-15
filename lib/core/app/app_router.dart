@@ -1,9 +1,48 @@
 // lib/core/app/app_router.dart
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jireta_loan/core/auth/auth_provider.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:jireta_loan/features/audit_logs/presentation/pages/audit_log_page.dart';
+import 'package:jireta_loan/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:jireta_loan/features/auth/presentation/pages/login_page.dart';
+import 'package:jireta_loan/features/auth/presentation/pages/otp_verification_page.dart';
+import 'package:jireta_loan/features/auth/presentation/pages/signup_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_loan_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_notifications_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_payments_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_profile_page.dart';
+import 'package:jireta_loan/features/collections/presentation/pages/collection_detail_page.dart';
+import 'package:jireta_loan/features/collections/presentation/pages/collection_list_page.dart';
+import 'package:jireta_loan/features/dashboard/presentation/pages/admin_dashboard_page.dart';
+import 'package:jireta_loan/features/dashboard/presentation/pages/manager_dashboard_page.dart';
+import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_detail_page.dart';
+import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_list_page.dart';
+import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
+import 'package:jireta_loan/features/documents/presentation/pages/document_preview_page.dart';
+import 'package:jireta_loan/features/documents/presentation/pages/kyc_upload_page.dart';
+import 'package:jireta_loan/features/loans/presentation/pages/loan_application_page.dart';
+import 'package:jireta_loan/features/loans/presentation/pages/loan_detail_page.dart';
+import 'package:jireta_loan/features/loans/presentation/pages/loan_list_page.dart';
+import 'package:jireta_loan/features/notifications/presentation/pages/notification_center_page.dart';
+import 'package:jireta_loan/features/payments/presentation/pages/payment_history_page.dart';
+import 'package:jireta_loan/features/payments/presentation/pages/payment_page.dart';
+import 'package:jireta_loan/features/payments/presentation/pages/payment_receipt_page.dart';
+import 'package:jireta_loan/features/reports/presentation/pages/collection_efficiency_page.dart';
+import 'package:jireta_loan/features/reports/presentation/pages/overdue_report_page.dart';
+import 'package:jireta_loan/features/reports/presentation/pages/portfolio_report_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_history_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_map_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_profile_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_today_page.dart';
+import 'package:jireta_loan/features/settings/presentation/pages/settings_page.dart';
+import 'package:jireta_loan/features/users/presentation/pages/user_create_page.dart';
+import 'package:jireta_loan/features/users/presentation/pages/user_detail_page.dart';
+import 'package:jireta_loan/features/users/presentation/pages/user_list_page.dart';
+import 'package:jireta_loan/shared/layouts/mobile_shell_layout.dart';
+import 'package:jireta_loan/shared/layouts/web_shell_layout.dart';
 
 class AppRouter {
   AppRouter._();
@@ -19,141 +58,293 @@ class AppRouter {
         GoRoute(
           path: '/auth/login',
           name: 'login',
-          builder: (context, state) => const _PlaceholderPage(title: 'Login'),
+          builder: (context, state) => const LoginPage(),
         ),
         GoRoute(
           path: '/auth/signup',
           name: 'signup',
-          builder: (context, state) => const _PlaceholderPage(title: 'Sign Up'),
+          builder: (context, state) => const SignupPage(),
         ),
         GoRoute(
           path: '/auth/otp',
           name: 'otp',
-          builder: (context, state) => const _PlaceholderPage(title: 'OTP Verification'),
+          builder: (context, state) {
+            final extra = state.extra;
+            String email = '';
+            if (extra is Map<String, dynamic>) {
+              email = extra['email'] as String? ?? '';
+            } else if (extra is String) {
+              email = extra;
+            }
+            return OtpVerificationPage(email: email);
+          },
         ),
         GoRoute(
           path: '/auth/forgot-password',
           name: 'forgotPassword',
-          builder: (context, state) => const _PlaceholderPage(title: 'Forgot Password'),
+          builder: (context, state) => const ForgotPasswordPage(),
         ),
 
-        GoRoute(
-          path: '/head-employee/dashboard',
-          name: 'headManagerDashboard',
-          builder: (context, state) => const _PlaceholderPage(title: 'Head Employee Dashboard'),
-        ),
-        GoRoute(
-          path: '/head-employee/users',
-          name: 'headManagerUsers',
-          builder: (context, state) => const _PlaceholderPage(title: 'User Management'),
-        ),
-        GoRoute(
-          path: '/head-employee/loans',
-          name: 'headManagerLoans',
-          builder: (context, state) => const _PlaceholderPage(title: 'Loan Management'),
-        ),
-        GoRoute(
-          path: '/head-employee/lenders',
-          name: 'headManagerLenders',
-          builder: (context, state) => const _PlaceholderPage(title: 'Lender Management'),
-        ),
-        GoRoute(
-          path: '/head-employee/riders',
-          name: 'headManagerRiders',
-          builder: (context, state) => const _PlaceholderPage(title: 'Rider Management'),
-        ),
-        GoRoute(
-          path: '/head-employee/collections',
-          name: 'headManagerCollections',
-          builder: (context, state) => const _PlaceholderPage(title: 'Collections Management'),
-        ),
-        GoRoute(
-          path: '/head-employee/reports',
-          name: 'headManagerReports',
-          builder: (context, state) => const _PlaceholderPage(title: 'Reports'),
-        ),
-        GoRoute(
-          path: '/head-employee/audit',
-          name: 'headManagerAudit',
-          builder: (context, state) => const _PlaceholderPage(title: 'Audit Log'),
-        ),
-        GoRoute(
-          path: '/head-employee/settings',
-          name: 'headManagerSettings',
-          builder: (context, state) => const _PlaceholderPage(title: 'Settings'),
-        ),
+        ShellRoute(
+          builder: (context, state, child) {
+            if (kIsWeb) {
+              return WebShellLayout(child: child);
+            }
+            return MobileShellLayout(child: child);
+          },
+          routes: [
+            GoRoute(
+              path: '/head-employee/dashboard',
+              name: 'headManagerDashboard',
+              builder: (context, state) => const AdminDashboardPage(),
+            ),
+            GoRoute(
+              path: '/head-employee/users',
+              name: 'headManagerUsers',
+              builder: (context, state) => const UserListPage(),
+              routes: [
+                GoRoute(
+                  path: 'create',
+                  name: 'headManagerUserCreate',
+                  builder: (context, state) => const UserCreatePage(),
+                ),
+                GoRoute(
+                  path: ':userId',
+                  name: 'headManagerUserDetail',
+                  builder: (context, state) =>
+                      UserDetailPage(userId: state.pathParameters['userId']!),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/head-employee/loans',
+              name: 'headManagerLoans',
+              builder: (context, state) => const LoanListPage(),
+              routes: [
+                GoRoute(
+                  path: ':loanId',
+                  name: 'headManagerLoanDetail',
+                  builder: (context, state) =>
+                      LoanDetailPage(loanId: state.pathParameters['loanId']!),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/head-employee/lenders',
+              name: 'headManagerLenders',
+              builder: (context, state) =>
+                  const _PlaceholderPage(title: 'Lender Management'),
+            ),
+            GoRoute(
+              path: '/head-employee/riders',
+              name: 'headManagerRiders',
+              builder: (context, state) =>
+                  const _PlaceholderPage(title: 'Rider Management'),
+            ),
+            GoRoute(
+              path: '/head-employee/collections',
+              name: 'headManagerCollections',
+              builder: (context, state) => const CollectionListPage(),
+              routes: [
+                GoRoute(
+                  path: ':collectionId',
+                  name: 'headManagerCollectionDetail',
+                  builder: (context, state) => CollectionDetailPage(
+                      collectionId: state.pathParameters['collectionId']!),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/head-employee/reports',
+              name: 'headManagerReports',
+              builder: (context, state) => const PortfolioReportPage(),
+              routes: [
+                GoRoute(
+                  path: 'overdue',
+                  name: 'headManagerReportOverdue',
+                  builder: (context, state) => const OverdueReportPage(),
+                ),
+                GoRoute(
+                  path: 'collection-efficiency',
+                  name: 'headManagerReportEfficiency',
+                  builder: (context, state) =>
+                      const CollectionEfficiencyPage(),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/head-employee/audit',
+              name: 'headManagerAudit',
+              builder: (context, state) => const AuditLogPage(),
+            ),
+            GoRoute(
+              path: '/head-employee/settings',
+              name: 'headManagerSettings',
+              builder: (context, state) => const SettingsPage(),
+            ),
 
-        GoRoute(
-          path: '/employee/dashboard',
-          name: 'employeeDashboard',
-          builder: (context, state) => const _PlaceholderPage(title: 'Employee Dashboard'),
-        ),
-        GoRoute(
-          path: '/employee/loans',
-          name: 'managerLoans',
-          builder: (context, state) => const _PlaceholderPage(title: 'Loan Processing'),
-        ),
-        GoRoute(
-          path: '/employee/lenders',
-          name: 'managerLenders',
-          builder: (context, state) => const _PlaceholderPage(title: 'Lender Overview'),
-        ),
-        GoRoute(
-          path: '/employee/riders',
-          name: 'managerRiders',
-          builder: (context, state) => const _PlaceholderPage(title: 'Rider Overview'),
-        ),
-        GoRoute(
-          path: '/employee/collections',
-          name: 'managerCollections',
-          builder: (context, state) => const _PlaceholderPage(title: 'Collections Overview'),
-        ),
-        GoRoute(
-          path: '/employee/profile',
-          name: 'managerProfile',
-          builder: (context, state) => const _PlaceholderPage(title: 'Employee Profile'),
-        ),
+            GoRoute(
+              path: '/employee/dashboard',
+              name: 'employeeDashboard',
+              builder: (context, state) => const EmployeeDashboardPage(),
+            ),
+            GoRoute(
+              path: '/employee/loans',
+              name: 'managerLoans',
+              builder: (context, state) => const LoanListPage(),
+              routes: [
+                GoRoute(
+                  path: ':loanId',
+                  name: 'managerLoanDetail',
+                  builder: (context, state) =>
+                      LoanDetailPage(loanId: state.pathParameters['loanId']!),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/employee/lenders',
+              name: 'managerLenders',
+              builder: (context, state) =>
+                  const _PlaceholderPage(title: 'Lender Overview'),
+            ),
+            GoRoute(
+              path: '/employee/riders',
+              name: 'managerRiders',
+              builder: (context, state) =>
+                  const _PlaceholderPage(title: 'Rider Overview'),
+            ),
+            GoRoute(
+              path: '/employee/collections',
+              name: 'managerCollections',
+              builder: (context, state) => const CollectionListPage(),
+              routes: [
+                GoRoute(
+                  path: ':collectionId',
+                  name: 'managerCollectionDetail',
+                  builder: (context, state) => CollectionDetailPage(
+                      collectionId: state.pathParameters['collectionId']!),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/employee/profile',
+              name: 'managerProfile',
+              builder: (context, state) => const SettingsPage(),
+            ),
 
-        GoRoute(
-          path: '/rider/today',
-          name: 'riderToday',
-          builder: (context, state) => const _PlaceholderPage(title: 'Today\'s Route'),
-        ),
-        GoRoute(
-          path: '/rider/map',
-          name: 'riderMap',
-          builder: (context, state) => const _PlaceholderPage(title: 'Collection Map'),
-        ),
-        GoRoute(
-          path: '/rider/history',
-          name: 'riderHistory',
-          builder: (context, state) => const _PlaceholderPage(title: 'Collection History'),
-        ),
-        GoRoute(
-          path: '/rider/profile',
-          name: 'riderProfile',
-          builder: (context, state) => const _PlaceholderPage(title: 'Rider Profile'),
-        ),
+            GoRoute(
+              path: '/rider/today',
+              name: 'riderToday',
+              builder: (context, state) => const RiderTodayPage(),
+            ),
+            GoRoute(
+              path: '/rider/map',
+              name: 'riderMap',
+              builder: (context, state) => const RiderMapPage(),
+            ),
+            GoRoute(
+              path: '/rider/history',
+              name: 'riderHistory',
+              builder: (context, state) => const RiderHistoryPage(),
+            ),
+            GoRoute(
+              path: '/rider/profile',
+              name: 'riderProfile',
+              builder: (context, state) => const RiderProfilePage(),
+            ),
 
-        GoRoute(
-          path: '/lender/loan',
-          name: 'borrowerLoan',
-          builder: (context, state) => const _PlaceholderPage(title: 'My Loan'),
-        ),
-        GoRoute(
-          path: '/lender/payments',
-          name: 'lenderPayments',
-          builder: (context, state) => const _PlaceholderPage(title: 'My Payments'),
-        ),
-        GoRoute(
-          path: '/lender/notifications',
-          name: 'lenderNotifications',
-          builder: (context, state) => const _PlaceholderPage(title: 'Notifications'),
-        ),
-        GoRoute(
-          path: '/lender/profile',
-          name: 'lenderProfile',
-          builder: (context, state) => const _PlaceholderPage(title: 'My Profile'),
+            GoRoute(
+              path: '/lender/loan',
+              name: 'borrowerLoan',
+              builder: (context, state) => const LenderLoanPage(),
+              routes: [
+                GoRoute(
+                  path: 'apply',
+                  name: 'borrowerLoanApply',
+                  builder: (context, state) => const LoanApplicationPage(),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/lender/payments',
+              name: 'lenderPayments',
+              builder: (context, state) => const LenderPaymentsPage(),
+            ),
+            GoRoute(
+              path: '/lender/notifications',
+              name: 'lenderNotifications',
+              builder: (context, state) => const LenderNotificationsPage(),
+            ),
+            GoRoute(
+              path: '/lender/profile',
+              name: 'lenderProfile',
+              builder: (context, state) => const LenderProfilePage(),
+            ),
+            GoRoute(
+              path: '/lender/kyc',
+              name: 'lenderKyc',
+              builder: (context, state) => const KycUploadPage(),
+            ),
+
+            GoRoute(
+              path: '/loans/:loanId',
+              name: 'loanDetail',
+              builder: (context, state) =>
+                  LoanDetailPage(loanId: state.pathParameters['loanId']!),
+            ),
+            GoRoute(
+              path: '/payments',
+              name: 'payment',
+              builder: (context, state) {
+                final loanId = state.uri.queryParameters['loanId'];
+                return PaymentPage(loanId: loanId);
+              },
+            ),
+            GoRoute(
+              path: '/payments/history',
+              name: 'paymentHistory',
+              builder: (context, state) {
+                final loanId = state.uri.queryParameters['loanId'];
+                return PaymentHistoryPage(loanId: loanId);
+              },
+            ),
+            GoRoute(
+              path: '/payments/:paymentId/receipt',
+              name: 'paymentReceipt',
+              builder: (context, state) => PaymentReceiptPage(
+                  paymentId: state.pathParameters['paymentId']!),
+            ),
+            GoRoute(
+              path: '/disbursements',
+              name: 'disbursementList',
+              builder: (context, state) => const DisbursementListPage(),
+              routes: [
+                GoRoute(
+                  path: ':disbursementId',
+                  name: 'disbursementDetail',
+                  builder: (context, state) => DisbursementDetailPage(
+                      disbursementId:
+                          state.pathParameters['disbursementId']!),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/notifications',
+              name: 'notificationCenter',
+              builder: (context, state) => const NotificationCenterPage(),
+            ),
+            GoRoute(
+              path: '/documents/preview',
+              name: 'documentPreview',
+              builder: (context, state) {
+                final doc = state.extra;
+                if (doc is! KycDocument) {
+                  return const _PlaceholderPage(title: 'Document Preview');
+                }
+                return DocumentPreviewPage(document: doc);
+              },
+            ),
+          ],
         ),
 
         GoRoute(
@@ -211,7 +402,9 @@ class AppRouter {
   static bool _hasRoleAccess(String role, String path) {
     if (role == AppConstants.roleHeadManager) return true;
 
-    if (path.startsWith('/head-manager')) return false;
+    if (path.startsWith('/head-employee')) {
+      return role == AppConstants.roleHeadManager;
+    }
     if (path.startsWith('/employee')) {
       return role == AppConstants.roleEmployee;
     }

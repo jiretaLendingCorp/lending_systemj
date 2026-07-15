@@ -173,8 +173,8 @@ class _AgingRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final borderColor = isLight
-        ? ColorTokens.lightBorder.withOpacity(0.5)
-        : ColorTokens.darkBorder.withOpacity(0.5);
+        ? ColorTokens.lightBorder.withValues(alpha: 0.5)
+        : ColorTokens.darkBorder.withValues(alpha: 0.5);
     final pct = totalAmount > 0 ? (amount / totalAmount) * 100 : 0.0;
 
     return Container(
@@ -248,7 +248,7 @@ class _AgingRow extends StatelessWidget {
                     borderRadius: BorderRadius.circular(3),
                     child: LinearProgressIndicator(
                       value: pct / 100,
-                      backgroundColor: color.withOpacity(0.15),
+                      backgroundColor: color.withValues(alpha: 0.15),
                       valueColor: AlwaysStoppedAnimation<Color>(color),
                     ),
                   ),

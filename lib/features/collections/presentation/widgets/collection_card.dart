@@ -121,7 +121,7 @@ class CollectionCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color:
-                        ColorTokens.lightSuccess.withOpacity(0.1),
+                        ColorTokens.lightSuccess.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
@@ -201,10 +201,10 @@ class _CollectionStatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(isDark ? 0.2 : 0.12),
+        color: color.withValues(alpha: isDark ? 0.2 : 0.12),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

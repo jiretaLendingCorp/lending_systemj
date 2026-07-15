@@ -106,7 +106,7 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                     _legendItem(Colors.orange, 'Collection'),
                     if (_currentLocation != null) ...[
                       const SizedBox(height: 4),
-                      _legendItem(Colors.blue.withOpacity(0.5), 'Your Location'),
+                      _legendItem(Colors.blue.withValues(alpha: 0.5), 'Your Location'),
                     ],
                   ],
                 ),
@@ -207,7 +207,7 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: _statusColor(task.status).withOpacity(0.1),
+                      color: _statusColor(task.status).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(

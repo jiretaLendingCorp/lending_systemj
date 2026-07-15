@@ -243,7 +243,7 @@ class _HistoryTaskCard extends StatelessWidget {
                     color: (task.status == RiderTaskStatus.completed
                             ? ColorTokens.lightSuccess
                             : ColorTokens.lightError)
-                        .withOpacity(0.1),
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(

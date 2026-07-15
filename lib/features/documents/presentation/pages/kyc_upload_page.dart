@@ -111,10 +111,10 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: ColorTokens.lightError.withOpacity(0.05),
+                      color: ColorTokens.lightError.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: ColorTokens.lightError.withOpacity(0.2),
+                        color: ColorTokens.lightError.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -143,10 +143,10 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: ColorTokens.lightSuccess.withOpacity(0.05),
+                      color: ColorTokens.lightSuccess.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: ColorTokens.lightSuccess.withOpacity(0.2),
+                        color: ColorTokens.lightSuccess.withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -285,7 +285,7 @@ class _UploadProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
-      color: ColorTokens.accent.withOpacity(0.05),
+      color: ColorTokens.accent.withValues(alpha: 0.05),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

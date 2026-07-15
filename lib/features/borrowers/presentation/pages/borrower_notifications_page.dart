@@ -137,7 +137,7 @@ class _NotificationItem extends StatelessWidget {
     final isUnread = !(notification.isRead as bool);
 
     return Card(
-      color: isUnread ? ColorTokens.accent.withOpacity(0.03) : null,
+      color: isUnread ? ColorTokens.accent.withValues(alpha: 0.03) : null,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
