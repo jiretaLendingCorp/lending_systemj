@@ -163,6 +163,35 @@ class _SidebarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isCollapsed) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
+        child: InkWell(
+          onTap: onToggle,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: ColorTokens.accent,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Center(
+              child: Text(
+                'LF',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 8, 12),
       child: Row(
@@ -186,28 +215,25 @@ class _SidebarHeader extends StatelessWidget {
               ),
             ),
           ),
-          if (!isCollapsed) ...[
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                AppConstants.appName,
-                style: TextStyles.titleMedium(context).copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: ColorTokens.accent,
-                ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              AppConstants.appName,
+              style: TextStyles.titleMedium(context).copyWith(
+                fontWeight: FontWeight.w700,
+                color: ColorTokens.accent,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
-          ],
-          const Spacer(),
+          ),
           IconButton(
-            icon: Icon(
-              isCollapsed
-                  ? Icons.chevron_right_rounded
-                  : Icons.chevron_left_rounded,
+            icon: const Icon(
+              Icons.chevron_left_rounded,
               size: 20,
             ),
             onPressed: onToggle,
-            tooltip: isCollapsed ? 'Expand sidebar' : 'Collapse sidebar',
+            tooltip: 'Collapse sidebar',
             splashRadius: 18,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
@@ -348,7 +374,7 @@ class _SidebarFooter extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      padding: const EdgeInsets.fromLTRB(16, 12, 8, 16),
       child: Row(
         children: [
           AvatarWidget(
@@ -379,10 +405,13 @@ class _SidebarFooter extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.8,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 4),
           IconButton(
             icon: Icon(
               Icons.logout_rounded,
@@ -413,6 +442,7 @@ class _SidebarFooter extends StatelessWidget {
   }
 
   void _handleSignOut(BuildContext context) {
+    final container = ProviderScope.containerOf(context, listen: false);
     showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -433,8 +463,10 @@ class _SidebarFooter extends StatelessWidget {
           ),
         ],
       ),
-    ).then((confirmed) {
+    ).then((confirmed) async {
       if (confirmed == true) {
+        final authNotifier = container.read(authProvider.notifier);
+        await authNotifier.signOut();
       }
     });
   }

@@ -5,54 +5,53 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jireta_loan/core/auth/auth_provider.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
-import 'package:jireta_loan/features/audit_logs/presentation/pages/audit_log_page.dart';
-import 'package:jireta_loan/features/auth/presentation/pages/forgot_password_page.dart';
-import 'package:jireta_loan/features/auth/presentation/pages/login_page.dart';
-import 'package:jireta_loan/features/auth/presentation/pages/otp_verification_page.dart';
-import 'package:jireta_loan/features/auth/presentation/pages/signup_page.dart';
-import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_loan_page.dart';
-import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_notifications_page.dart';
-import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_payments_page.dart';
-import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_profile_page.dart';
-import 'package:jireta_loan/features/collections/presentation/pages/collection_detail_page.dart';
-import 'package:jireta_loan/features/collections/presentation/pages/collection_list_page.dart';
-import 'package:jireta_loan/features/dashboard/presentation/pages/admin_dashboard_page.dart';
-import 'package:jireta_loan/features/dashboard/presentation/pages/manager_dashboard_page.dart';
-import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_detail_page.dart';
-import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_list_page.dart';
-import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
-import 'package:jireta_loan/features/documents/presentation/pages/document_preview_page.dart';
-import 'package:jireta_loan/features/documents/presentation/pages/kyc_upload_page.dart';
-import 'package:jireta_loan/features/loans/presentation/pages/loan_application_page.dart';
-import 'package:jireta_loan/features/loans/presentation/pages/loan_detail_page.dart';
-import 'package:jireta_loan/features/loans/presentation/pages/loan_list_page.dart';
-import 'package:jireta_loan/features/notifications/presentation/pages/notification_center_page.dart';
-import 'package:jireta_loan/features/payments/presentation/pages/payment_history_page.dart';
-import 'package:jireta_loan/features/payments/presentation/pages/payment_page.dart';
-import 'package:jireta_loan/features/payments/presentation/pages/payment_receipt_page.dart';
-import 'package:jireta_loan/features/reports/presentation/pages/collection_efficiency_page.dart';
-import 'package:jireta_loan/features/reports/presentation/pages/overdue_report_page.dart';
-import 'package:jireta_loan/features/reports/presentation/pages/portfolio_report_page.dart';
-import 'package:jireta_loan/features/riders/presentation/pages/rider_history_page.dart';
-import 'package:jireta_loan/features/riders/presentation/pages/rider_map_page.dart';
-import 'package:jireta_loan/features/riders/presentation/pages/rider_profile_page.dart';
-import 'package:jireta_loan/features/riders/presentation/pages/rider_today_page.dart';
-import 'package:jireta_loan/features/settings/presentation/pages/settings_page.dart';
-import 'package:jireta_loan/features/users/presentation/pages/user_create_page.dart';
-import 'package:jireta_loan/features/users/presentation/pages/user_detail_page.dart';
-import 'package:jireta_loan/features/users/presentation/pages/user_list_page.dart';
 import 'package:jireta_loan/shared/layouts/mobile_shell_layout.dart';
 import 'package:jireta_loan/shared/layouts/web_shell_layout.dart';
+import 'package:jireta_loan/features/auth/presentation/pages/login_page.dart';
+import 'package:jireta_loan/features/auth/presentation/pages/signup_page.dart';
+import 'package:jireta_loan/features/auth/presentation/pages/otp_verification_page.dart';
+import 'package:jireta_loan/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:jireta_loan/features/dashboard/presentation/pages/admin_dashboard_page.dart';
+import 'package:jireta_loan/features/dashboard/presentation/pages/manager_dashboard_page.dart';
+import 'package:jireta_loan/features/users/presentation/pages/user_list_page.dart';
+import 'package:jireta_loan/features/users/presentation/pages/user_create_page.dart';
+import 'package:jireta_loan/features/users/presentation/pages/user_detail_page.dart';
+import 'package:jireta_loan/features/loans/presentation/pages/loan_list_page.dart';
+import 'package:jireta_loan/features/loans/presentation/pages/loan_detail_page.dart';
+import 'package:jireta_loan/features/loans/presentation/pages/loan_application_page.dart';
+import 'package:jireta_loan/features/collections/presentation/pages/collection_list_page.dart';
+import 'package:jireta_loan/features/collections/presentation/pages/collection_detail_page.dart';
+import 'package:jireta_loan/features/reports/presentation/pages/portfolio_report_page.dart';
+import 'package:jireta_loan/features/reports/presentation/pages/overdue_report_page.dart';
+import 'package:jireta_loan/features/reports/presentation/pages/collection_efficiency_page.dart';
+import 'package:jireta_loan/features/audit_logs/presentation/pages/audit_log_page.dart';
+import 'package:jireta_loan/features/settings/presentation/pages/settings_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_today_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_map_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_history_page.dart';
+import 'package:jireta_loan/features/riders/presentation/pages/rider_profile_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_loan_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_payments_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_notifications_page.dart';
+import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_profile_page.dart';
+import 'package:jireta_loan/features/documents/presentation/pages/kyc_upload_page.dart';
+import 'package:jireta_loan/features/payments/presentation/pages/payment_page.dart';
+import 'package:jireta_loan/features/payments/presentation/pages/payment_history_page.dart';
+import 'package:jireta_loan/features/payments/presentation/pages/payment_receipt_page.dart';
+import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_list_page.dart';
+import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_detail_page.dart';
+import 'package:jireta_loan/features/notifications/presentation/pages/notification_center_page.dart';
 
 class AppRouter {
   AppRouter._();
 
   static final provider = Provider<GoRouter>((ref) {
     final authState = ref.watch(authProvider);
+    final isWideScreen = kIsWeb;
 
     return GoRouter(
       initialLocation: '/',
-      debugLogDiagnostics: true,
+      debugLogDiagnostics: kDebugMode,
       redirect: (context, state) => _guard(authState, state),
       routes: [
         GoRoute(
@@ -69,12 +68,12 @@ class AppRouter {
           path: '/auth/otp',
           name: 'otp',
           builder: (context, state) {
-            final extra = state.extra;
-            String email = '';
-            if (extra is Map<String, dynamic>) {
-              email = extra['email'] as String? ?? '';
-            } else if (extra is String) {
-              email = extra;
+            String email = state.uri.queryParameters['email'] ?? '';
+            if (email.isEmpty) {
+              final extra = state.extra;
+              if (extra is Map) {
+                email = extra['email'] as String? ?? '';
+              }
             }
             return OtpVerificationPage(email: email);
           },
@@ -87,7 +86,7 @@ class AppRouter {
 
         ShellRoute(
           builder: (context, state, child) {
-            if (kIsWeb) {
+            if (isWideScreen) {
               return WebShellLayout(child: child);
             }
             return MobileShellLayout(child: child);
@@ -111,8 +110,9 @@ class AppRouter {
                 GoRoute(
                   path: ':userId',
                   name: 'headManagerUserDetail',
-                  builder: (context, state) =>
-                      UserDetailPage(userId: state.pathParameters['userId']!),
+                  builder: (context, state) => UserDetailPage(
+                    userId: state.pathParameters['userId']!,
+                  ),
                 ),
               ],
             ),
@@ -124,22 +124,21 @@ class AppRouter {
                 GoRoute(
                   path: ':loanId',
                   name: 'headManagerLoanDetail',
-                  builder: (context, state) =>
-                      LoanDetailPage(loanId: state.pathParameters['loanId']!),
+                  builder: (context, state) => LoanDetailPage(
+                    loanId: state.pathParameters['loanId']!,
+                  ),
                 ),
               ],
             ),
             GoRoute(
               path: '/head-employee/lenders',
               name: 'headManagerLenders',
-              builder: (context, state) =>
-                  const _PlaceholderPage(title: 'Lender Management'),
+              builder: (context, state) => const _PlaceholderPage(title: 'Lender Management'),
             ),
             GoRoute(
               path: '/head-employee/riders',
               name: 'headManagerRiders',
-              builder: (context, state) =>
-                  const _PlaceholderPage(title: 'Rider Management'),
+              builder: (context, state) => const _PlaceholderPage(title: 'Rider Management'),
             ),
             GoRoute(
               path: '/head-employee/collections',
@@ -150,7 +149,8 @@ class AppRouter {
                   path: ':collectionId',
                   name: 'headManagerCollectionDetail',
                   builder: (context, state) => CollectionDetailPage(
-                      collectionId: state.pathParameters['collectionId']!),
+                    collectionId: state.pathParameters['collectionId']!,
+                  ),
                 ),
               ],
             ),
@@ -167,8 +167,7 @@ class AppRouter {
                 GoRoute(
                   path: 'collection-efficiency',
                   name: 'headManagerReportEfficiency',
-                  builder: (context, state) =>
-                      const CollectionEfficiencyPage(),
+                  builder: (context, state) => const CollectionEfficiencyPage(),
                 ),
               ],
             ),
@@ -196,22 +195,21 @@ class AppRouter {
                 GoRoute(
                   path: ':loanId',
                   name: 'managerLoanDetail',
-                  builder: (context, state) =>
-                      LoanDetailPage(loanId: state.pathParameters['loanId']!),
+                  builder: (context, state) => LoanDetailPage(
+                    loanId: state.pathParameters['loanId']!,
+                  ),
                 ),
               ],
             ),
             GoRoute(
               path: '/employee/lenders',
               name: 'managerLenders',
-              builder: (context, state) =>
-                  const _PlaceholderPage(title: 'Lender Overview'),
+              builder: (context, state) => const _PlaceholderPage(title: 'Lender Overview'),
             ),
             GoRoute(
               path: '/employee/riders',
               name: 'managerRiders',
-              builder: (context, state) =>
-                  const _PlaceholderPage(title: 'Rider Overview'),
+              builder: (context, state) => const _PlaceholderPage(title: 'Rider Overview'),
             ),
             GoRoute(
               path: '/employee/collections',
@@ -222,7 +220,8 @@ class AppRouter {
                   path: ':collectionId',
                   name: 'managerCollectionDetail',
                   builder: (context, state) => CollectionDetailPage(
-                      collectionId: state.pathParameters['collectionId']!),
+                    collectionId: state.pathParameters['collectionId']!,
+                  ),
                 ),
               ],
             ),
@@ -289,30 +288,26 @@ class AppRouter {
             GoRoute(
               path: '/loans/:loanId',
               name: 'loanDetail',
-              builder: (context, state) =>
-                  LoanDetailPage(loanId: state.pathParameters['loanId']!),
+              builder: (context, state) => LoanDetailPage(
+                loanId: state.pathParameters['loanId']!,
+              ),
             ),
             GoRoute(
               path: '/payments',
               name: 'payment',
-              builder: (context, state) {
-                final loanId = state.uri.queryParameters['loanId'];
-                return PaymentPage(loanId: loanId);
-              },
+              builder: (context, state) => const PaymentPage(),
             ),
             GoRoute(
               path: '/payments/history',
               name: 'paymentHistory',
-              builder: (context, state) {
-                final loanId = state.uri.queryParameters['loanId'];
-                return PaymentHistoryPage(loanId: loanId);
-              },
+              builder: (context, state) => const PaymentHistoryPage(),
             ),
             GoRoute(
               path: '/payments/:paymentId/receipt',
               name: 'paymentReceipt',
               builder: (context, state) => PaymentReceiptPage(
-                  paymentId: state.pathParameters['paymentId']!),
+                paymentId: state.pathParameters['paymentId']!,
+              ),
             ),
             GoRoute(
               path: '/disbursements',
@@ -323,8 +318,8 @@ class AppRouter {
                   path: ':disbursementId',
                   name: 'disbursementDetail',
                   builder: (context, state) => DisbursementDetailPage(
-                      disbursementId:
-                          state.pathParameters['disbursementId']!),
+                    disbursementId: state.pathParameters['disbursementId']!,
+                  ),
                 ),
               ],
             ),
@@ -332,17 +327,6 @@ class AppRouter {
               path: '/notifications',
               name: 'notificationCenter',
               builder: (context, state) => const NotificationCenterPage(),
-            ),
-            GoRoute(
-              path: '/documents/preview',
-              name: 'documentPreview',
-              builder: (context, state) {
-                final doc = state.extra;
-                if (doc is! KycDocument) {
-                  return const _PlaceholderPage(title: 'Document Preview');
-                }
-                return DocumentPreviewPage(document: doc);
-              },
             ),
           ],
         ),
@@ -400,10 +384,12 @@ class AppRouter {
   }
 
   static bool _hasRoleAccess(String role, String path) {
-    if (role == AppConstants.roleHeadManager) return true;
+    if (role == AppConstants.roleHeadManager) {
+      return true;
+    }
 
     if (path.startsWith('/head-employee')) {
-      return role == AppConstants.roleHeadManager;
+      return false;
     }
     if (path.startsWith('/employee')) {
       return role == AppConstants.roleEmployee;
