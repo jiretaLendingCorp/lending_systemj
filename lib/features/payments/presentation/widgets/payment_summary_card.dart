@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
   final double amount;

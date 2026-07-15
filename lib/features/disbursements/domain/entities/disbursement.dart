@@ -1,7 +1,7 @@
 // lib/features/disbursements/domain/entities/disbursement.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 enum DisbursementMethod {
   gcash,
@@ -81,8 +81,8 @@ enum DisbursementStatus {
         DisbursementStatus.pending => LucideIcons.clock,
         DisbursementStatus.assigned => LucideIcons.user,
         DisbursementStatus.inTransit => LucideIcons.truck,
-        DisbursementStatus.delivered => LucideIcons.checkCircle,
-        DisbursementStatus.failed => LucideIcons.alertCircle,
+        DisbursementStatus.delivered => LucideIcons.circleCheck,
+        DisbursementStatus.failed => LucideIcons.circleAlert,
       };
 }
 

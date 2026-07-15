@@ -5,7 +5,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 import 'package:jireta_loan/features/loans/presentation/widgets/loan_status_badge.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LoanCard extends StatelessWidget {
   final Loan loan;
@@ -156,7 +156,7 @@ class LoanCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        LucideIcons.alertTriangle,
+                        LucideIcons.triangleAlert,
                         size: 14,
                         color: ColorTokens.lightError,
                       ),

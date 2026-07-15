@@ -7,7 +7,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 import 'package:jireta_loan/features/payments/presentation/providers/payment_notifier.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PaymentHistoryPage extends ConsumerStatefulWidget {
   final String? loanId;
@@ -191,7 +191,7 @@ class _PaymentHistoryPageState extends ConsumerState<PaymentHistoryPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 48,
               color: ColorTokens.lightError,
             ),

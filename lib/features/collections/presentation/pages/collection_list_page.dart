@@ -7,7 +7,7 @@ import 'package:jireta_loan/features/collections/domain/entities/collection.dart
 import 'package:jireta_loan/features/collections/domain/repositories/collection_repository.dart';
 import 'package:jireta_loan/features/collections/presentation/providers/collection_notifier.dart';
 import 'package:jireta_loan/features/collections/presentation/widgets/collection_card.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CollectionListPage extends ConsumerStatefulWidget {
   const CollectionListPage({super.key});
@@ -255,7 +255,7 @@ class _CollectionListPageState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -547,7 +547,7 @@ class _AssignRiderCollectionDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 40,
               color: ColorTokens.lightError,
             ),
@@ -700,7 +700,7 @@ class _AssignRiderCollectionDialogState
                         ),
                         if (isSelected)
                           const Icon(
-                            LucideIcons.checkCircle,
+                            LucideIcons.circleCheck,
                             color: ColorTokens.accent,
                             size: 22,
                           ),

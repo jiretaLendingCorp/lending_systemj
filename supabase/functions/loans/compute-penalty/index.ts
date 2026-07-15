@@ -3,9 +3,7 @@ import { handleCors, corsHeaders } from "../../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
 import { getServiceClient } from "../../_shared/supabase.ts";
 import { badRequest, successResponse, serverError, forbidden } from "../../_shared/errors.ts";
-
-const PENALTY_THRESHOLD_DAYS = 30;
-const PENALTY_RATE = 0.20;
+import { computePenalty, PENALTY_THRESHOLD_DAYS, DEFAULT_PENALTY_RATE } from "../../_shared/loan-finance.ts";
 const CRON_SECRET = Deno.env.get("CRON_SECRET") ?? "";
 
 Deno.serve(async (req: Request) => {
@@ -141,7 +139,12 @@ async function processLoanPenalty(
     return { loan_id: loanId, penalty_applied: false, skipped: true, reason: "Penalty already applied" };
   }
 
-  const penaltyAmount = Number(loan.total_payable) * PENALTY_RATE;
+  const penaltyAmount = computePenalty({
+    principal: Number(loan.total_payable) - Number(loan.penalty_amount ?? 0),
+    penaltyRate: DEFAULT_PENALTY_RATE,
+    daysOverdue,
+    thresholdDays: PENALTY_THRESHOLD_DAYS,
+  });
   const finalBalance = Number(loan.total_payable) + penaltyAmount;
 
   const { error: updateError } = await supabase

@@ -9,7 +9,7 @@ import 'package:jireta_loan/features/loans/presentation/providers/loan_notifier.
 import 'package:jireta_loan/features/loans/presentation/widgets/loan_schedule_table.dart';
 import 'package:jireta_loan/features/loans/presentation/widgets/loan_status_badge.dart';
 import 'package:jireta_loan/features/loans/presentation/widgets/loan_status_timeline.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LoanDetailPage extends ConsumerStatefulWidget {
   final String loanId;
@@ -179,7 +179,7 @@ class _LoanDetailPageState extends ConsumerState<LoanDetailPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 48,
               color: ColorTokens.lightError,
             ),

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:jireta_loan/features/reports/presentation/providers/report_notifier.dart';
 import 'package:jireta_loan/features/reports/presentation/widgets/aging_table.dart';
@@ -79,7 +79,7 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                         child: ReportSummaryCard(
                           label: 'Total Overdue',
                           value: CurrencyFormatter.formatPhp(state.report.totalAmount),
-                          icon: LucideIcons.alertTriangle,
+                          icon: LucideIcons.triangleAlert,
                           iconColor: ColorTokens.lightError,
                           subtitle: '${state.report.totalOverdue} loans',
                         ),
@@ -109,7 +109,7 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                         child: ReportSummaryCard(
                           label: '30+ Days',
                           value: CurrencyFormatter.formatPhp(state.report.amount30Plus),
-                          icon: LucideIcons.alertCircle,
+                          icon: LucideIcons.circleAlert,
                           iconColor: ColorTokens.lightError,
                           subtitle: '${state.report.days30Plus} loans',
                         ),

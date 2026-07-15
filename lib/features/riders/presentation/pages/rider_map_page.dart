@@ -6,7 +6,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
 import 'package:jireta_loan/features/riders/presentation/providers/rider_notifier.dart';
 import 'package:jireta_loan/features/riders/presentation/widgets/gps_checkin_button.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class RiderMapPage extends ConsumerStatefulWidget {
   const RiderMapPage({super.key});

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:jireta_loan/features/borrowers/presentation/providers/borrower_notifier.dart';
 import 'package:jireta_loan/features/borrowers/presentation/widgets/kyc_status_card.dart';
@@ -131,7 +131,7 @@ class _BorrowerLoanPageState extends ConsumerState<LenderLoanPage> {
                     padding: const EdgeInsets.all(16),
                     child: FilledButton.icon(
                       onPressed: _navigateToLoanApplication,
-                      icon: const Icon(LucideIcons.plusCircle),
+                      icon: const Icon(LucideIcons.circlePlus),
                       label: const Text('Apply for New Loan'),
                       style: FilledButton.styleFrom(
                         backgroundColor: ColorTokens.accent,
@@ -174,7 +174,7 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(LucideIcons.alertCircle, size: 48, color: theme.colorScheme.error),
+          Icon(LucideIcons.circleAlert, size: 48, color: theme.colorScheme.error),
           const SizedBox(height: 16),
           Text(message, style: theme.textTheme.bodyLarge, textAlign: TextAlign.center),
           const SizedBox(height: 16),

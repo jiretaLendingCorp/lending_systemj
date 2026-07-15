@@ -9,7 +9,7 @@ import 'package:jireta_loan/features/settings/presentation/widgets/reauth_dialog
 import 'package:jireta_loan/features/settings/presentation/widgets/settings_section.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});

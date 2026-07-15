@@ -3,6 +3,7 @@ import { handleCors, corsHeaders } from "../../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
 import { getServiceClient } from "../../_shared/supabase.ts";
 import { badRequest, successResponse, serverError, forbidden, notFound } from "../../_shared/errors.ts";
+import { computeOutstandingBalance } from "../../_shared/loan-finance.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -62,7 +63,11 @@ Deno.serve(async (req: Request) => {
       .filter((p: { status: string }) => p.status === "completed")
       .reduce((sum: number, p: { amount: number }) => sum + Number(p.amount), 0);
 
-    const remainingBalance = Number(loan.total_payable) - totalPaid;
+    const remainingBalance = computeOutstandingBalance({
+      totalPayable: Number(loan.total_payable),
+      penaltyAmount: Number(loan.penalty_amount ?? 0),
+      totalPaid,
+    });
 
     return successResponse(
       {

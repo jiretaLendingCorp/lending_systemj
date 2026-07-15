@@ -1,7 +1,7 @@
 // lib/features/auth/presentation/widgets/auth_text_field.dart
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AuthTextField extends StatefulWidget {
   final String? label;

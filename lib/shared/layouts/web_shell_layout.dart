@@ -8,7 +8,7 @@ import 'package:jireta_loan/core/theme/text_styles.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
 import 'package:jireta_loan/features/notifications/presentation/providers/notification_notifier.dart';
 import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class _NavItem {
   final String label;
@@ -29,7 +29,7 @@ const _adminNavItems = [
   _NavItem(label: 'Lenders', icon: LucideIcons.building, route: '/head-employee/lenders'),
   _NavItem(label: 'Riders', icon: LucideIcons.bike, route: '/head-employee/riders'),
   _NavItem(label: 'Collections', icon: LucideIcons.banknote, route: '/head-employee/collections'),
-  _NavItem(label: 'Reports', icon: LucideIcons.barChart, route: '/head-employee/reports'),
+  _NavItem(label: 'Reports', icon: LucideIcons.chartBar, route: '/head-employee/reports'),
   _NavItem(label: 'Audit Logs', icon: LucideIcons.history, route: '/head-employee/audit'),
   _NavItem(label: 'Settings', icon: LucideIcons.settings, route: '/head-employee/settings'),
 ];

@@ -12,7 +12,7 @@ import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_loan_
 import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_payments_page.dart';
 import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_notifications_page.dart';
 import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_profile_page.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class _MobileNavItem {
   final String label;

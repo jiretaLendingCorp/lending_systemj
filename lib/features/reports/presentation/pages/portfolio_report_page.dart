@@ -7,7 +7,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
 import 'package:jireta_loan/features/reports/presentation/providers/report_notifier.dart';
 import 'package:jireta_loan/features/reports/presentation/widgets/report_summary_card.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
@@ -126,7 +126,7 @@ class _PortfolioReportPageState extends ConsumerState<PortfolioReportPage> {
           child: ReportSummaryCard(
             label: 'Total Collected',
             value: CurrencyFormatter.formatPhp(report.totalCollected),
-            icon: LucideIcons.checkCircle,
+            icon: LucideIcons.circleCheck,
             iconColor: ColorTokens.lightSuccess,
           ),
         ),

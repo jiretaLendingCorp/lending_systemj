@@ -7,14 +7,14 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
 import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class OtpVerificationPage extends ConsumerStatefulWidget {
-  final String email;
+  final String phone;
 
   const OtpVerificationPage({
     super.key,
-    required this.email,
+    required this.phone,
   });
 
   @override
@@ -99,7 +99,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
     }
 
     ref.read(authFeatureProvider.notifier).verifyOtp(
-          email: widget.email,
+          phone: widget.phone,
           otp: otp,
         );
   }
@@ -121,7 +121,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
     setState(() {
       _resendCount++;
     });
-    ref.read(authFeatureProvider.notifier).sendOtp(email: widget.email);
+    ref.read(authFeatureProvider.notifier).sendOtp(phone: widget.phone);
     _startResendTimer();
   }
 
@@ -167,7 +167,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Verify Your Email',
+                'Verify Your Phone',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -185,7 +185,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
                   children: [
                     const TextSpan(text: 'We sent a 6-digit code to\n'),
                     TextSpan(
-                      text: widget.email,
+                      text: widget.phone,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: isDark

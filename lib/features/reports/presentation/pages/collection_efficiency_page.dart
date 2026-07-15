@@ -9,7 +9,7 @@ import 'package:jireta_loan/features/reports/presentation/providers/report_notif
 import 'package:jireta_loan/features/reports/presentation/widgets/report_summary_card.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CollectionEfficiencyPage extends ConsumerStatefulWidget {
   const CollectionEfficiencyPage({super.key});
@@ -129,7 +129,7 @@ class _CollectionEfficiencyPageState
           child: ReportSummaryCard(
             label: 'Success Rate',
             value: '${report.successRate.toStringAsFixed(1)}%',
-            icon: LucideIcons.checkCircle,
+            icon: LucideIcons.circleCheck,
             iconColor: ColorTokens.lightSuccess,
             subtitle: '${report.successfulAttempts} of ${report.totalAttempts} attempts',
           ),

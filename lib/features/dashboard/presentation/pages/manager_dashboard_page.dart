@@ -12,7 +12,7 @@ import 'package:jireta_loan/features/dashboard/presentation/providers/dashboard_
 import 'package:jireta_loan/features/dashboard/presentation/widgets/kpi_card.dart';
 import 'package:jireta_loan/shared/widgets/empty_state.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class EmployeeDashboardPage extends ConsumerStatefulWidget {
   const EmployeeDashboardPage({super.key});
@@ -158,7 +158,7 @@ class _ManagerDashboardPageState extends ConsumerState<EmployeeDashboardPage> {
               child: KpiCard(
                 title: 'Overdue Count',
                 value: '${stats.overdueCount}',
-                icon: LucideIcons.alertTriangle,
+                icon: LucideIcons.triangleAlert,
                 iconColor: ColorTokens.lightError,
                 trend: stats.overdueCount > 0
                     ? '${stats.overdueRate.toStringAsFixed(1)}%'
@@ -173,7 +173,7 @@ class _ManagerDashboardPageState extends ConsumerState<EmployeeDashboardPage> {
               child: KpiCard(
                 title: "Today's Tasks",
                 value: '${stats.pendingApprovals}',
-                icon: LucideIcons.checkCircle,
+                icon: LucideIcons.circleCheck,
                 iconColor: ColorTokens.lightWarning,
                 subtitle: 'Pending approvals',
                 onTap: () => context.go('/employee/loans'),
@@ -612,7 +612,7 @@ class _CollectionTile extends StatelessWidget {
             ),
           ),
           Icon(
-            LucideIcons.checkCircle,
+            LucideIcons.circleCheck,
             size: 16,
             color: ColorTokens.lightSuccess,
           ),

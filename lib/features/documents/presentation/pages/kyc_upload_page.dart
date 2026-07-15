@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
 import 'package:jireta_loan/features/documents/presentation/providers/document_notifier.dart';
@@ -120,7 +120,7 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                     ),
                     child: Row(
                       children: [
-                        Icon(LucideIcons.alertCircle,
+                        Icon(LucideIcons.circleAlert,
                             size: 18, color: ColorTokens.lightError),
                         const SizedBox(width: 8),
                         Expanded(
@@ -152,7 +152,7 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                     ),
                     child: Row(
                       children: [
-                        Icon(LucideIcons.checkCircle,
+                        Icon(LucideIcons.circleCheck,
                             size: 18, color: ColorTokens.lightSuccess),
                         const SizedBox(width: 8),
                         Text(

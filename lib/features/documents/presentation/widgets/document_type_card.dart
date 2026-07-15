@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DocumentTypeCard extends StatelessWidget {
   final DocumentType documentType;
@@ -199,8 +199,8 @@ class DocumentTypeCard extends StatelessWidget {
 
   IconData get _statusIcon => switch (existingDocument?.status) {
         DocumentStatus.pending => LucideIcons.clock,
-        DocumentStatus.verified => LucideIcons.checkCircle,
-        DocumentStatus.rejected => LucideIcons.alertCircle,
+        DocumentStatus.verified => LucideIcons.circleCheck,
+        DocumentStatus.rejected => LucideIcons.circleAlert,
         null => LucideIcons.fileUp,
       };
 
@@ -227,8 +227,8 @@ class _StatusIndicator extends StatelessWidget {
 
     final icon = switch (status) {
       DocumentStatus.pending => LucideIcons.clock,
-      DocumentStatus.verified => LucideIcons.checkCircle,
-      DocumentStatus.rejected => LucideIcons.xCircle,
+      DocumentStatus.verified => LucideIcons.circleCheck,
+      DocumentStatus.rejected => LucideIcons.circleX,
     };
 
     return Container(

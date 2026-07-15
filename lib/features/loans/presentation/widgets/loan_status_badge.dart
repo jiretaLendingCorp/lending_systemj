@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LoanStatusBadge extends StatelessWidget {
   final LoanStatus status;
@@ -74,15 +74,15 @@ class LoanStatusBadge extends StatelessWidget {
       };
 
   IconData get _statusIcon => switch (status) {
-        LoanStatus.draft => LucideIcons.fileEdit,
+        LoanStatus.draft => LucideIcons.filePen,
         LoanStatus.submitted => LucideIcons.send,
         LoanStatus.underReview => LucideIcons.search,
-        LoanStatus.approved => LucideIcons.checkCircle,
+        LoanStatus.approved => LucideIcons.circleCheck,
         LoanStatus.disbursed => LucideIcons.landmark,
-        LoanStatus.active => LucideIcons.playCircle,
+        LoanStatus.active => LucideIcons.circlePlay,
         LoanStatus.paid => LucideIcons.badgeCheck,
-        LoanStatus.defaulted => LucideIcons.alertCircle,
-        LoanStatus.rejected => LucideIcons.xCircle,
+        LoanStatus.defaulted => LucideIcons.circleAlert,
+        LoanStatus.rejected => LucideIcons.circleX,
         LoanStatus.closed => LucideIcons.lock,
       };
 }

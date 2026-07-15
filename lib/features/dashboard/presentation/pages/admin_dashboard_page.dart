@@ -13,7 +13,7 @@ import 'package:jireta_loan/features/dashboard/presentation/widgets/kpi_card.dar
 import 'package:jireta_loan/shared/widgets/empty_state.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AdminDashboardPage extends ConsumerStatefulWidget {
   const AdminDashboardPage({super.key});
@@ -76,14 +76,14 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                         const SizedBox(width: 8),
                         _QuickActionButton(
                           label: 'Approve Loans',
-                          icon: LucideIcons.checkCircle,
+                          icon: LucideIcons.circleCheck,
                           onPressed: () => context.go('/head-employee/loans'),
                           color: ColorTokens.lightSuccess,
                         ),
                         const SizedBox(width: 8),
                         _QuickActionButton(
                           label: 'View Reports',
-                          icon: LucideIcons.barChart,
+                          icon: LucideIcons.chartBar,
                           onPressed: () => context.go('/head-employee/reports'),
                           color: ColorTokens.secondaryAccent,
                         ),
@@ -197,7 +197,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
               child: KpiCard(
                 title: 'Overdue Count',
                 value: '${stats.overdueCount}',
-                icon: LucideIcons.alertTriangle,
+                icon: LucideIcons.triangleAlert,
                 iconColor: ColorTokens.lightError,
                 trend: stats.overdueCount > 0 ? '${stats.overdueRate.toStringAsFixed(1)}%' : null,
                 trendUp: false,
@@ -707,9 +707,9 @@ class _ActivityTile extends StatelessWidget {
 
   IconData _activityIcon(String type) {
     return switch (type) {
-      'loan_created' => LucideIcons.plusCircle,
-      'loan_approved' => LucideIcons.checkCircle,
-      'loan_rejected' => LucideIcons.xCircle,
+      'loan_created' => LucideIcons.circlePlus,
+      'loan_approved' => LucideIcons.circleCheck,
+      'loan_rejected' => LucideIcons.circleX,
       'payment_received' => LucideIcons.banknote,
       'disbursement' => LucideIcons.send,
       'collection' => LucideIcons.piggyBank,

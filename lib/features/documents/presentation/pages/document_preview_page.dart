@@ -5,7 +5,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
 import 'package:jireta_loan/features/documents/presentation/providers/document_notifier.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DocumentPreviewPage extends ConsumerStatefulWidget {
   final KycDocument document;
@@ -177,7 +177,7 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(LucideIcons.alertTriangle,
+                    Icon(LucideIcons.triangleAlert,
                         size: 20, color: ColorTokens.lightError),
                     const SizedBox(width: 10),
                     Expanded(

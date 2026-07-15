@@ -1,6 +1,6 @@
 // lib/shared/widgets/app_toast.dart
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 
 enum ToastType { success, error, warning, info }
@@ -120,9 +120,9 @@ class _ToastContent extends StatelessWidget {
 
   IconData _resolveIcon(ToastType type) {
     return switch (type) {
-      ToastType.success => LucideIcons.checkCircle,
-      ToastType.error => LucideIcons.alertCircle,
-      ToastType.warning => LucideIcons.alertTriangle,
+      ToastType.success => LucideIcons.circleCheck,
+      ToastType.error => LucideIcons.circleAlert,
+      ToastType.warning => LucideIcons.triangleAlert,
       ToastType.info => LucideIcons.info,
     };
   }

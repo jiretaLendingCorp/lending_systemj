@@ -86,6 +86,10 @@ import_map = "./functions/import_map.json"
 verify_jwt = true
 import_map = "./functions/import_map.json"
 
+[functions.loans-preview]
+verify_jwt = true
+import_map = "./functions/import_map.json"
+
 [functions.loans-list]
 verify_jwt = true
 import_map = "./functions/import_map.json"

@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DocumentUploadButton extends StatefulWidget {
   final String label;
@@ -101,7 +101,7 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
       width: double.infinity,
       child: FilledButton.icon(
         onPressed: null,
-        icon: const Icon(LucideIcons.checkCircle, size: 18),
+        icon: const Icon(LucideIcons.circleCheck, size: 18),
         label: const Text('Uploaded'),
         style: FilledButton.styleFrom(
           backgroundColor: ColorTokens.lightSuccess,

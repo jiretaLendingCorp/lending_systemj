@@ -6,7 +6,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/collections/domain/entities/collection.dart';
 import 'package:jireta_loan/features/collections/presentation/providers/collection_notifier.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class CollectionDetailPage extends ConsumerStatefulWidget {
   final String collectionId;
@@ -103,7 +103,7 @@ class _CollectionDetailPageState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -360,7 +360,7 @@ class _CollectionDetailPageState
                   child: ElevatedButton.icon(
                     onPressed: _markCollected,
                     icon:
-                        const Icon(LucideIcons.checkCircle),
+                        const Icon(LucideIcons.circleCheck),
                     label: const Text('Mark Collected'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorTokens.lightSuccess,
@@ -377,7 +377,7 @@ class _CollectionDetailPageState
                   height: 48,
                   child: OutlinedButton.icon(
                     onPressed: () => _markFailed(),
-                    icon: const Icon(LucideIcons.alertCircle),
+                    icon: const Icon(LucideIcons.circleAlert),
                     label: const Text('Mark as Failed'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: ColorTokens.lightError,

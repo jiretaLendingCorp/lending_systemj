@@ -10,7 +10,7 @@ import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/google_sign_in_button.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -79,7 +79,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
           SnackBar(
             content: Row(
               children: [
-                const Icon(LucideIcons.alertCircle, color: Colors.white, size: 20),
+                const Icon(LucideIcons.circleAlert, color: Colors.white, size: 20),
                 const SizedBox(width: 12),
                 Expanded(child: Text(next.message)),
               ],

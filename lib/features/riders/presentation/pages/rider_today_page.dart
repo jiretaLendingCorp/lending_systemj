@@ -7,7 +7,7 @@ import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
 import 'package:jireta_loan/features/riders/presentation/providers/rider_notifier.dart';
 import 'package:jireta_loan/features/riders/presentation/widgets/task_card.dart';
 import 'package:jireta_loan/features/riders/presentation/widgets/task_stats_card.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class RiderTodayPage extends ConsumerStatefulWidget {
   const RiderTodayPage({super.key});
@@ -118,7 +118,7 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(LucideIcons.alertCircle,
+                      Icon(LucideIcons.circleAlert,
                           size: 48, color: theme.colorScheme.error),
                       const SizedBox(height: 16),
                       Text(
@@ -144,7 +144,7 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(LucideIcons.checkCircle,
+                            Icon(LucideIcons.circleCheck,
                                 size: 64,
                                 color: theme.colorScheme.outline),
                             const SizedBox(height: 16),
@@ -185,7 +185,7 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
                                         BorderRadius.circular(12),
                                   ),
                                   child: const Icon(
-                                    LucideIcons.checkCircle,
+                                    LucideIcons.circleCheck,
                                     color: Colors.white,
                                     size: 32,
                                   ),
@@ -204,7 +204,7 @@ class _RiderTodayPageState extends ConsumerState<RiderTodayPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(LucideIcons.checkCircle,
+                      const Icon(LucideIcons.circleCheck,
                           size: 64, color: ColorTokens.lightSuccess),
                       const SizedBox(height: 16),
                       Text(

@@ -4,6 +4,7 @@ import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
 import { getServiceClient } from "../../_shared/supabase.ts";
 import { badRequest, successResponse, serverError, forbidden, conflict, unprocessable } from "../../_shared/errors.ts";
 import { loanCreateSchema } from "../../_shared/validation.ts";
+import { computeLoan } from "../../_shared/loan-finance.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -107,7 +108,13 @@ Deno.serve(async (req: Request) => {
     }
 
     const interest_rate = 0.20;
-    const total_payable = principal * (1 + interest_rate);
+    const computed = computeLoan({
+      principal,
+      interestRate: interest_rate,
+      termDays: term_days,
+      scheduleType: schedule_type,
+    });
+    const total_payable = computed.totalPayable;
 
     const { data: loan, error: loanError } = await supabase
       .from("loans")

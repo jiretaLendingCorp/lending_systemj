@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/auth/auth_provider.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class RiderProfilePage extends ConsumerWidget {
   const RiderProfilePage({super.key});
@@ -83,7 +83,7 @@ class RiderProfilePage extends ConsumerWidget {
             Row(
               children: [
                 _StatCard(
-                  icon: LucideIcons.checkCircle,
+                  icon: LucideIcons.circleCheck,
                   label: 'Completed',
                   value: '0',
                   color: ColorTokens.lightSuccess,
@@ -140,7 +140,7 @@ class RiderProfilePage extends ConsumerWidget {
             _SettingsSection(
               children: [
                 ListTile(
-                  leading: const Icon(LucideIcons.helpCircle),
+                  leading: const Icon(LucideIcons.circleQuestionMark),
                   title: const Text('Help & Support'),
                   trailing: const Icon(LucideIcons.chevronRight),
                   onTap: () {

@@ -11,6 +11,7 @@ class ApiEndpoints {
 
   static const String authLogin = '/auth/login';
   static const String authSignup = '/auth/signup';
+  static const String authOtpSend = '/auth/otp-send';
   static const String authOtpVerify = '/auth/otp-verify';
   static const String authOtpResend = '/auth/otp-resend';
   static const String authForgotPassword = '/auth/forgot-password';
@@ -28,6 +29,7 @@ class ApiEndpoints {
   static const String loans = '/loans';
   static const String loansById = '/loans/{id}';
   static const String loansApply = '/loans/apply';
+  static const String loansPreview = '/loans/preview';
   static const String loansApprove = '/loans/{id}/approve';
   static const String loansReject = '/loans/{id}/reject';
   static const String loansDisburse = '/loans/{id}/disburse';

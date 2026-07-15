@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/loans/presentation/providers/loan_notifier.dart';
 import 'package:jireta_loan/features/loans/presentation/widgets/loan_card.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LoanListPage extends ConsumerStatefulWidget {
   const LoanListPage({super.key});
@@ -188,7 +188,7 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 48,
               color: ColorTokens.lightError,
             ),

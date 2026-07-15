@@ -1,7 +1,7 @@
 // lib/features/payments/domain/entities/payment.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 enum PaymentMethod {
   gcash,

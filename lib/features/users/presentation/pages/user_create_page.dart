@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/users/presentation/providers/user_notifier.dart';
@@ -163,7 +163,7 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                         ),
                         child: Row(
                           children: [
-                            Icon(LucideIcons.alertTriangle,
+                            Icon(LucideIcons.triangleAlert,
                                 size: 18, color: ColorTokens.roleHeadManager),
                             const SizedBox(width: 8),
                             Expanded(

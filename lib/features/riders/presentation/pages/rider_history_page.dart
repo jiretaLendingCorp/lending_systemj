@@ -6,7 +6,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
 import 'package:jireta_loan/features/riders/presentation/providers/rider_notifier.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class RiderHistoryPage extends ConsumerStatefulWidget {
   const RiderHistoryPage({super.key});
@@ -115,7 +115,7 @@ class _RiderHistoryPageState extends ConsumerState<RiderHistoryPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(LucideIcons.alertCircle,
+                      Icon(LucideIcons.circleAlert,
                           size: 48, color: theme.colorScheme.error),
                       const SizedBox(height: 16),
                       Text(riderState.message,

@@ -1,7 +1,7 @@
 // lib/features/collections/domain/entities/collection.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 enum CollectionMethod {
   gcash,
@@ -81,8 +81,8 @@ enum CollectionStatus {
         CollectionStatus.pending => LucideIcons.clock,
         CollectionStatus.assigned => LucideIcons.user,
         CollectionStatus.inTransit => LucideIcons.truck,
-        CollectionStatus.collected => LucideIcons.checkCircle,
-        CollectionStatus.failed => LucideIcons.alertCircle,
+        CollectionStatus.collected => LucideIcons.circleCheck,
+        CollectionStatus.failed => LucideIcons.circleAlert,
       };
 }
 

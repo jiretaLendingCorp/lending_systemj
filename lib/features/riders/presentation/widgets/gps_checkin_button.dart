@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class GpsCheckinButton extends StatefulWidget {
   final RiderTask task;
@@ -124,7 +124,7 @@ class _GpsCheckinButtonState extends State<GpsCheckinButton> {
   Widget _buildSuccessButton(ThemeData theme) {
     return FilledButton.icon(
       onPressed: null,
-      icon: const Icon(LucideIcons.checkCircle, size: 20),
+      icon: const Icon(LucideIcons.circleCheck, size: 20),
       label: const Text('Checked In'),
       style: FilledButton.styleFrom(
         backgroundColor: ColorTokens.lightSuccess,

@@ -3,6 +3,7 @@ import { handleCors, corsHeaders } from "../../_shared/cors.ts";
 import { authenticateRequest, hasRole } from "../../_shared/jwt.ts";
 import { getServiceClient } from "../../_shared/supabase.ts";
 import { badRequest, successResponse, serverError, forbidden } from "../../_shared/errors.ts";
+import { computeOutstandingBalance, computeCollectionEfficiency } from "../../_shared/loan-finance.ts";
 
 Deno.serve(async (req: Request) => {
   const cors = handleCors(req);
@@ -89,8 +90,15 @@ Deno.serve(async (req: Request) => {
       disbursementBreakdown[d.status] = (disbursementBreakdown[d.status] ?? 0) + 1;
     }
 
-    const outstandingBalance = totalPayable + totalPenalties - totalCollected;
-    const collectionRate = totalPayable > 0 ? (totalCollected / totalPayable) * 100 : 0;
+    const outstandingBalance = computeOutstandingBalance({
+      totalPayable,
+      penaltyAmount: totalPenalties,
+      totalPaid: totalCollected,
+    });
+    const collectionRate = computeCollectionEfficiency({
+      totalDue: totalPayable,
+      totalCollected,
+    });
     const defaultRate =
       (activeLoans ?? []).length > 0
         ? ((statusBreakdown["defaulted"] ?? 0) / (activeLoans ?? []).length) * 100

@@ -14,10 +14,10 @@ class AppConstants {
   static const double interestRate = 0.20;
   static const double penaltyRate = 0.20;
   static const int loanTermDays = 30;
-  static const int gracePeriodDays = 3;
+  static const int gracePeriodDays = 30;
 
   static const double minPaymentAmount = 100.0;
-  static const int paymentOverdueGraceDays = 3;
+  static const int paymentOverdueGraceDays = 30;
 
   static const int defaultPageSize = 20;
   static const int maxPageSize = 100;

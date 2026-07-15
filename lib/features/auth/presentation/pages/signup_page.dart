@@ -9,7 +9,7 @@ import 'package:jireta_loan/features/auth/domain/entities/user.dart';
 import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/google_sign_in_button.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
@@ -85,7 +85,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           ),
         );
       } else if (next is AuthOtpSent) {
-        context.push('/auth/otp', extra: {'email': next.email});
+        context.push('/auth/otp', extra: {'phone': next.phone});
       }
     });
 

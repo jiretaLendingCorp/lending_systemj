@@ -6,7 +6,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/borrowers/presentation/providers/borrower_notifier.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LenderPaymentsPage extends ConsumerStatefulWidget {
   const LenderPaymentsPage({super.key});
@@ -73,7 +73,7 @@ class _BorrowerPaymentsPageState extends ConsumerState<LenderPaymentsPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(LucideIcons.alertCircle,
+                      Icon(LucideIcons.circleAlert,
                           size: 48, color: theme.colorScheme.error),
                       const SizedBox(height: 16),
                       Text(borrowerState.message,
@@ -248,9 +248,9 @@ class _PaymentCard extends StatelessWidget {
       };
 
   IconData get _paymentStatusIcon => switch (payment.status) {
-        PaymentStatus.completed => LucideIcons.checkCircle,
+        PaymentStatus.completed => LucideIcons.circleCheck,
         PaymentStatus.pending => LucideIcons.clock,
-        PaymentStatus.failed => LucideIcons.alertCircle,
+        PaymentStatus.failed => LucideIcons.circleAlert,
         PaymentStatus.refunded => LucideIcons.rotateCcw,
       };
 }

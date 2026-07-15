@@ -75,43 +75,40 @@ class AuthRemoteDataSource {
     }
   }
 
-  Future<void> otpSend({required String email}) async {
+  Future<void> otpSend({required String phone}) async {
     try {
-      await _supabase.auth.signInWithOtp(
-        email: email.trim().toLowerCase(),
+      await _dio.post(
+        ApiEndpoints.authOtpSend,
+        data: {'phone': phone.trim()},
       );
-    } on supabase.AuthException catch (e) {
-      if (e.message.contains('rate limit') || e.message.contains('too many')) {
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 429) {
         throw const AppAuthException(
           message: 'Too many OTP requests. Please wait before requesting again.',
           errorCode: 'OTP_RATE_LIMITED',
         );
       }
-      throw AppAuthException(message: _mapSupabaseAuthMessage(e.message));
+      throw _mapDioException(e);
     } catch (e) {
       throw _mapToAppException(e);
     }
   }
 
   Future<UserModel> otpVerify({
-    required String email,
+    required String phone,
     required String otp,
   }) async {
     try {
-      final response = await _supabase.auth.verifyOTP(
-        email: email.trim().toLowerCase(),
-        token: otp.trim(),
-        type: supabase.OtpType.signup,
+      final response = await _dio.post(
+        ApiEndpoints.authOtpVerify,
+        data: {
+          'phone': phone.trim(),
+          'code': otp.trim(),
+        },
       );
-      final user = response.user;
-      if (user == null) {
-        throw const AppAuthException(
-          message: 'Verification failed. Please try again.',
-        );
-      }
-      return _userFromSupabaseResponse(user);
-    } on supabase.AuthException catch (e) {
-      throw AppAuthException(message: _mapSupabaseAuthMessage(e.message));
+      return UserModel.fromJson(response.data['data'] as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw _mapDioException(e);
     } catch (e) {
       throw _mapToAppException(e);
     }

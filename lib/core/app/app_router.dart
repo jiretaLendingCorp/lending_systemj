@@ -41,7 +41,7 @@ import 'package:jireta_loan/features/payments/presentation/pages/payment_receipt
 import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_list_page.dart';
 import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_detail_page.dart';
 import 'package:jireta_loan/features/notifications/presentation/pages/notification_center_page.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AppRouter {
   AppRouter._();
@@ -69,14 +69,14 @@ class AppRouter {
           path: '/auth/otp',
           name: 'otp',
           builder: (context, state) {
-            String email = state.uri.queryParameters['email'] ?? '';
-            if (email.isEmpty) {
+            String phone = state.uri.queryParameters['phone'] ?? '';
+            if (phone.isEmpty) {
               final extra = state.extra;
               if (extra is Map) {
-                email = extra['email'] as String? ?? '';
+                phone = extra['phone'] as String? ?? '';
               }
             }
-            return OtpVerificationPage(email: email);
+            return OtpVerificationPage(phone: phone);
           },
         ),
         GoRoute(

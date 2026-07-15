@@ -6,7 +6,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 import 'package:jireta_loan/features/payments/presentation/providers/payment_notifier.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class PaymentReceiptPage extends ConsumerStatefulWidget {
   final String paymentId;
@@ -66,7 +66,7 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -286,8 +286,8 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
 
   IconData _statusIcon(PaymentStatus status) => switch (status) {
         PaymentStatus.pending => LucideIcons.clock,
-        PaymentStatus.completed => LucideIcons.checkCircle,
-        PaymentStatus.failed => LucideIcons.xCircle,
+        PaymentStatus.completed => LucideIcons.circleCheck,
+        PaymentStatus.failed => LucideIcons.circleX,
         PaymentStatus.refunded => LucideIcons.rotateCcw,
       };
 
@@ -448,8 +448,8 @@ class _ReceiptStatusBadge extends StatelessWidget {
 
   IconData get _statusIcon => switch (status) {
         PaymentStatus.pending => LucideIcons.clock,
-        PaymentStatus.completed => LucideIcons.checkCircle,
-        PaymentStatus.failed => LucideIcons.xCircle,
+        PaymentStatus.completed => LucideIcons.circleCheck,
+        PaymentStatus.failed => LucideIcons.circleX,
         PaymentStatus.refunded => LucideIcons.rotateCcw,
       };
 }

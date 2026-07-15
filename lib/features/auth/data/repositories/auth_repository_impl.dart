@@ -101,9 +101,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> otpSend({required String email}) async {
+  Future<Either<Failure, void>> otpSend({required String phone}) async {
     try {
-      await _remoteDataSource.otpSend(email: email);
+      await _remoteDataSource.otpSend(phone: phone);
       return const Right(null);
     } on AppAuthException catch (e) {
       return Left(AuthFailure(
@@ -126,12 +126,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, User>> otpVerify({
-    required String email,
+    required String phone,
     required String otp,
   }) async {
     try {
       final user = await _remoteDataSource.otpVerify(
-        email: email,
+        phone: phone,
         otp: otp,
       );
       return Right(user);

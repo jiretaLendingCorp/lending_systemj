@@ -10,7 +10,7 @@ import 'package:jireta_loan/features/users/domain/entities/user_management.dart'
 import 'package:jireta_loan/features/users/presentation/providers/user_notifier.dart';
 import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
 import 'package:jireta_loan/shared/widgets/confirm_dialog.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:jireta_loan/shared/widgets/status_chip.dart';
 

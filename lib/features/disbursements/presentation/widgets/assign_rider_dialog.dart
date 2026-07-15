@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/disbursements/domain/repositories/disbursement_repository.dart';
 import 'package:jireta_loan/features/disbursements/presentation/providers/disbursement_notifier.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class AssignRiderDialog extends ConsumerStatefulWidget {
   final String disbursementId;
@@ -142,7 +142,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 40,
               color: ColorTokens.lightError,
             ),
@@ -338,7 +338,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
 
                         if (isSelected)
                           const Icon(
-                            LucideIcons.checkCircle,
+                            LucideIcons.circleCheck,
                             color: ColorTokens.accent,
                             size: 22,
                           ),

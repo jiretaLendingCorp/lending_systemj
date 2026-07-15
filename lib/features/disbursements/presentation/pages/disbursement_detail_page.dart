@@ -6,7 +6,7 @@ import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
 import 'package:jireta_loan/features/disbursements/presentation/providers/disbursement_notifier.dart';
 import 'package:jireta_loan/features/disbursements/presentation/widgets/assign_rider_dialog.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class DisbursementDetailPage extends ConsumerStatefulWidget {
   final String disbursementId;
@@ -109,7 +109,7 @@ class _DisbursementDetailPageState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              LucideIcons.alertCircle,
+              LucideIcons.circleAlert,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -343,7 +343,7 @@ class _DisbursementDetailPageState
                   height: 48,
                   child: ElevatedButton.icon(
                     onPressed: _markDelivered,
-                    icon: const Icon(LucideIcons.checkCircle),
+                    icon: const Icon(LucideIcons.circleCheck),
                     label: const Text('Mark Delivered'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorTokens.lightSuccess,
@@ -360,7 +360,7 @@ class _DisbursementDetailPageState
                   height: 48,
                   child: OutlinedButton.icon(
                     onPressed: () => _markFailed(),
-                    icon: const Icon(LucideIcons.alertCircle),
+                    icon: const Icon(LucideIcons.circleAlert),
                     label: const Text('Mark as Failed'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: ColorTokens.lightError,

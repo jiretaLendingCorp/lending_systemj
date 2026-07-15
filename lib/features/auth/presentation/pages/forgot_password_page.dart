@@ -7,7 +7,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});

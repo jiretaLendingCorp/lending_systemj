@@ -30,8 +30,8 @@ class AuthFeatureAuthenticated extends AuthFeatureState {
 }
 
 class AuthOtpSent extends AuthFeatureState {
-  final String email;
-  const AuthOtpSent(this.email);
+  final String phone;
+  const AuthOtpSent(this.phone);
 }
 
 class AuthPasswordResetSent extends AuthFeatureState {
@@ -137,26 +137,26 @@ class AuthFeatureNotifier extends StateNotifier<AuthFeatureState> {
     );
     state = result.fold(
       (failure) => AuthError(failure.message, failure: failure),
-      (user) => AuthOtpSent(email),
+      (user) => AuthOtpSent(phone),
     );
   }
 
-  Future<void> sendOtp({required String email}) async {
+  Future<void> sendOtp({required String phone}) async {
     state = const AuthFeatureLoading();
-    final result = await _repository.otpSend(email: email);
+    final result = await _repository.otpSend(phone: phone);
     state = result.fold(
       (failure) => AuthError(failure.message, failure: failure),
-      (_) => AuthOtpSent(email),
+      (_) => AuthOtpSent(phone),
     );
   }
 
   Future<void> verifyOtp({
-    required String email,
+    required String phone,
     required String otp,
   }) async {
     state = const AuthFeatureLoading();
     final result = await _otpVerifyUseCase(
-      OtpVerifyParams(email: email, otp: otp),
+      OtpVerifyParams(phone: phone, otp: otp),
     );
     state = result.fold(
       (failure) => AuthError(failure.message, failure: failure),

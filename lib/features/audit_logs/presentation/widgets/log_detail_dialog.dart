@@ -4,7 +4,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LogDetailDialog extends StatelessWidget {
   final AuditLog log;
@@ -158,7 +158,7 @@ class _DiffView extends StatelessWidget {
           Row(
             children: [
               Icon(
-                isOld ? LucideIcons.minusCircle : LucideIcons.plusCircle,
+                isOld ? LucideIcons.circleMinus : LucideIcons.circlePlus,
                 size: 14,
                 color: textColor,
               ),

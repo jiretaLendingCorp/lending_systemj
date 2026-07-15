@@ -1,7 +1,7 @@
 // lib/features/riders/presentation/widgets/task_stats_card.dart
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class TaskStatsCard extends StatelessWidget {
   final int total;
@@ -50,7 +50,7 @@ class TaskStatsCard extends StatelessWidget {
                     label: 'Completed',
                     value: '$completed',
                     color: ColorTokens.lightSuccess,
-                    icon: LucideIcons.checkCircle,
+                    icon: LucideIcons.circleCheck,
                   ),
                 ),
                 _divider(),

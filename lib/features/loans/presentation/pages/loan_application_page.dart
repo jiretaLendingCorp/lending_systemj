@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jireta_loan/core/network/dio_client.dart';
+import 'package:jireta_loan/core/network/api_endpoints.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
@@ -9,7 +11,7 @@ import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 import 'package:jireta_loan/features/loans/presentation/providers/loan_notifier.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 class LoanApplicationPage extends ConsumerStatefulWidget {
   const LoanApplicationPage({super.key});
@@ -60,14 +62,63 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
     return int.tryParse(_termController.text) ?? 0;
   }
 
-  double get _interestAmount => _principal * AppConstants.interestRate;
+  // Preview data from backend
+  Map<String, dynamic>? _previewData;
+  bool _isLoadingPreview = false;
 
-  double get _totalPayable => _principal + _interestAmount;
+  double get _interestAmount =>
+      (_previewData?['interest_amount'] as num?)?.toDouble() ?? 0;
 
-  int get _installmentCount => _scheduleType.installmentCount(_termDays);
+  double get _totalPayable =>
+      (_previewData?['total_payable'] as num?)?.toDouble() ?? 0;
+
+  int get _installmentCount =>
+      (_previewData?['installment_count'] as num?)?.toInt() ?? 0;
 
   double get _installmentAmount =>
-      _installmentCount > 0 ? _totalPayable / _installmentCount : 0;
+      (_previewData?['amount_per_installment'] as num?)?.toDouble() ?? 0;
+
+  Future<void> _fetchPreview() async {
+    if (_principal <= 0 || _termDays <= 0) {
+      setState(() => _previewData = null);
+      return;
+    }
+    if (_isLoadingPreview) return;
+
+    setState(() => _isLoadingPreview = true);
+    try {
+      final dio = ref.read(dioProvider);
+      final response = await dio.post(
+        ApiEndpoints.loansPreview,
+        data: {
+          'principal': _principal,
+          'term_days': _termDays,
+          'schedule_type': _scheduleType.toApiString(),
+          'co_maker': {
+            'full_name': _coMakerNameController.text.trim().isNotEmpty
+                ? _coMakerNameController.text.trim()
+                : 'Placeholder',
+            'phone': _coMakerPhoneController.text.trim().isNotEmpty
+                ? _coMakerPhoneController.text.trim()
+                : '09123456789',
+            'address': _coMakerAddressController.text.trim().isNotEmpty
+                ? _coMakerAddressController.text.trim()
+                : 'Placeholder',
+            'relationship': _coMakerRelationship,
+          },
+          'purpose': 'Preview',
+        },
+      );
+      final data = response.data['data']?['preview'];
+      if (data != null) {
+        setState(() => _previewData = data as Map<String, dynamic>);
+      }
+    } catch (_) {
+      // If preview fails, keep old data or show nothing
+    } finally {
+      setState(() => _isLoadingPreview = false);
+    }
+  }
 
   void _handleSubmit() {
     if (!_formKey.currentState!.validate()) return;
@@ -141,7 +192,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                       ? ColorTokens.darkTextSecondary
                       : ColorTokens.lightTextSecondary,
                 ),
-                onChanged: (_) => setState(() {}),
+                onChanged: (_) => _fetchPreview(),
               ),
               const SizedBox(height: 4),
               Text(
@@ -190,7 +241,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                       ? ColorTokens.darkTextSecondary
                       : ColorTokens.lightTextSecondary,
                 ),
-                onChanged: (_) => setState(() {}),
+                onChanged: (_) => _fetchPreview(),
               ),
               const SizedBox(height: 16),
 
@@ -214,7 +265,10 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: InkWell(
                             onTap: () =>
-                                setState(() => _scheduleType = type),
+                                setState(() {
+                                  _scheduleType = type;
+                                  _fetchPreview();
+                                }),
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -273,7 +327,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
               ),
               const SizedBox(height: 24),
 
-              if (_principal > 0 && _termDays > 0) ...[
+              if (_previewData != null && _principal > 0 && _termDays > 0) ...[
                 _LoanPreviewCard(
                   principal: _principal,
                   interestRate: AppConstants.interestRate,
@@ -283,6 +337,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                   installmentAmount: _installmentAmount,
                   scheduleType: _scheduleType,
                   isDark: isDark,
+                  isLoading: _isLoadingPreview,
                 ),
                 const SizedBox(height: 24),
               ],
@@ -480,6 +535,7 @@ class _LoanPreviewCard extends StatelessWidget {
   final double installmentAmount;
   final ScheduleType scheduleType;
   final bool isDark;
+  final bool isLoading;
 
   const _LoanPreviewCard({
     required this.principal,
@@ -490,6 +546,7 @@ class _LoanPreviewCard extends StatelessWidget {
     required this.installmentAmount,
     required this.scheduleType,
     required this.isDark,
+    this.isLoading = false,
   });
 
   @override
@@ -502,7 +559,14 @@ class _LoanPreviewCard extends StatelessWidget {
           color: ColorTokens.accent.withValues(alpha: 0.3),
         ),
       ),
-      child: Padding(
+      child: isLoading
+          ? const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

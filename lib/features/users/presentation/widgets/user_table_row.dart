@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:jireta_loan/features/users/domain/entities/user_management.dart';
 import 'package:jireta_loan/features/users/presentation/widgets/role_dropdown.dart';

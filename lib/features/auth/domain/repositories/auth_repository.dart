@@ -17,10 +17,10 @@ abstract class AuthRepository {
     required String role,
   });
 
-  Future<Either<Failure, void>> otpSend({required String email});
+  Future<Either<Failure, void>> otpSend({required String phone});
 
   Future<Either<Failure, User>> otpVerify({
-    required String email,
+    required String phone,
     required String otp,
   });
 
