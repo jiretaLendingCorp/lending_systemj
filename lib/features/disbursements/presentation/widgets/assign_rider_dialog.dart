@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/disbursements/domain/repositories/disbursement_repository.dart';
 import 'package:jireta_loan/features/disbursements/presentation/providers/disbursement_notifier.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class AssignRiderDialog extends ConsumerStatefulWidget {
   final String disbursementId;
@@ -80,7 +81,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
       title: Row(
         children: [
           Icon(
-            Icons.person_add_rounded,
+            LucideIcons.userPlus,
             color: ColorTokens.accent,
             size: 24,
           ),
@@ -141,7 +142,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              LucideIcons.alertCircle,
               size: 40,
               color: ColorTokens.lightError,
             ),
@@ -171,7 +172,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.person_off_rounded,
+              LucideIcons.userX,
               size: 40,
               color: isDark
                   ? ColorTokens.darkDisabled
@@ -308,7 +309,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
                                   if (rider.phone != null) ...[
                                     const SizedBox(width: 12),
                                     Icon(
-                                      Icons.phone_rounded,
+                                      LucideIcons.phone,
                                       size: 12,
                                       color: isDark
                                           ? ColorTokens
@@ -337,7 +338,7 @@ class _AssignRiderDialogState extends ConsumerState<AssignRiderDialog> {
 
                         if (isSelected)
                           const Icon(
-                            Icons.check_circle_rounded,
+                            LucideIcons.checkCircle,
                             color: ColorTokens.accent,
                             size: 22,
                           ),

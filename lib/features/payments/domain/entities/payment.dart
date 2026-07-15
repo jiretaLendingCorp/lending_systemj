@@ -1,6 +1,7 @@
 // lib/features/payments/domain/entities/payment.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 enum PaymentMethod {
   gcash,
@@ -31,9 +32,9 @@ enum PaymentMethod {
       };
 
   IconData get iconData => switch (this) {
-        PaymentMethod.gcash => Icons.phone_android_rounded,
-        PaymentMethod.office => Icons.store_rounded,
-        PaymentMethod.cash => Icons.payments_rounded,
+        PaymentMethod.gcash => LucideIcons.smartphone,
+        PaymentMethod.office => LucideIcons.store,
+        PaymentMethod.cash => LucideIcons.banknote,
       };
 }
 

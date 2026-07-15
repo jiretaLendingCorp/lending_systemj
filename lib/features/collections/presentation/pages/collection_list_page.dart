@@ -7,6 +7,7 @@ import 'package:jireta_loan/features/collections/domain/entities/collection.dart
 import 'package:jireta_loan/features/collections/domain/repositories/collection_repository.dart';
 import 'package:jireta_loan/features/collections/presentation/providers/collection_notifier.dart';
 import 'package:jireta_loan/features/collections/presentation/widgets/collection_card.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class CollectionListPage extends ConsumerStatefulWidget {
   const CollectionListPage({super.key});
@@ -254,7 +255,7 @@ class _CollectionListPageState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              LucideIcons.alertCircle,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -285,7 +286,7 @@ class _CollectionListPageState
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.payments_rounded,
+                LucideIcons.banknote,
                 size: 64,
                 color: isDark
                     ? ColorTokens.darkDisabled
@@ -483,7 +484,7 @@ class _AssignRiderCollectionDialogState
       title: Row(
         children: [
           Icon(
-            Icons.person_add_rounded,
+            LucideIcons.userPlus,
             color: ColorTokens.accent,
             size: 24,
           ),
@@ -546,7 +547,7 @@ class _AssignRiderCollectionDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              LucideIcons.alertCircle,
               size: 40,
               color: ColorTokens.lightError,
             ),
@@ -571,7 +572,7 @@ class _AssignRiderCollectionDialogState
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.person_off_rounded,
+              LucideIcons.userX,
               size: 40,
               color: widget.isDark
                   ? ColorTokens.darkDisabled
@@ -672,7 +673,7 @@ class _AssignRiderCollectionDialogState
                               Row(
                                 children: [
                                   Icon(
-                                    Icons.local_shipping_rounded,
+                                    LucideIcons.truck,
                                     size: 12,
                                     color: widget.isDark
                                         ? ColorTokens
@@ -699,7 +700,7 @@ class _AssignRiderCollectionDialogState
                         ),
                         if (isSelected)
                           const Icon(
-                            Icons.check_circle_rounded,
+                            LucideIcons.checkCircle,
                             color: ColorTokens.accent,
                             size: 22,
                           ),

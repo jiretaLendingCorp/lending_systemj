@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class SettingsSection extends StatelessWidget {
   final String title;
@@ -106,7 +107,7 @@ class SettingsRow extends StatelessWidget {
                       Tooltip(
                         message: 'Requires re-authentication',
                         child: Icon(
-                          Icons.shield_outlined,
+                          LucideIcons.shield,
                           size: 14,
                           color: ColorTokens.lightWarning,
                         ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/features/audit_logs/presentation/providers/audit_log_notifier.dart';
 import 'package:jireta_loan/features/audit_logs/presentation/widgets/audit_log_row.dart';
@@ -71,7 +72,7 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                     ),
                     ElevatedButton.icon(
                       onPressed: _exportLogs,
-                      icon: const Icon(Icons.download_outlined, size: 18),
+                      icon: const Icon(LucideIcons.download, size: 18),
                       label: const Text('Export CSV'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorTokens.accent,
@@ -107,7 +108,7 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                     const SizedBox(width: 12),
                     OutlinedButton.icon(
                       onPressed: _selectDateRange,
-                      icon: const Icon(Icons.date_range_outlined, size: 18),
+                      icon: const Icon(LucideIcons.calendarRange, size: 18),
                       label: Text(
                         _dateRange != null
                             ? '${_formatDate(_dateRange!.start)} - ${_formatDate(_dateRange!.end)}'
@@ -153,7 +154,7 @@ class _AuditLogPageState extends ConsumerState<AuditLogPage> {
                   AuditLogsLoaded(:final logs) => logs.isEmpty
                       ? const Center(
                           child: EmptyState(
-                            icon: Icons.history_outlined,
+                            icon: LucideIcons.history,
                             title: 'No audit logs found',
                             subtitle: 'Try adjusting your filters or date range.',
                           ),

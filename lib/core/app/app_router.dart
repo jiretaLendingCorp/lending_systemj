@@ -41,6 +41,7 @@ import 'package:jireta_loan/features/payments/presentation/pages/payment_receipt
 import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_list_page.dart';
 import 'package:jireta_loan/features/disbursements/presentation/pages/disbursement_detail_page.dart';
 import 'package:jireta_loan/features/notifications/presentation/pages/notification_center_page.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class AppRouter {
   AppRouter._();
@@ -419,7 +420,7 @@ class _PlaceholderPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.construction_rounded,
+              LucideIcons.construction,
               size: 64,
               color: Theme.of(context).disabledColor,
             ),

@@ -7,6 +7,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
 import 'package:jireta_loan/features/reports/presentation/providers/report_notifier.dart';
 import 'package:jireta_loan/features/reports/presentation/widgets/report_summary_card.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
@@ -62,7 +63,7 @@ class _PortfolioReportPageState extends ConsumerState<PortfolioReportPage> {
                     ),
                     OutlinedButton.icon(
                       onPressed: _selectDateRange,
-                      icon: const Icon(Icons.date_range_outlined, size: 18),
+                      icon: const Icon(LucideIcons.calendarRange, size: 18),
                       label: Text(
                         _dateRange != null
                             ? '${_formatDate(_dateRange!.start)} - ${_formatDate(_dateRange!.end)}'
@@ -72,7 +73,7 @@ class _PortfolioReportPageState extends ConsumerState<PortfolioReportPage> {
                     const SizedBox(width: 8),
                     ElevatedButton.icon(
                       onPressed: () => _exportReport('portfolio'),
-                      icon: const Icon(Icons.download_outlined, size: 18),
+                      icon: const Icon(LucideIcons.download, size: 18),
                       label: const Text('Export'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorTokens.accent,
@@ -107,7 +108,7 @@ class _PortfolioReportPageState extends ConsumerState<PortfolioReportPage> {
           child: ReportSummaryCard(
             label: 'Total Disbursed',
             value: CurrencyFormatter.formatPhp(report.totalDisbursed),
-            icon: Icons.account_balance_wallet_outlined,
+            icon: LucideIcons.wallet,
             iconColor: ColorTokens.accent,
           ),
         ),
@@ -116,7 +117,7 @@ class _PortfolioReportPageState extends ConsumerState<PortfolioReportPage> {
           child: ReportSummaryCard(
             label: 'Outstanding',
             value: CurrencyFormatter.formatPhp(report.totalOutstanding),
-            icon: Icons.pending_outlined,
+            icon: LucideIcons.clock,
             iconColor: ColorTokens.lightWarning,
           ),
         ),
@@ -125,7 +126,7 @@ class _PortfolioReportPageState extends ConsumerState<PortfolioReportPage> {
           child: ReportSummaryCard(
             label: 'Total Collected',
             value: CurrencyFormatter.formatPhp(report.totalCollected),
-            icon: Icons.check_circle_outline,
+            icon: LucideIcons.checkCircle,
             iconColor: ColorTokens.lightSuccess,
           ),
         ),
@@ -134,7 +135,7 @@ class _PortfolioReportPageState extends ConsumerState<PortfolioReportPage> {
           child: ReportSummaryCard(
             label: 'Interest Earned',
             value: CurrencyFormatter.formatPhp(report.totalInterestEarned),
-            icon: Icons.trending_up_outlined,
+            icon: LucideIcons.trendingUp,
             iconColor: ColorTokens.lightInfo,
             subtitle: 'Rate: ${report.collectionRate.toStringAsFixed(1)}% collected',
           ),

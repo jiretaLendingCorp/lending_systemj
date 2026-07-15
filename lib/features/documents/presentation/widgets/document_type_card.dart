@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class DocumentTypeCard extends StatelessWidget {
   final DocumentType documentType;
@@ -124,7 +125,7 @@ class DocumentTypeCard extends StatelessWidget {
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: onUpload,
-                  icon: const Icon(Icons.add_photo_alternate_outlined, size: 18),
+                  icon: const Icon(LucideIcons.imagePlus, size: 18),
                   label: const Text('Upload Document'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: ColorTokens.accent,
@@ -141,7 +142,7 @@ class DocumentTypeCard extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: onView,
-                        icon: const Icon(Icons.visibility_outlined, size: 16),
+                        icon: const Icon(LucideIcons.eye, size: 16),
                         label: const Text('View'),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -154,7 +155,7 @@ class DocumentTypeCard extends StatelessWidget {
                     Expanded(
                       child: FilledButton.icon(
                         onPressed: onReplace,
-                        icon: const Icon(Icons.refresh, size: 16),
+                        icon: const Icon(LucideIcons.refreshCw, size: 16),
                         label: const Text('Replace'),
                         style: FilledButton.styleFrom(
                           backgroundColor: ColorTokens.secondaryAccent,
@@ -197,10 +198,10 @@ class DocumentTypeCard extends StatelessWidget {
   Color get _statusBackgroundColor => _statusColor;
 
   IconData get _statusIcon => switch (existingDocument?.status) {
-        DocumentStatus.pending => Icons.schedule,
-        DocumentStatus.verified => Icons.check_circle_outline,
-        DocumentStatus.rejected => Icons.error_outline,
-        null => Icons.upload_file,
+        DocumentStatus.pending => LucideIcons.clock,
+        DocumentStatus.verified => LucideIcons.checkCircle,
+        DocumentStatus.rejected => LucideIcons.alertCircle,
+        null => LucideIcons.fileUp,
       };
 
   String get _statusText => switch (existingDocument?.status) {
@@ -225,9 +226,9 @@ class _StatusIndicator extends StatelessWidget {
     };
 
     final icon = switch (status) {
-      DocumentStatus.pending => Icons.schedule,
-      DocumentStatus.verified => Icons.check_circle,
-      DocumentStatus.rejected => Icons.cancel,
+      DocumentStatus.pending => LucideIcons.clock,
+      DocumentStatus.verified => LucideIcons.checkCircle,
+      DocumentStatus.rejected => LucideIcons.xCircle,
     };
 
     return Container(

@@ -5,6 +5,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
 import 'package:jireta_loan/features/documents/presentation/providers/document_notifier.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class DocumentPreviewPage extends ConsumerStatefulWidget {
   final KycDocument document;
@@ -43,7 +44,7 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
         actions: [
           if (doc.needsReupload)
             IconButton(
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(LucideIcons.refreshCw),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -104,7 +105,7 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.info_outline,
+                          Icon(LucideIcons.info,
                               size: 14, color: theme.colorScheme.outline),
                           const SizedBox(width: 6),
                           Text(
@@ -136,7 +137,7 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.broken_image_outlined,
+                        Icon(LucideIcons.imageOff,
                             size: 48, color: theme.colorScheme.error),
                         const SizedBox(height: 12),
                         Text(
@@ -176,7 +177,7 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.warning_amber_rounded,
+                    Icon(LucideIcons.alertTriangle,
                         size: 20, color: ColorTokens.lightError),
                     const SizedBox(width: 10),
                     Expanded(
@@ -214,7 +215,7 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: const Icon(Icons.refresh),
+                    icon: const Icon(LucideIcons.refreshCw),
                     label: const Text('Re-upload Document'),
                     style: FilledButton.styleFrom(
                       backgroundColor: ColorTokens.accent,
@@ -281,7 +282,7 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.broken_image_outlined, size: 48),
+                const Icon(LucideIcons.imageOff, size: 48),
                 const SizedBox(height: 8),
                 Text('Failed to load image',
                     style: Theme.of(context).textTheme.bodySmall),
@@ -296,7 +297,7 @@ class _DocumentPreviewPageState extends ConsumerState<DocumentPreviewPage> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.picture_as_pdf_outlined,
+          Icon(LucideIcons.fileText,
               size: 64, color: ColorTokens.lightError),
           const SizedBox(height: 12),
           Text(

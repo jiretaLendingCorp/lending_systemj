@@ -10,6 +10,7 @@ import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/google_sign_in_button.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -78,7 +79,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.error_outline, color: Colors.white, size: 20),
+                const Icon(LucideIcons.alertCircle, color: Colors.white, size: 20),
                 const SizedBox(width: 12),
                 Expanded(child: Text(next.message)),
               ],
@@ -138,7 +139,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
             textInputAction: TextInputAction.next,
             validator: Validators.email,
             prefixIcon: Icon(
-              Icons.email_outlined,
+              LucideIcons.mail,
               size: 20,
               color: isDark
                   ? ColorTokens.darkTextSecondary
@@ -165,7 +166,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
               return null;
             },
             prefixIcon: Icon(
-              Icons.lock_outlined,
+              LucideIcons.lock,
               size: 20,
               color: isDark
                   ? ColorTokens.darkTextSecondary
@@ -174,8 +175,8 @@ class _LoginPageState extends ConsumerState<LoginPage>
             suffixIcon: IconButton(
               icon: Icon(
                 _obscurePassword
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
+                    ? LucideIcons.eye
+                    : LucideIcons.eyeOff,
                 size: 20,
                 color: isDark
                     ? ColorTokens.darkTextSecondary
@@ -249,7 +250,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           key: ValueKey('idle'),
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.login_rounded, size: 18),
+                            Icon(LucideIcons.logIn, size: 18),
                             SizedBox(width: 8),
                             Text('Sign In'),
                           ],
@@ -394,27 +395,25 @@ class _AnimatedLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 72,
-        height: 72,
+        width: 88,
+        height: 88,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [ColorTokens.accent, ColorTokens.accentDark],
-          ),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: ColorTokens.accent.withValues(alpha: 0.3),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
+              color: ColorTokens.accent.withValues(alpha: 0.25),
+              blurRadius: 24,
+              offset: const Offset(0, 12),
             ),
           ],
         ),
-        child: const Icon(
-          Icons.account_balance_rounded,
-          size: 36,
-          color: Colors.white,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: Image.asset(
+            'assets/images/logo.jpg',
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.high,
+          ),
         ),
       ),
     );

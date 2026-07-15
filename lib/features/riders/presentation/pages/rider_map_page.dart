@@ -6,6 +6,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
 import 'package:jireta_loan/features/riders/presentation/providers/rider_notifier.dart';
 import 'package:jireta_loan/features/riders/presentation/widgets/gps_checkin_button.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class RiderMapPage extends ConsumerStatefulWidget {
   const RiderMapPage({super.key});
@@ -188,8 +189,8 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                 children: [
                   Icon(
                     task.isDisbursement
-                        ? Icons.outbox_outlined
-                        : Icons.inbox_outlined,
+                        ? LucideIcons.inbox
+                        : LucideIcons.inbox,
                     color: task.isDisbursement
                         ? ColorTokens.accent
                         : ColorTokens.secondaryAccent,
@@ -221,15 +222,15 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                 ],
               ),
               const SizedBox(height: 16),
-              _infoRow(Icons.location_on_outlined, task.lenderAddress),
+              _infoRow(LucideIcons.mapPin, task.lenderAddress),
               const SizedBox(height: 8),
               _infoRow(
-                Icons.payments_outlined,
+                LucideIcons.banknote,
                 '${task.type.label}: ${_formatAmount(task.amount)}',
               ),
               const SizedBox(height: 8),
               _infoRow(
-                Icons.description_outlined,
+                LucideIcons.fileText,
                 'Loan: ${task.loanId.substring(0, 8)}...',
               ),
               const SizedBox(height: 20),
@@ -241,7 +242,7 @@ class _RiderMapPageState extends ConsumerState<RiderMapPage> {
                       Navigator.pop(context);
                       _animateToTask(task);
                     },
-                    icon: const Icon(Icons.navigation),
+                    icon: const Icon(LucideIcons.navigation),
                     label: const Text('Navigate'),
                   ),
                 ),

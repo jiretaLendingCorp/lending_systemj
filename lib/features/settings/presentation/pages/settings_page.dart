@@ -9,6 +9,7 @@ import 'package:jireta_loan/features/settings/presentation/widgets/reauth_dialog
 import 'package:jireta_loan/features/settings/presentation/widgets/settings_section.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -101,10 +102,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       SettingsSection(
                         title: 'Interest Rate',
                         subtitle: 'Applied to all new loan applications',
-                        icon: Icons.percent_outlined,
+                        icon: LucideIcons.percent,
                         trailing: Tooltip(
                           message: 'Requires re-authentication',
-                          child: Icon(Icons.shield_outlined,
+                          child: Icon(LucideIcons.shield,
                               size: 16, color: ColorTokens.lightWarning),
                         ),
                         children: [
@@ -148,10 +149,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       SettingsSection(
                         title: 'Penalty Settings',
                         subtitle: 'Configure overdue payment penalties',
-                        icon: Icons.gavel_outlined,
+                        icon: LucideIcons.gavel,
                         trailing: Tooltip(
                           message: 'Requires re-authentication',
-                          child: Icon(Icons.shield_outlined,
+                          child: Icon(LucideIcons.shield,
                               size: 16, color: ColorTokens.lightWarning),
                         ),
                         children: [
@@ -218,7 +219,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       SettingsSection(
                         title: 'SMS Template',
                         subtitle: 'Template for payment reminder SMS',
-                        icon: Icons.sms_outlined,
+                        icon: LucideIcons.messageSquare,
                         children: [
                           TextFormField(
                             controller: _smsTemplateController,
@@ -251,7 +252,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       SettingsSection(
                         title: 'Notification Preferences',
                         subtitle: 'Configure how and when notifications are sent',
-                        icon: Icons.notifications_outlined,
+                        icon: LucideIcons.bell,
                         children: [
                           SettingsRow(
                             label: 'Email Notifications',
@@ -331,7 +332,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       SettingsSection(
                         title: 'System Flags',
                         subtitle: 'Feature toggles and maintenance controls',
-                        icon: Icons.toggle_on_outlined,
+                        icon: LucideIcons.toggleRight,
                         children: [
                           SettingsRow(
                             label: 'Maintenance Mode',

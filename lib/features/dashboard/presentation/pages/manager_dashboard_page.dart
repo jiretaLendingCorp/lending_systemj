@@ -12,6 +12,7 @@ import 'package:jireta_loan/features/dashboard/presentation/providers/dashboard_
 import 'package:jireta_loan/features/dashboard/presentation/widgets/kpi_card.dart';
 import 'package:jireta_loan/shared/widgets/empty_state.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class EmployeeDashboardPage extends ConsumerStatefulWidget {
   const EmployeeDashboardPage({super.key});
@@ -133,7 +134,7 @@ class _ManagerDashboardPageState extends ConsumerState<EmployeeDashboardPage> {
               child: KpiCard(
                 title: 'My Loans',
                 value: '${stats.totalLoans}',
-                icon: Icons.account_balance_rounded,
+                icon: LucideIcons.landmark,
                 iconColor: ColorTokens.accent,
               ),
             ),
@@ -143,7 +144,7 @@ class _ManagerDashboardPageState extends ConsumerState<EmployeeDashboardPage> {
               child: KpiCard(
                 title: 'Active Loans',
                 value: '${stats.activeLoans}',
-                icon: Icons.trending_up_rounded,
+                icon: LucideIcons.trendingUp,
                 iconColor: ColorTokens.lightInfo,
                 trend: stats.totalLoans > 0
                     ? '${((stats.activeLoans / stats.totalLoans) * 100).toStringAsFixed(0)}%'
@@ -157,7 +158,7 @@ class _ManagerDashboardPageState extends ConsumerState<EmployeeDashboardPage> {
               child: KpiCard(
                 title: 'Overdue Count',
                 value: '${stats.overdueCount}',
-                icon: Icons.warning_amber_rounded,
+                icon: LucideIcons.alertTriangle,
                 iconColor: ColorTokens.lightError,
                 trend: stats.overdueCount > 0
                     ? '${stats.overdueRate.toStringAsFixed(1)}%'
@@ -172,7 +173,7 @@ class _ManagerDashboardPageState extends ConsumerState<EmployeeDashboardPage> {
               child: KpiCard(
                 title: "Today's Tasks",
                 value: '${stats.pendingApprovals}',
-                icon: Icons.task_alt_rounded,
+                icon: LucideIcons.checkCircle,
                 iconColor: ColorTokens.lightWarning,
                 subtitle: 'Pending approvals',
                 onTap: () => context.go('/employee/loans'),
@@ -208,7 +209,7 @@ class _PendingApprovalsLink extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.hourglass_top_rounded,
+              LucideIcons.hourglass,
               size: 18,
               color: ColorTokens.lightWarning,
             ),
@@ -222,7 +223,7 @@ class _PendingApprovalsLink extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Icon(
-              Icons.arrow_forward_ios_rounded,
+              LucideIcons.chevronRight,
               size: 12,
               color: ColorTokens.lightWarning,
             ),
@@ -534,7 +535,7 @@ class _RecentCollectionsPanel extends StatelessWidget {
           const SizedBox(height: 8),
           if (collectionActivities.isEmpty)
             const EmptyState(
-              icon: Icons.savings_outlined,
+              icon: LucideIcons.piggyBank,
               title: 'No recent collections',
               subtitle: 'Collections will appear here as payments are received',
               iconSize: 40,
@@ -584,7 +585,7 @@ class _CollectionTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
-              Icons.payments_outlined,
+              LucideIcons.banknote,
               size: 16,
               color: ColorTokens.lightSuccess,
             ),
@@ -611,7 +612,7 @@ class _CollectionTile extends StatelessWidget {
             ),
           ),
           Icon(
-            Icons.check_circle_rounded,
+            LucideIcons.checkCircle,
             size: 16,
             color: ColorTokens.lightSuccess,
           ),

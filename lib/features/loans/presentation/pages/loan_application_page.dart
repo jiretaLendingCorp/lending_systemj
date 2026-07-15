@@ -9,6 +9,7 @@ import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
 import 'package:jireta_loan/features/loans/presentation/providers/loan_notifier.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LoanApplicationPage extends ConsumerStatefulWidget {
   const LoanApplicationPage({super.key});
@@ -122,7 +123,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
             children: [
               _SectionHeader(
                 title: 'Loan Amount',
-                icon: Icons.payments_outlined,
+                icon: LucideIcons.banknote,
                 isDark: isDark,
               ),
               const SizedBox(height: 8),
@@ -134,7 +135,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                 textInputAction: TextInputAction.next,
                 validator: Validators.loanAmount,
                 prefixIcon: Icon(
-                  Icons.payments_outlined,
+                  LucideIcons.banknote,
                   size: 20,
                   color: isDark
                       ? ColorTokens.darkTextSecondary
@@ -156,7 +157,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
 
               _SectionHeader(
                 title: 'Term & Schedule',
-                icon: Icons.calendar_today_outlined,
+                icon: LucideIcons.calendarPlus,
                 isDark: isDark,
               ),
               const SizedBox(height: 8),
@@ -183,7 +184,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                   return null;
                 },
                 prefixIcon: Icon(
-                  Icons.schedule_outlined,
+                  LucideIcons.clock,
                   size: 20,
                   color: isDark
                       ? ColorTokens.darkTextSecondary
@@ -288,7 +289,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
 
               _SectionHeader(
                 title: 'Co-Maker Information',
-                icon: Icons.person_add_outlined,
+                icon: LucideIcons.userPlus,
                 isDark: isDark,
               ),
               const SizedBox(height: 4),
@@ -310,7 +311,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                 textCapitalization: TextCapitalization.words,
                 validator: (value) => Validators.required(value, fieldName: 'Co-maker name'),
                 prefixIcon: Icon(
-                  Icons.person_outlined,
+                  LucideIcons.user,
                   size: 20,
                   color: isDark
                       ? ColorTokens.darkTextSecondary
@@ -326,7 +327,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                 textInputAction: TextInputAction.next,
                 validator: Validators.phone,
                 prefixIcon: Icon(
-                  Icons.phone_outlined,
+                  LucideIcons.phone,
                   size: 20,
                   color: isDark
                       ? ColorTokens.darkTextSecondary
@@ -342,7 +343,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                 textCapitalization: TextCapitalization.words,
                 validator: (value) => Validators.required(value, fieldName: 'Co-maker address'),
                 prefixIcon: Icon(
-                  Icons.location_on_outlined,
+                  LucideIcons.mapPin,
                   size: 20,
                   color: isDark
                       ? ColorTokens.darkTextSecondary
@@ -367,7 +368,7 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
                     initialValue: _coMakerRelationship,
                     decoration: InputDecoration(
                       prefixIcon: Icon(
-                        Icons.people_outlined,
+                        LucideIcons.users,
                         size: 20,
                         color: isDark
                             ? ColorTokens.darkTextSecondary
@@ -432,9 +433,9 @@ class _LoanApplicationPageState extends ConsumerState<LoanApplicationPage> {
   }
 
   IconData _scheduleIcon(ScheduleType type) => switch (type) {
-        ScheduleType.daily => Icons.today_rounded,
-        ScheduleType.weekly => Icons.date_range_rounded,
-        ScheduleType.monthly => Icons.calendar_month_rounded,
+        ScheduleType.daily => LucideIcons.calendarCheck,
+        ScheduleType.weekly => LucideIcons.calendarRange,
+        ScheduleType.monthly => LucideIcons.calendar,
       };
 }
 
@@ -509,7 +510,7 @@ class _LoanPreviewCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.calculate_outlined,
+                  LucideIcons.calculator,
                   size: 18,
                   color: ColorTokens.accent,
                 ),

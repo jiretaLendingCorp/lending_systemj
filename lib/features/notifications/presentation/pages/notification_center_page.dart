@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/features/notifications/presentation/providers/notification_notifier.dart';
 import 'package:jireta_loan/features/notifications/presentation/widgets/notification_card.dart';
@@ -90,7 +91,7 @@ class _NotificationCenterPageState
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.error_outline,
+                      Icon(LucideIcons.alertCircle,
                           size: 48, color: theme.colorScheme.error),
                       const SizedBox(height: 16),
                       Text(notifState.message,
@@ -113,7 +114,7 @@ class _NotificationCenterPageState
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.notifications_none_outlined,
+                            Icon(LucideIcons.bell,
                                 size: 64, color: theme.colorScheme.outline),
                             const SizedBox(height: 16),
                             Text(

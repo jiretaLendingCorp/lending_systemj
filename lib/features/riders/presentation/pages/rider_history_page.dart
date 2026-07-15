@@ -6,6 +6,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
 import 'package:jireta_loan/features/riders/presentation/providers/rider_notifier.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class RiderHistoryPage extends ConsumerStatefulWidget {
   const RiderHistoryPage({super.key});
@@ -71,7 +72,7 @@ class _RiderHistoryPageState extends ConsumerState<RiderHistoryPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.calendar_month),
+            icon: const Icon(LucideIcons.calendar),
             onPressed: _selectDateRange,
             tooltip: 'Filter by date',
           ),
@@ -88,7 +89,7 @@ class _RiderHistoryPageState extends ConsumerState<RiderHistoryPage> {
                   child: Row(
                     children: [
                       Chip(
-                        avatar: const Icon(Icons.filter_list, size: 16),
+                        avatar: const Icon(LucideIcons.filter, size: 16),
                         label: Text(
                           '${DateFormatter.formatDisplayDate(_selectedDateRange!.start)} '
                           '– ${DateFormatter.formatDisplayDate(_selectedDateRange!.end)}',
@@ -114,7 +115,7 @@ class _RiderHistoryPageState extends ConsumerState<RiderHistoryPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.error_outline,
+                      Icon(LucideIcons.alertCircle,
                           size: 48, color: theme.colorScheme.error),
                       const SizedBox(height: 16),
                       Text(riderState.message,
@@ -135,7 +136,7 @@ class _RiderHistoryPageState extends ConsumerState<RiderHistoryPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.history,
+                            Icon(LucideIcons.history,
                                 size: 64, color: theme.colorScheme.outline),
                             const SizedBox(height: 16),
                             Text(
@@ -216,8 +217,8 @@ class _HistoryTaskCard extends StatelessWidget {
               children: [
                 Icon(
                   task.isDisbursement
-                      ? Icons.outbox_outlined
-                      : Icons.inbox_outlined,
+                      ? LucideIcons.inbox
+                      : LucideIcons.inbox,
                   size: 20,
                   color: task.isDisbursement
                       ? ColorTokens.accent
@@ -268,7 +269,7 @@ class _HistoryTaskCard extends StatelessWidget {
             const SizedBox(height: 4),
             Row(
               children: [
-                Icon(Icons.location_on_outlined,
+                Icon(LucideIcons.mapPin,
                     size: 14, color: theme.colorScheme.outline),
                 const SizedBox(width: 4),
                 Expanded(

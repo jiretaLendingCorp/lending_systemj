@@ -1,6 +1,7 @@
 // lib/features/documents/domain/entities/kyc_document.dart
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 enum DocumentType {
   governmentId,
@@ -44,10 +45,10 @@ enum DocumentType {
       };
 
   IconData get icon => switch (this) {
-        DocumentType.governmentId => Icons.badge_outlined,
-        DocumentType.proofOfBilling => Icons.receipt_long_outlined,
-        DocumentType.selfie => Icons.face_outlined,
-        DocumentType.proofOfIncome => Icons.attach_money_outlined,
+        DocumentType.governmentId => LucideIcons.badge,
+        DocumentType.proofOfBilling => LucideIcons.receipt,
+        DocumentType.selfie => LucideIcons.smile,
+        DocumentType.proofOfIncome => LucideIcons.dollarSign,
       };
 }
 

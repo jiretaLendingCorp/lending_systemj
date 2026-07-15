@@ -1,5 +1,6 @@
 // lib/shared/widgets/search_bar_widget.dart
 import 'dart:async';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
@@ -88,7 +89,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           fontSize: 14,
         ),
         prefixIcon: Icon(
-          Icons.search_rounded,
+          LucideIcons.search,
           size: 20,
           color: isLight
               ? ColorTokens.lightTextSecondary
@@ -97,7 +98,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         suffixIcon: _hasText
             ? IconButton(
                 icon: Icon(
-                  Icons.close_rounded,
+                  LucideIcons.x,
                   size: 18,
                   color: isLight
                       ? ColorTokens.lightTextSecondary

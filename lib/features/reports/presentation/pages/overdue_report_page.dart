@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/features/reports/presentation/providers/report_notifier.dart';
 import 'package:jireta_loan/features/reports/presentation/widgets/aging_table.dart';
@@ -59,7 +60,7 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () => _exportReport(),
-                      icon: const Icon(Icons.download_outlined, size: 18),
+                      icon: const Icon(LucideIcons.download, size: 18),
                       label: const Text('Export'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorTokens.accent,
@@ -78,7 +79,7 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                         child: ReportSummaryCard(
                           label: 'Total Overdue',
                           value: CurrencyFormatter.formatPhp(state.report.totalAmount),
-                          icon: Icons.warning_amber_outlined,
+                          icon: LucideIcons.alertTriangle,
                           iconColor: ColorTokens.lightError,
                           subtitle: '${state.report.totalOverdue} loans',
                         ),
@@ -88,7 +89,7 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                         child: ReportSummaryCard(
                           label: '1-7 Days',
                           value: CurrencyFormatter.formatPhp(state.report.amount1to7),
-                          icon: Icons.schedule_outlined,
+                          icon: LucideIcons.clock,
                           iconColor: ColorTokens.lightWarning,
                           subtitle: '${state.report.days1to7} loans',
                         ),
@@ -98,7 +99,7 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                         child: ReportSummaryCard(
                           label: '8-30 Days',
                           value: CurrencyFormatter.formatPhp(state.report.amount8to30),
-                          icon: Icons.event_busy_outlined,
+                          icon: LucideIcons.calendarX,
                           iconColor: ColorTokens.secondaryAccent,
                           subtitle: '${state.report.days8to30} loans',
                         ),
@@ -108,7 +109,7 @@ class _OverdueReportPageState extends ConsumerState<OverdueReportPage> {
                         child: ReportSummaryCard(
                           label: '30+ Days',
                           value: CurrencyFormatter.formatPhp(state.report.amount30Plus),
-                          icon: Icons.error_outline,
+                          icon: LucideIcons.alertCircle,
                           iconColor: ColorTokens.lightError,
                           subtitle: '${state.report.days30Plus} loans',
                         ),

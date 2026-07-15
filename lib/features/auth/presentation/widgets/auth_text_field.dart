@@ -1,6 +1,7 @@
 // lib/features/auth/presentation/widgets/auth_text_field.dart
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class AuthTextField extends StatefulWidget {
   final String? label;
@@ -117,8 +118,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
                 ? IconButton(
                     icon: Icon(
                       _obscureText
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
+                          ? LucideIcons.eyeOff
+                          : LucideIcons.eye,
                       color: isDark
                           ? ColorTokens.darkTextSecondary
                           : ColorTokens.lightTextSecondary,

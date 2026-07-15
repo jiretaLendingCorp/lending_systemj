@@ -6,6 +6,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/borrowers/presentation/providers/borrower_notifier.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LenderPaymentsPage extends ConsumerStatefulWidget {
   const LenderPaymentsPage({super.key});
@@ -35,7 +36,7 @@ class _BorrowerPaymentsPageState extends ConsumerState<LenderPaymentsPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list),
+            icon: const Icon(LucideIcons.filter),
             onPressed: () {
               _showFilterDialog();
             },
@@ -52,7 +53,7 @@ class _BorrowerPaymentsPageState extends ConsumerState<LenderPaymentsPage> {
                 padding: const EdgeInsets.all(16),
                 child: FilledButton.icon(
                   onPressed: _navigateToMakePayment,
-                  icon: const Icon(Icons.payment),
+                  icon: const Icon(LucideIcons.creditCard),
                   label: const Text('Make a Payment'),
                   style: FilledButton.styleFrom(
                     backgroundColor: ColorTokens.accent,
@@ -72,7 +73,7 @@ class _BorrowerPaymentsPageState extends ConsumerState<LenderPaymentsPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.error_outline,
+                      Icon(LucideIcons.alertCircle,
                           size: 48, color: theme.colorScheme.error),
                       const SizedBox(height: 16),
                       Text(borrowerState.message,
@@ -95,7 +96,7 @@ class _BorrowerPaymentsPageState extends ConsumerState<LenderPaymentsPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.receipt_long_outlined,
+                            Icon(LucideIcons.receipt,
                                 size: 64, color: theme.colorScheme.outline),
                             const SizedBox(height: 16),
                             Text(
@@ -154,9 +155,9 @@ class _BorrowerPaymentsPageState extends ConsumerState<LenderPaymentsPage> {
         content: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(title: Text('All Loans'), leading: Icon(Icons.list)),
+            ListTile(title: Text('All Loans'), leading: Icon(LucideIcons.list)),
             ListTile(
-                title: Text('Current Loan'), leading: Icon(Icons.filter_1)),
+                title: Text('Current Loan'), leading: Icon(LucideIcons.filter)),
           ],
         ),
         actions: [
@@ -247,9 +248,9 @@ class _PaymentCard extends StatelessWidget {
       };
 
   IconData get _paymentStatusIcon => switch (payment.status) {
-        PaymentStatus.completed => Icons.check_circle_outline,
-        PaymentStatus.pending => Icons.schedule,
-        PaymentStatus.failed => Icons.error_outline,
-        PaymentStatus.refunded => Icons.replay,
+        PaymentStatus.completed => LucideIcons.checkCircle,
+        PaymentStatus.pending => LucideIcons.clock,
+        PaymentStatus.failed => LucideIcons.alertCircle,
+        PaymentStatus.refunded => LucideIcons.rotateCcw,
       };
 }

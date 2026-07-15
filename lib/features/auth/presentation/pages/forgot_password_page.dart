@@ -7,6 +7,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -68,7 +69,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
         children: [
           const SizedBox(height: 48),
           Icon(
-            Icons.mark_email_read_rounded,
+            LucideIcons.mailCheck,
             size: 64,
             color: ColorTokens.lightSuccess,
           ),
@@ -142,7 +143,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Icon(
-              Icons.lock_reset_rounded,
+              LucideIcons.lock,
               size: 48,
               color: ColorTokens.accent,
             ),
@@ -175,7 +176,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
               textInputAction: TextInputAction.done,
               validator: Validators.email,
               prefixIcon: Icon(
-                Icons.email_outlined,
+                LucideIcons.mail,
                 size: 20,
                 color: isDark
                     ? ColorTokens.darkTextSecondary
@@ -207,7 +208,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.arrow_back_rounded,
+                  LucideIcons.arrowLeft,
                   size: 16,
                   color: ColorTokens.accent,
                 ),
@@ -261,7 +262,7 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: const Icon(LucideIcons.arrowLeft),
           onPressed: () => context.pop(),
         ),
       ),

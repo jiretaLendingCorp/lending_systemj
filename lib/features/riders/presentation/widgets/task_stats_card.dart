@@ -1,6 +1,7 @@
 // lib/features/riders/presentation/widgets/task_stats_card.dart
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class TaskStatsCard extends StatelessWidget {
   final int total;
@@ -40,7 +41,7 @@ class TaskStatsCard extends StatelessWidget {
                     label: 'Total',
                     value: '$total',
                     color: theme.colorScheme.onSurface,
-                    icon: Icons.assignment_outlined,
+                    icon: LucideIcons.clipboardList,
                   ),
                 ),
                 _divider(),
@@ -49,7 +50,7 @@ class TaskStatsCard extends StatelessWidget {
                     label: 'Completed',
                     value: '$completed',
                     color: ColorTokens.lightSuccess,
-                    icon: Icons.check_circle_outline,
+                    icon: LucideIcons.checkCircle,
                   ),
                 ),
                 _divider(),
@@ -58,7 +59,7 @@ class TaskStatsCard extends StatelessWidget {
                     label: 'Pending',
                     value: '$pending',
                     color: ColorTokens.lightWarning,
-                    icon: Icons.schedule,
+                    icon: LucideIcons.clock,
                   ),
                 ),
                 _divider(),
@@ -67,7 +68,7 @@ class TaskStatsCard extends StatelessWidget {
                     label: 'In Transit',
                     value: '$inTransit',
                     color: ColorTokens.accent,
-                    icon: Icons.local_shipping_outlined,
+                    icon: LucideIcons.truck,
                   ),
                 ),
               ],

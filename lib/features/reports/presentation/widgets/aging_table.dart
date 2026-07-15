@@ -4,6 +4,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/features/reports/domain/entities/report_data.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class AgingTable extends StatelessWidget {
   final OverdueReport report;
@@ -39,7 +40,7 @@ class AgingTable extends StatelessWidget {
               child: Row(
                 children: [
                   const Icon(
-                    Icons.schedule_rounded,
+                    LucideIcons.clock,
                     size: 20,
                     color: ColorTokens.secondaryAccent,
                   ),

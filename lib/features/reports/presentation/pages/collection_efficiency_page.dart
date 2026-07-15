@@ -9,6 +9,7 @@ import 'package:jireta_loan/features/reports/presentation/providers/report_notif
 import 'package:jireta_loan/features/reports/presentation/widgets/report_summary_card.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class CollectionEfficiencyPage extends ConsumerStatefulWidget {
   const CollectionEfficiencyPage({super.key});
@@ -62,7 +63,7 @@ class _CollectionEfficiencyPageState
                     ),
                     OutlinedButton.icon(
                       onPressed: _selectDateRange,
-                      icon: const Icon(Icons.date_range_outlined, size: 18),
+                      icon: const Icon(LucideIcons.calendarRange, size: 18),
                       label: Text(
                         _dateRange != null
                             ? '${_formatDate(_dateRange!.start)} - ${_formatDate(_dateRange!.end)}'
@@ -72,7 +73,7 @@ class _CollectionEfficiencyPageState
                     const SizedBox(width: 8),
                     ElevatedButton.icon(
                       onPressed: () => _exportReport(),
-                      icon: const Icon(Icons.download_outlined, size: 18),
+                      icon: const Icon(LucideIcons.download, size: 18),
                       label: const Text('Export'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorTokens.accent,
@@ -107,7 +108,7 @@ class _CollectionEfficiencyPageState
           child: ReportSummaryCard(
             label: 'Efficiency Rate',
             value: '${report.efficiencyRate.toStringAsFixed(1)}%',
-            icon: Icons.speed_outlined,
+            icon: LucideIcons.gauge,
             iconColor: ColorTokens.accent,
             trend: report.efficiencyRate >= 90 ? 'Good' : 'Low',
             trendUp: report.efficiencyRate >= 90,
@@ -118,7 +119,7 @@ class _CollectionEfficiencyPageState
           child: ReportSummaryCard(
             label: 'Total Collected',
             value: CurrencyFormatter.formatPhp(report.totalCollected),
-            icon: Icons.payments_outlined,
+            icon: LucideIcons.banknote,
             iconColor: ColorTokens.lightSuccess,
             subtitle: 'of ${CurrencyFormatter.formatPhp(report.totalExpected)} expected',
           ),
@@ -128,7 +129,7 @@ class _CollectionEfficiencyPageState
           child: ReportSummaryCard(
             label: 'Success Rate',
             value: '${report.successRate.toStringAsFixed(1)}%',
-            icon: Icons.check_circle_outline,
+            icon: LucideIcons.checkCircle,
             iconColor: ColorTokens.lightSuccess,
             subtitle: '${report.successfulAttempts} of ${report.totalAttempts} attempts',
           ),
@@ -138,7 +139,7 @@ class _CollectionEfficiencyPageState
           child: ReportSummaryCard(
             label: 'Avg. Collection Time',
             value: '${report.averageCollectionTimeHours.toStringAsFixed(1)}h',
-            icon: Icons.schedule_outlined,
+            icon: LucideIcons.clock,
             iconColor: ColorTokens.lightInfo,
           ),
         ),

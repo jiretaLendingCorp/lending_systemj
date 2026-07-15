@@ -10,6 +10,7 @@ import 'package:jireta_loan/features/users/domain/entities/user_management.dart'
 import 'package:jireta_loan/features/users/presentation/providers/user_notifier.dart';
 import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
 import 'package:jireta_loan/shared/widgets/confirm_dialog.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/shared/widgets/status_chip.dart';
 
@@ -40,7 +41,7 @@ class UserDetailPage extends ConsumerWidget {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(LucideIcons.arrowLeft),
             onPressed: () => context.pop(),
           ),
           title: Text('User Details', style: TextStyles.titleLarge(context)),
@@ -57,7 +58,7 @@ class UserDetailPage extends ConsumerWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(LucideIcons.arrowLeft),
           onPressed: () => context.pop(),
         ),
         title: Text('User Details', style: TextStyles.titleLarge(context)),
@@ -287,7 +288,7 @@ class _ActionSection extends ConsumerWidget {
             children: [
               OutlinedButton.icon(
                 onPressed: () => _handleResetPassword(context, ref),
-                icon: const Icon(Icons.lock_reset_outlined, size: 18),
+                icon: const Icon(LucideIcons.lock, size: 18),
                 label: const Text('Reset Password'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: ColorTokens.accent,
@@ -298,7 +299,7 @@ class _ActionSection extends ConsumerWidget {
               ),
               OutlinedButton.icon(
                 onPressed: () => _handleForceLogout(context, ref),
-                icon: const Icon(Icons.logout_outlined, size: 18),
+                icon: const Icon(LucideIcons.logOut, size: 18),
                 label: const Text('Force Logout'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: ColorTokens.lightWarning,
@@ -310,7 +311,7 @@ class _ActionSection extends ConsumerWidget {
               if (user.isActive)
                 OutlinedButton.icon(
                   onPressed: () => _handleDeactivate(context, ref),
-                  icon: const Icon(Icons.person_off_outlined, size: 18),
+                  icon: const Icon(LucideIcons.userX, size: 18),
                   label: const Text('Deactivate'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: ColorTokens.lightError,
@@ -322,7 +323,7 @@ class _ActionSection extends ConsumerWidget {
               if (!user.isActive)
                 OutlinedButton.icon(
                   onPressed: () => _handleReactivate(context, ref),
-                  icon: const Icon(Icons.person_add_outlined, size: 18),
+                  icon: const Icon(LucideIcons.userPlus, size: 18),
                   label: const Text('Reactivate'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: ColorTokens.lightSuccess,

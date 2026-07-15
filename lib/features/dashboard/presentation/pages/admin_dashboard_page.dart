@@ -13,6 +13,7 @@ import 'package:jireta_loan/features/dashboard/presentation/widgets/kpi_card.dar
 import 'package:jireta_loan/shared/widgets/empty_state.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class AdminDashboardPage extends ConsumerStatefulWidget {
   const AdminDashboardPage({super.key});
@@ -69,20 +70,20 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
                       children: [
                         _QuickActionButton(
                           label: 'Create Loan',
-                          icon: Icons.add_rounded,
+                          icon: LucideIcons.plus,
                           onPressed: () => context.go('/head-employee/loans'),
                         ),
                         const SizedBox(width: 8),
                         _QuickActionButton(
                           label: 'Approve Loans',
-                          icon: Icons.check_circle_outline_rounded,
+                          icon: LucideIcons.checkCircle,
                           onPressed: () => context.go('/head-employee/loans'),
                           color: ColorTokens.lightSuccess,
                         ),
                         const SizedBox(width: 8),
                         _QuickActionButton(
                           label: 'View Reports',
-                          icon: Icons.assessment_outlined,
+                          icon: LucideIcons.barChart,
                           onPressed: () => context.go('/head-employee/reports'),
                           color: ColorTokens.secondaryAccent,
                         ),
@@ -166,7 +167,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
               child: KpiCard(
                 title: 'Total Loans',
                 value: '${stats.totalLoans}',
-                icon: Icons.account_balance_rounded,
+                icon: LucideIcons.landmark,
                 iconColor: ColorTokens.accent,
               ),
             ),
@@ -176,7 +177,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
               child: KpiCard(
                 title: 'Active Loans',
                 value: '${stats.activeLoans}',
-                icon: Icons.trending_up_rounded,
+                icon: LucideIcons.trendingUp,
                 iconColor: ColorTokens.lightInfo,
               ),
             ),
@@ -186,7 +187,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
               child: KpiCard(
                 title: 'Total Disbursed',
                 value: CurrencyFormatter.formatPhpCompact(stats.totalDisbursed),
-                icon: Icons.payments_rounded,
+                icon: LucideIcons.banknote,
                 iconColor: ColorTokens.lightSuccess,
               ),
             ),
@@ -196,7 +197,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
               child: KpiCard(
                 title: 'Overdue Count',
                 value: '${stats.overdueCount}',
-                icon: Icons.warning_amber_rounded,
+                icon: LucideIcons.alertTriangle,
                 iconColor: ColorTokens.lightError,
                 trend: stats.overdueCount > 0 ? '${stats.overdueRate.toStringAsFixed(1)}%' : null,
                 trendUp: false,
@@ -208,7 +209,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
               child: KpiCard(
                 title: 'Pending Approvals',
                 value: '${stats.pendingApprovals}',
-                icon: Icons.hourglass_top_rounded,
+                icon: LucideIcons.hourglass,
                 iconColor: ColorTokens.lightWarning,
                 onTap: () => context.go('/head-employee/loans'),
               ),
@@ -219,7 +220,7 @@ class _AdminDashboardPageState extends ConsumerState<AdminDashboardPage> {
               child: KpiCard(
                 title: "Today's Collections",
                 value: CurrencyFormatter.formatPhpCompact(stats.todayCollections),
-                icon: Icons.today_rounded,
+                icon: LucideIcons.calendarCheck,
                 iconColor: ColorTokens.secondaryAccent,
               ),
             ),
@@ -636,7 +637,7 @@ class _RecentActivityList extends StatelessWidget {
           const SizedBox(height: 8),
           if (activities.isEmpty)
             const EmptyState(
-              icon: Icons.history_rounded,
+              icon: LucideIcons.history,
               title: 'No recent activity',
               subtitle: 'Activity will appear here as actions are performed',
               iconSize: 40,
@@ -706,14 +707,14 @@ class _ActivityTile extends StatelessWidget {
 
   IconData _activityIcon(String type) {
     return switch (type) {
-      'loan_created' => Icons.add_circle_outline_rounded,
-      'loan_approved' => Icons.check_circle_outline_rounded,
-      'loan_rejected' => Icons.cancel_outlined,
-      'payment_received' => Icons.payments_outlined,
-      'disbursement' => Icons.send_outlined,
-      'collection' => Icons.savings_outlined,
-      'user_created' => Icons.person_add_outlined,
-      _ => Icons.info_outline_rounded,
+      'loan_created' => LucideIcons.plusCircle,
+      'loan_approved' => LucideIcons.checkCircle,
+      'loan_rejected' => LucideIcons.xCircle,
+      'payment_received' => LucideIcons.banknote,
+      'disbursement' => LucideIcons.send,
+      'collection' => LucideIcons.piggyBank,
+      'user_created' => LucideIcons.userPlus,
+      _ => LucideIcons.info,
     };
   }
 

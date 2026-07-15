@@ -4,6 +4,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class NextPaymentCard extends StatelessWidget {
   final Loan loan;
@@ -62,7 +63,7 @@ class NextPaymentCard extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.calendar_today_outlined,
+                  LucideIcons.calendarPlus,
                   size: 18,
                   color: isOverdue
                       ? ColorTokens.lightError
@@ -131,7 +132,7 @@ class NextPaymentCard extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.warning_amber_rounded,
+                    Icon(LucideIcons.alertTriangle,
                         size: 16, color: ColorTokens.lightError),
                     const SizedBox(width: 8),
                     Text(

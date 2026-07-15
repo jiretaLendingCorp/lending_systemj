@@ -6,6 +6,7 @@ import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
 import 'package:jireta_loan/features/disbursements/presentation/providers/disbursement_notifier.dart';
 import 'package:jireta_loan/features/disbursements/presentation/widgets/assign_rider_dialog.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class DisbursementDetailPage extends ConsumerStatefulWidget {
   final String disbursementId;
@@ -108,7 +109,7 @@ class _DisbursementDetailPageState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              LucideIcons.alertCircle,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -217,7 +218,7 @@ class _DisbursementDetailPageState
                     value: disbursement.riderName ?? 'Unknown',
                     isDark: isDark,
                     trailing: Icon(
-                      Icons.person_rounded,
+                      LucideIcons.user,
                       size: 16,
                       color: ColorTokens.roleRider,
                     ),
@@ -302,7 +303,7 @@ class _DisbursementDetailPageState
                   child: ElevatedButton.icon(
                     onPressed: () =>
                         _showAssignRiderDialog(disbursement.id),
-                    icon: const Icon(Icons.person_add_rounded),
+                    icon: const Icon(LucideIcons.userPlus),
                     label: const Text('Assign Rider'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorTokens.accent,
@@ -323,7 +324,7 @@ class _DisbursementDetailPageState
                     onPressed: () => ref
                         .read(disbursementFeatureProvider.notifier)
                         .markInTransit(disbursement.id),
-                    icon: const Icon(Icons.local_shipping_rounded),
+                    icon: const Icon(LucideIcons.truck),
                     label: const Text('Mark In Transit'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorTokens.lightInfo,
@@ -342,7 +343,7 @@ class _DisbursementDetailPageState
                   height: 48,
                   child: ElevatedButton.icon(
                     onPressed: _markDelivered,
-                    icon: const Icon(Icons.check_circle_rounded),
+                    icon: const Icon(LucideIcons.checkCircle),
                     label: const Text('Mark Delivered'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorTokens.lightSuccess,
@@ -359,7 +360,7 @@ class _DisbursementDetailPageState
                   height: 48,
                   child: OutlinedButton.icon(
                     onPressed: () => _markFailed(),
-                    icon: const Icon(Icons.error_rounded),
+                    icon: const Icon(LucideIcons.alertCircle),
                     label: const Text('Mark as Failed'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: ColorTokens.lightError,

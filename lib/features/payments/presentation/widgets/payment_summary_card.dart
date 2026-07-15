@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class PaymentSummaryCard extends StatelessWidget {
   final double amount;
@@ -38,7 +39,7 @@ class PaymentSummaryCard extends StatelessWidget {
           Row(
             children: [
               Icon(
-                Icons.receipt_long_rounded,
+                LucideIcons.receipt,
                 size: 18,
                 color: ColorTokens.accent,
               ),
@@ -117,7 +118,7 @@ class PaymentSummaryCard extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline_rounded,
+                    LucideIcons.info,
                     size: 16,
                     color: const Color(0xFF007BFF),
                   ),
@@ -146,7 +147,7 @@ class PaymentSummaryCard extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline_rounded,
+                    LucideIcons.info,
                     size: 16,
                     color: ColorTokens.secondaryAccent,
                   ),
@@ -175,7 +176,7 @@ class PaymentSummaryCard extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.info_outline_rounded,
+                    LucideIcons.info,
                     size: 16,
                     color: ColorTokens.lightSuccess,
                   ),

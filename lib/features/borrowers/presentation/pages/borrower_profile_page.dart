@@ -6,6 +6,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
 import 'package:jireta_loan/features/borrowers/presentation/providers/borrower_notifier.dart';
 import 'package:jireta_loan/features/borrowers/presentation/widgets/kyc_status_card.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LenderProfilePage extends ConsumerStatefulWidget {
   const LenderProfilePage({super.key});
@@ -38,7 +39,7 @@ class _BorrowerProfilePageState extends ConsumerState<LenderProfilePage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit_outlined),
+            icon: const Icon(LucideIcons.pencil),
             onPressed: _showEditProfileDialog,
             tooltip: 'Edit Profile',
           ),
@@ -115,18 +116,18 @@ class _BorrowerProfilePageState extends ConsumerState<LenderProfilePage> {
                 const SizedBox(height: 12),
                 _InfoCard(
                   children: [
-                    _infoRow(Icons.person_outline, 'Full Name',
+                    _infoRow(LucideIcons.user, 'Full Name',
                         borrowerState.profile.fullName),
-                    _infoRow(Icons.phone_outlined, 'Phone',
+                    _infoRow(LucideIcons.phone, 'Phone',
                         borrowerState.profile.phone),
-                    _infoRow(Icons.email_outlined, 'Email',
+                    _infoRow(LucideIcons.mail, 'Email',
                         borrowerState.profile.email),
-                    _infoRow(Icons.location_on_outlined, 'Address',
+                    _infoRow(LucideIcons.mapPin, 'Address',
                         borrowerState.profile.address),
-                    _infoRow(Icons.work_outline, 'Employment',
+                    _infoRow(LucideIcons.briefcase, 'Employment',
                         borrowerState.profile.employmentType.label),
                     _infoRow(
-                      Icons.payments_outlined,
+                      LucideIcons.banknote,
                       'Monthly Income',
                       borrowerState.profile.monthlyIncome > 0
                           ? '₱${borrowerState.profile.monthlyIncome.toStringAsFixed(0)}'
@@ -150,21 +151,21 @@ class _BorrowerProfilePageState extends ConsumerState<LenderProfilePage> {
                   SwitchListTile.adaptive(
                     title: const Text('Push Notifications'),
                     subtitle: const Text('Payment reminders & updates'),
-                    secondary: const Icon(Icons.notifications_outlined),
+                    secondary: const Icon(LucideIcons.bell),
                     value: true,
                     onChanged: (value) {},
                   ),
                   SwitchListTile.adaptive(
                     title: const Text('Biometric Login'),
                     subtitle: const Text('Use fingerprint or face ID'),
-                    secondary: const Icon(Icons.fingerprint),
+                    secondary: const Icon(LucideIcons.fingerprint),
                     value: false,
                     onChanged: (value) {},
                   ),
                   ListTile(
-                    leading: const Icon(Icons.lock_outline),
+                    leading: const Icon(LucideIcons.lock),
                     title: const Text('Change Password'),
-                    trailing: const Icon(Icons.chevron_right),
+                    trailing: const Icon(LucideIcons.chevronRight),
                     onTap: () {
                     },
                   ),
@@ -177,7 +178,7 @@ class _BorrowerProfilePageState extends ConsumerState<LenderProfilePage> {
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: () => _showSignOutDialog(),
-                  icon: Icon(Icons.logout, color: theme.colorScheme.error),
+                  icon: Icon(LucideIcons.logOut, color: theme.colorScheme.error),
                   label: Text(
                     'Sign Out',
                     style: TextStyle(color: theme.colorScheme.error),

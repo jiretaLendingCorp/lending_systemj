@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/users/presentation/providers/user_notifier.dart';
@@ -48,7 +49,7 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(LucideIcons.arrowLeft),
           onPressed: () => context.pop(),
         ),
         title: Text('Create User', style: TextStyles.titleLarge(context)),
@@ -81,7 +82,7 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       validator: Validators.required,
                       decoration: const InputDecoration(
                         labelText: 'Full Name',
-                        prefixIcon: Icon(Icons.person_outline),
+                        prefixIcon: Icon(LucideIcons.user),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -92,7 +93,7 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         labelText: 'Email',
-                        prefixIcon: Icon(Icons.email_outlined),
+                        prefixIcon: Icon(LucideIcons.mail),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -103,12 +104,12 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        prefixIcon: const Icon(Icons.lock_outline),
+                        prefixIcon: const Icon(LucideIcons.lock),
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: Icon(_obscurePassword
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined),
+                              ? LucideIcons.eye
+                              : LucideIcons.eyeOff),
                           onPressed: () {
                             setState(() => _obscurePassword = !_obscurePassword);
                           },
@@ -121,7 +122,7 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(
                         labelText: 'Phone (optional)',
-                        prefixIcon: Icon(Icons.phone_outlined),
+                        prefixIcon: Icon(LucideIcons.phone),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -130,7 +131,7 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                       controller: _branchIdController,
                       decoration: const InputDecoration(
                         labelText: 'Branch ID (optional)',
-                        prefixIcon: Icon(Icons.store_outlined),
+                        prefixIcon: Icon(LucideIcons.store),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -162,7 +163,7 @@ class _UserCreatePageState extends ConsumerState<UserCreatePage> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.warning_amber_outlined,
+                            Icon(LucideIcons.alertTriangle,
                                 size: 18, color: ColorTokens.roleHeadManager),
                             const SizedBox(width: 8),
                             Expanded(

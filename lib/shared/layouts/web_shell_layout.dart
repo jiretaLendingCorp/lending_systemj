@@ -8,6 +8,7 @@ import 'package:jireta_loan/core/theme/text_styles.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
 import 'package:jireta_loan/features/notifications/presentation/providers/notification_notifier.dart';
 import 'package:jireta_loan/shared/widgets/avatar_widget.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class _NavItem {
   final String label;
@@ -22,24 +23,24 @@ class _NavItem {
 }
 
 const _adminNavItems = [
-  _NavItem(label: 'Dashboard', icon: Icons.dashboard_rounded, route: '/head-employee/dashboard'),
-  _NavItem(label: 'Users', icon: Icons.people_rounded, route: '/head-employee/users'),
-  _NavItem(label: 'Loans', icon: Icons.account_balance_rounded, route: '/head-employee/loans'),
-  _NavItem(label: 'Lenders', icon: Icons.business_rounded, route: '/head-employee/lenders'),
-  _NavItem(label: 'Riders', icon: Icons.two_wheeler_rounded, route: '/head-employee/riders'),
-  _NavItem(label: 'Collections', icon: Icons.payments_rounded, route: '/head-employee/collections'),
-  _NavItem(label: 'Reports', icon: Icons.assessment_rounded, route: '/head-employee/reports'),
-  _NavItem(label: 'Audit Logs', icon: Icons.history_rounded, route: '/head-employee/audit'),
-  _NavItem(label: 'Settings', icon: Icons.settings_rounded, route: '/head-employee/settings'),
+  _NavItem(label: 'Dashboard', icon: LucideIcons.layoutDashboard, route: '/head-employee/dashboard'),
+  _NavItem(label: 'Users', icon: LucideIcons.users, route: '/head-employee/users'),
+  _NavItem(label: 'Loans', icon: LucideIcons.landmark, route: '/head-employee/loans'),
+  _NavItem(label: 'Lenders', icon: LucideIcons.building, route: '/head-employee/lenders'),
+  _NavItem(label: 'Riders', icon: LucideIcons.bike, route: '/head-employee/riders'),
+  _NavItem(label: 'Collections', icon: LucideIcons.banknote, route: '/head-employee/collections'),
+  _NavItem(label: 'Reports', icon: LucideIcons.barChart, route: '/head-employee/reports'),
+  _NavItem(label: 'Audit Logs', icon: LucideIcons.history, route: '/head-employee/audit'),
+  _NavItem(label: 'Settings', icon: LucideIcons.settings, route: '/head-employee/settings'),
 ];
 
 const _managerNavItems = [
-  _NavItem(label: 'Dashboard', icon: Icons.dashboard_rounded, route: '/employee/dashboard'),
-  _NavItem(label: 'Loans', icon: Icons.account_balance_rounded, route: '/employee/loans'),
-  _NavItem(label: 'Lenders', icon: Icons.business_rounded, route: '/employee/lenders'),
-  _NavItem(label: 'Riders', icon: Icons.two_wheeler_rounded, route: '/employee/riders'),
-  _NavItem(label: 'Collections', icon: Icons.payments_rounded, route: '/employee/collections'),
-  _NavItem(label: 'Profile', icon: Icons.person_rounded, route: '/employee/profile'),
+  _NavItem(label: 'Dashboard', icon: LucideIcons.layoutDashboard, route: '/employee/dashboard'),
+  _NavItem(label: 'Loans', icon: LucideIcons.landmark, route: '/employee/loans'),
+  _NavItem(label: 'Lenders', icon: LucideIcons.building, route: '/employee/lenders'),
+  _NavItem(label: 'Riders', icon: LucideIcons.bike, route: '/employee/riders'),
+  _NavItem(label: 'Collections', icon: LucideIcons.banknote, route: '/employee/collections'),
+  _NavItem(label: 'Profile', icon: LucideIcons.user, route: '/employee/profile'),
 ];
 
 final _sidebarCollapsedProvider = StateProvider<bool>((ref) => false);
@@ -173,18 +174,14 @@ class _SidebarHeader extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: ColorTokens.accent,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Center(
-              child: Text(
-                'LF',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5,
-                ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/images/logo.jpg',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.high,
               ),
             ),
           ),
@@ -197,21 +194,17 @@ class _SidebarHeader extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
-              color: ColorTokens.accent,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Center(
-              child: Text(
-                'LF',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5,
-                ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/images/logo.jpg',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.high,
               ),
             ),
           ),
@@ -229,7 +222,7 @@ class _SidebarHeader extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(
-              Icons.chevron_left_rounded,
+              LucideIcons.chevronLeft,
               size: 20,
             ),
             onPressed: onToggle,
@@ -414,7 +407,7 @@ class _SidebarFooter extends StatelessWidget {
           const SizedBox(width: 4),
           IconButton(
             icon: Icon(
-              Icons.logout_rounded,
+              LucideIcons.logOut,
               size: 18,
               color: isLight
                   ? ColorTokens.lightTextSecondary
@@ -508,7 +501,7 @@ class _TopBar extends ConsumerWidget {
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications_outlined, size: 22),
+                icon: const Icon(LucideIcons.bell, size: 22),
                 onPressed: () {
                   if (user.isHeadManager) {
                     context.go('/head-employee/dashboard');
@@ -551,7 +544,7 @@ class _TopBar extends ConsumerWidget {
 
           IconButton(
             icon: Icon(
-              isLight ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+              isLight ? LucideIcons.moon : LucideIcons.sun,
               size: 22,
             ),
             onPressed: () {

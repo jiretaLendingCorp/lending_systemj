@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/features/documents/domain/entities/kyc_document.dart';
 import 'package:jireta_loan/features/documents/presentation/providers/document_notifier.dart';
@@ -119,7 +120,7 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.error_outline,
+                        Icon(LucideIcons.alertCircle,
                             size: 18, color: ColorTokens.lightError),
                         const SizedBox(width: 8),
                         Expanded(
@@ -151,7 +152,7 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.check_circle_outline,
+                        Icon(LucideIcons.checkCircle,
                             size: 18, color: ColorTokens.lightSuccess),
                         const SizedBox(width: 8),
                         Text(
@@ -217,12 +218,12 @@ class _KycUploadPageState extends ConsumerState<KycUploadPage> {
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(Icons.camera_alt_outlined),
+                leading: const Icon(LucideIcons.camera),
                 title: const Text('Take Photo'),
                 onTap: () => Navigator.pop(context, ImageSource.camera),
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library_outlined),
+                leading: const Icon(LucideIcons.image),
                 title: const Text('Choose from Gallery'),
                 onTap: () => Navigator.pop(context, ImageSource.gallery),
               ),
@@ -347,7 +348,7 @@ class _TipsCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb_outline,
+                Icon(LucideIcons.lightbulb,
                     size: 18, color: ColorTokens.lightWarning),
                 const SizedBox(width: 8),
                 Text(

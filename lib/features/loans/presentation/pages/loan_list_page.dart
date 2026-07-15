@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/loans/presentation/providers/loan_notifier.dart';
 import 'package:jireta_loan/features/loans/presentation/widgets/loan_card.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LoanListPage extends ConsumerStatefulWidget {
   const LoanListPage({super.key});
@@ -80,7 +81,7 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
         title: const Text('Loans'),
         actions: [
           IconButton(
-            icon: Icon(_isSearching ? Icons.close_rounded : Icons.search_rounded),
+            icon: Icon(_isSearching ? LucideIcons.x : LucideIcons.search),
             onPressed: () {
               setState(() {
                 _isSearching = !_isSearching;
@@ -102,10 +103,10 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
                     autofocus: true,
                     decoration: InputDecoration(
                       hintText: 'Search loans...',
-                      prefixIcon: const Icon(Icons.search_rounded, size: 20),
+                      prefixIcon: const Icon(LucideIcons.search, size: 20),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
-                              icon: const Icon(Icons.clear_rounded, size: 20),
+                              icon: const Icon(LucideIcons.x, size: 20),
                               onPressed: () {
                                 _searchController.clear();
                                 _handleSearch('');
@@ -171,7 +172,7 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/lender/loan/apply'),
         tooltip: 'Apply for Loan',
-        child: const Icon(Icons.add_rounded),
+        child: const Icon(LucideIcons.plus),
       ),
     );
   }
@@ -187,7 +188,7 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              LucideIcons.alertCircle,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -220,7 +221,7 @@ class _LoanListPageState extends ConsumerState<LoanListPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.inbox_rounded,
+                LucideIcons.inbox,
                 size: 64,
                 color: isDark ? ColorTokens.darkDisabled : ColorTokens.lightDisabled,
               ),

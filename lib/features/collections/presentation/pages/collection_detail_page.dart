@@ -6,6 +6,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/collections/domain/entities/collection.dart';
 import 'package:jireta_loan/features/collections/presentation/providers/collection_notifier.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class CollectionDetailPage extends ConsumerStatefulWidget {
   final String collectionId;
@@ -102,7 +103,7 @@ class _CollectionDetailPageState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              LucideIcons.alertCircle,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -234,7 +235,7 @@ class _CollectionDetailPageState
                     value: collection.riderName ?? 'Unknown',
                     isDark: isDark,
                     trailing: Icon(
-                      Icons.person_rounded,
+                      LucideIcons.user,
                       size: 16,
                       color: ColorTokens.roleRider,
                     ),
@@ -298,7 +299,7 @@ class _CollectionDetailPageState
                       child: Row(
                         children: [
                           Icon(
-                            Icons.gps_fixed_rounded,
+                            LucideIcons.mapPin,
                             size: 20,
                             color: ColorTokens.lightSuccess,
                           ),
@@ -339,7 +340,7 @@ class _CollectionDetailPageState
                   child: ElevatedButton.icon(
                     onPressed: () => _showAssignRiderSheet(
                         collection.id),
-                    icon: const Icon(Icons.person_add_rounded),
+                    icon: const Icon(LucideIcons.userPlus),
                     label: const Text('Assign Rider'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorTokens.accent,
@@ -359,7 +360,7 @@ class _CollectionDetailPageState
                   child: ElevatedButton.icon(
                     onPressed: _markCollected,
                     icon:
-                        const Icon(Icons.check_circle_rounded),
+                        const Icon(LucideIcons.checkCircle),
                     label: const Text('Mark Collected'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ColorTokens.lightSuccess,
@@ -376,7 +377,7 @@ class _CollectionDetailPageState
                   height: 48,
                   child: OutlinedButton.icon(
                     onPressed: () => _markFailed(),
-                    icon: const Icon(Icons.error_rounded),
+                    icon: const Icon(LucideIcons.alertCircle),
                     label: const Text('Mark as Failed'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: ColorTokens.lightError,

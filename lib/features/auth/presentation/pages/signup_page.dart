@@ -9,6 +9,7 @@ import 'package:jireta_loan/features/auth/domain/entities/user.dart';
 import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:jireta_loan/features/auth/presentation/widgets/google_sign_in_button.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
@@ -94,7 +95,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Icon(
-            Icons.person_add_rounded,
+            LucideIcons.userPlus,
             size: 48,
             color: ColorTokens.accent,
           ),
@@ -127,7 +128,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
             textCapitalization: TextCapitalization.words,
             validator: Validators.name,
             prefixIcon: Icon(
-              Icons.person_outlined,
+              LucideIcons.user,
               size: 20,
               color: isDark
                   ? ColorTokens.darkTextSecondary
@@ -146,7 +147,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
             textInputAction: TextInputAction.next,
             validator: Validators.email,
             prefixIcon: Icon(
-              Icons.email_outlined,
+              LucideIcons.mail,
               size: 20,
               color: isDark
                   ? ColorTokens.darkTextSecondary
@@ -165,7 +166,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
             textInputAction: TextInputAction.next,
             validator: Validators.phone,
             prefixIcon: Icon(
-              Icons.phone_outlined,
+              LucideIcons.phone,
               size: 20,
               color: isDark
                   ? ColorTokens.darkTextSecondary
@@ -221,7 +222,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
             textInputAction: TextInputAction.next,
             validator: Validators.password,
             prefixIcon: Icon(
-              Icons.lock_outlined,
+              LucideIcons.lock,
               size: 20,
               color: isDark
                   ? ColorTokens.darkTextSecondary
@@ -241,7 +242,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
             validator: (value) =>
                 Validators.confirmPassword(value, _passwordController.text),
             prefixIcon: Icon(
-              Icons.lock_outlined,
+              LucideIcons.lock,
               size: 20,
               color: isDark
                   ? ColorTokens.darkTextSecondary
@@ -372,7 +373,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: const Icon(LucideIcons.arrowLeft),
           onPressed: () => context.pop(),
         ),
       ),
@@ -429,8 +430,8 @@ class _RoleOption extends StatelessWidget {
           children: [
             Icon(
               role == UserRole.lender
-                  ? Icons.person_rounded
-                  : Icons.two_wheeler_rounded,
+                  ? LucideIcons.user
+                  : LucideIcons.bike,
               size: 28,
               color: isSelected ? roleColor : (isDark ? ColorTokens.darkDisabled : ColorTokens.lightDisabled),
             ),

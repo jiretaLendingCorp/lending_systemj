@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class RoleBadge extends StatelessWidget {
   final UserRole role;
@@ -67,9 +68,9 @@ class RoleBadge extends StatelessWidget {
       };
 
   IconData get _roleIcon => switch (role) {
-        UserRole.headManager => Icons.admin_panel_settings_rounded,
-        UserRole.employee => Icons.manage_accounts_rounded,
-        UserRole.rider => Icons.two_wheeler_rounded,
-        UserRole.lender => Icons.person_rounded,
+        UserRole.headManager => LucideIcons.shieldCheck,
+        UserRole.employee => LucideIcons.userCog,
+        UserRole.rider => LucideIcons.bike,
+        UserRole.lender => LucideIcons.user,
       };
 }

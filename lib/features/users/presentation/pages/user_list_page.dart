@@ -13,6 +13,7 @@ import 'package:jireta_loan/shared/widgets/empty_state.dart';
 import 'package:jireta_loan/shared/widgets/error_banner.dart';
 import 'package:jireta_loan/shared/widgets/loading_overlay.dart';
 import 'package:jireta_loan/shared/widgets/search_bar_widget.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class UserListPage extends ConsumerStatefulWidget {
   const UserListPage({super.key});
@@ -74,7 +75,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                     ),
                     ElevatedButton.icon(
                       onPressed: () => context.push('/head-employee/users/create'),
-                      icon: const Icon(Icons.person_add_outlined, size: 18),
+                      icon: const Icon(LucideIcons.userPlus, size: 18),
                       label: const Text('Create User'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ColorTokens.accent,
@@ -170,7 +171,7 @@ class _UserListPageState extends ConsumerState<UserListPage> {
                   UsersLoaded(:final users) => users.isEmpty
                       ? const Center(
                           child: EmptyState(
-                            icon: Icons.people_outline,
+                            icon: LucideIcons.users,
                             title: 'No users found',
                             subtitle: 'Try adjusting your search or filters.',
                           ),

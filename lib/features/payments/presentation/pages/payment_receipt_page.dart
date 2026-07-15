@@ -6,6 +6,7 @@ import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 import 'package:jireta_loan/features/payments/presentation/providers/payment_notifier.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class PaymentReceiptPage extends ConsumerStatefulWidget {
   final String paymentId;
@@ -40,7 +41,7 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
           if (paymentState is PaymentDetailLoaded &&
               paymentState.payment.receiptUrl != null)
             IconButton(
-              icon: const Icon(Icons.download_rounded),
+              icon: const Icon(LucideIcons.download),
               tooltip: 'Download Receipt',
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -65,7 +66,7 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              LucideIcons.alertCircle,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -231,7 +232,7 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
                           content: Text('Downloading receipt PDF...')),
                     );
                   },
-                  icon: const Icon(Icons.picture_as_pdf_rounded),
+                  icon: const Icon(LucideIcons.fileText),
                   label: const Text('Download Receipt PDF'),
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: ColorTokens.accent),
@@ -254,7 +255,7 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
                         content: Text('Sharing receipt...')),
                   );
                 },
-                icon: const Icon(Icons.share_rounded),
+                icon: const Icon(LucideIcons.share),
                 label: const Text('Share Receipt'),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(
@@ -284,10 +285,10 @@ class _PaymentReceiptPageState extends ConsumerState<PaymentReceiptPage> {
       };
 
   IconData _statusIcon(PaymentStatus status) => switch (status) {
-        PaymentStatus.pending => Icons.schedule_rounded,
-        PaymentStatus.completed => Icons.check_circle_rounded,
-        PaymentStatus.failed => Icons.cancel_rounded,
-        PaymentStatus.refunded => Icons.replay_rounded,
+        PaymentStatus.pending => LucideIcons.clock,
+        PaymentStatus.completed => LucideIcons.checkCircle,
+        PaymentStatus.failed => LucideIcons.xCircle,
+        PaymentStatus.refunded => LucideIcons.rotateCcw,
       };
 
   Color _methodColor(PaymentMethod method) => switch (method) {
@@ -446,9 +447,9 @@ class _ReceiptStatusBadge extends StatelessWidget {
       };
 
   IconData get _statusIcon => switch (status) {
-        PaymentStatus.pending => Icons.schedule_rounded,
-        PaymentStatus.completed => Icons.check_circle_rounded,
-        PaymentStatus.failed => Icons.cancel_rounded,
-        PaymentStatus.refunded => Icons.replay_rounded,
+        PaymentStatus.pending => LucideIcons.clock,
+        PaymentStatus.completed => LucideIcons.checkCircle,
+        PaymentStatus.failed => LucideIcons.xCircle,
+        PaymentStatus.refunded => LucideIcons.rotateCcw,
       };
 }

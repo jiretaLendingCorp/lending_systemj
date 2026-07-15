@@ -8,6 +8,7 @@ import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
 import 'package:jireta_loan/features/payments/presentation/providers/payment_notifier.dart';
 import 'package:jireta_loan/features/payments/presentation/widgets/payment_method_card.dart';
 import 'package:jireta_loan/features/payments/presentation/widgets/payment_summary_card.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class PaymentPage extends ConsumerStatefulWidget {
   final String? loanId;
@@ -114,7 +115,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.account_balance_wallet_rounded,
+                        LucideIcons.wallet,
                         color: ColorTokens.accent,
                         size: 24,
                       ),

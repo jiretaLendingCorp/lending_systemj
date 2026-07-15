@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
 import 'package:jireta_loan/core/utils/validators.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class ReauthDialog extends StatefulWidget {
   const ReauthDialog({super.key});
@@ -39,7 +40,7 @@ class _ReauthDialogState extends State<ReauthDialog> {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.shield_outlined, color: ColorTokens.lightWarning, size: 24),
+          Icon(LucideIcons.shield, color: ColorTokens.lightWarning, size: 24),
           const SizedBox(width: 8),
           Text('Re-authentication Required',
               style: TextStyles.titleMedium(context)),
@@ -64,12 +65,12 @@ class _ReauthDialogState extends State<ReauthDialog> {
                 obscureText: _obscurePassword,
                 decoration: InputDecoration(
                   labelText: 'Current Password',
-                  prefixIcon: const Icon(Icons.lock_outline),
+                  prefixIcon: const Icon(LucideIcons.lock),
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(_obscurePassword
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined),
+                        ? LucideIcons.eye
+                        : LucideIcons.eyeOff),
                     onPressed: () {
                       setState(() => _obscurePassword = !_obscurePassword);
                     },
@@ -101,7 +102,7 @@ class _ReauthDialogState extends State<ReauthDialog> {
                   maxLength: 6,
                   decoration: const InputDecoration(
                     labelText: 'One-Time Password',
-                    prefixIcon: Icon(Icons.pin_outlined),
+                    prefixIcon: Icon(LucideIcons.mapPin),
                     border: OutlineInputBorder(),
                     counterText: '',
                   ),

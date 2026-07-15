@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LoanStatusBadge extends StatelessWidget {
   final LoanStatus status;
@@ -73,15 +74,15 @@ class LoanStatusBadge extends StatelessWidget {
       };
 
   IconData get _statusIcon => switch (status) {
-        LoanStatus.draft => Icons.edit_note_rounded,
-        LoanStatus.submitted => Icons.send_rounded,
-        LoanStatus.underReview => Icons.search_rounded,
-        LoanStatus.approved => Icons.check_circle_outline_rounded,
-        LoanStatus.disbursed => Icons.account_balance_outlined,
-        LoanStatus.active => Icons.play_circle_outline_rounded,
-        LoanStatus.paid => Icons.verified_rounded,
-        LoanStatus.defaulted => Icons.error_outline_rounded,
-        LoanStatus.rejected => Icons.cancel_outlined,
-        LoanStatus.closed => Icons.lock_outline_rounded,
+        LoanStatus.draft => LucideIcons.fileEdit,
+        LoanStatus.submitted => LucideIcons.send,
+        LoanStatus.underReview => LucideIcons.search,
+        LoanStatus.approved => LucideIcons.checkCircle,
+        LoanStatus.disbursed => LucideIcons.landmark,
+        LoanStatus.active => LucideIcons.playCircle,
+        LoanStatus.paid => LucideIcons.badgeCheck,
+        LoanStatus.defaulted => LucideIcons.alertCircle,
+        LoanStatus.rejected => LucideIcons.xCircle,
+        LoanStatus.closed => LucideIcons.lock,
       };
 }

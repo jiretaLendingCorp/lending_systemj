@@ -4,6 +4,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan_schedule.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LoanScheduleTable extends StatelessWidget {
   final List<LoanSchedule> schedule;
@@ -26,7 +27,7 @@ class LoanScheduleTable extends StatelessWidget {
           child: Column(
             children: [
               Icon(
-                Icons.event_note_rounded,
+                LucideIcons.calendarClock,
                 size: 48,
                 color: isDark ? ColorTokens.darkDisabled : ColorTokens.lightDisabled,
               ),

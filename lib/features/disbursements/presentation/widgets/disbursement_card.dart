@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class DisbursementCard extends StatelessWidget {
   final Disbursement disbursement;
@@ -95,7 +96,7 @@ class DisbursementCard extends StatelessWidget {
                   height: 36,
                   child: OutlinedButton.icon(
                     onPressed: onAssignRider,
-                    icon: const Icon(Icons.person_add_rounded, size: 16),
+                    icon: const Icon(LucideIcons.userPlus, size: 16),
                     label: Text(
                       disbursement.hasRiderAssigned
                           ? 'Reassign Rider'
@@ -131,7 +132,7 @@ class DisbursementCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.gps_fixed_rounded,
+                        LucideIcons.mapPin,
                         size: 14,
                         color: ColorTokens.lightSuccess,
                       ),

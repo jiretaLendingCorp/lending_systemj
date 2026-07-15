@@ -4,6 +4,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LogDetailDialog extends StatelessWidget {
   final AuditLog log;
@@ -25,7 +26,7 @@ class LogDetailDialog extends StatelessWidget {
     return AlertDialog(
       title: Row(
         children: [
-          Icon(Icons.history_outlined, color: ColorTokens.accent, size: 22),
+          Icon(LucideIcons.history, color: ColorTokens.accent, size: 22),
           const SizedBox(width: 8),
           Text('Audit Log Detail', style: TextStyles.titleMedium(context)),
         ],
@@ -157,7 +158,7 @@ class _DiffView extends StatelessWidget {
           Row(
             children: [
               Icon(
-                isOld ? Icons.remove_circle_outline : Icons.add_circle_outline,
+                isOld ? LucideIcons.minusCircle : LucideIcons.plusCircle,
                 size: 14,
                 color: textColor,
               ),

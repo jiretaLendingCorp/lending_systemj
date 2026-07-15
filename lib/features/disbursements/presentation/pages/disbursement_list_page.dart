@@ -6,6 +6,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/disbursements/domain/entities/disbursement.dart';
 import 'package:jireta_loan/features/disbursements/presentation/providers/disbursement_notifier.dart';
 import 'package:jireta_loan/features/disbursements/presentation/widgets/disbursement_card.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class DisbursementListPage extends ConsumerStatefulWidget {
   const DisbursementListPage({super.key});
@@ -253,7 +254,7 @@ class _DisbursementListPageState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline_rounded,
+              LucideIcons.alertCircle,
               size: 48,
               color: ColorTokens.lightError,
             ),
@@ -284,7 +285,7 @@ class _DisbursementListPageState
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.local_shipping_rounded,
+                LucideIcons.truck,
                 size: 64,
                 color: isDark
                     ? ColorTokens.darkDisabled

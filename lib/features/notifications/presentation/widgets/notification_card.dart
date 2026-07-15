@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/notifications/domain/entities/app_notification.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class NotificationCard extends StatelessWidget {
   final AppNotification notification;
@@ -111,11 +112,11 @@ class NotificationCard extends StatelessWidget {
       };
 
   IconData get _typeIcon => switch (notification.type) {
-        NotificationType.paymentReminder => Icons.payment_outlined,
-        NotificationType.loanApproved => Icons.check_circle_outline,
-        NotificationType.loanRejected => Icons.cancel_outlined,
-        NotificationType.disbursementRider => Icons.local_shipping_outlined,
-        NotificationType.penaltyApplied => Icons.warning_amber_outlined,
-        NotificationType.general => Icons.notifications_outlined,
+        NotificationType.paymentReminder => LucideIcons.creditCard,
+        NotificationType.loanApproved => LucideIcons.checkCircle,
+        NotificationType.loanRejected => LucideIcons.xCircle,
+        NotificationType.disbursementRider => LucideIcons.truck,
+        NotificationType.penaltyApplied => LucideIcons.alertTriangle,
+        NotificationType.general => LucideIcons.bell,
       };
 }

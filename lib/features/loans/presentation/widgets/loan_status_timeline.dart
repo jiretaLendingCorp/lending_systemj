@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/loans/domain/entities/loan.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class LoanStatusTimeline extends StatelessWidget {
   final Loan loan;
@@ -305,7 +306,7 @@ class _TimelineNode extends StatelessWidget {
             ),
           ),
           child: isCompleted && !isSkipped
-              ? const Icon(Icons.check_rounded, size: 14, color: Colors.white)
+              ? const Icon(LucideIcons.check, size: 14, color: Colors.white)
               : isCurrent
                   ? Container(
                       width: 8,
@@ -400,7 +401,7 @@ class _TimelineDot extends StatelessWidget {
         border: Border.all(color: color, width: 2),
       ),
       child: isCompleted
-          ? const Icon(Icons.check_rounded, size: 10, color: Colors.white)
+          ? const Icon(LucideIcons.check, size: 10, color: Colors.white)
           : isCurrent
               ? Container(
                   width: 6,

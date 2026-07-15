@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/theme/text_styles.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class ReportSummaryCard extends StatelessWidget {
   final String label;
@@ -72,7 +73,7 @@ class ReportSummaryCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        trendUp ? Icons.trending_up : Icons.trending_down,
+                        trendUp ? LucideIcons.trendingUp : LucideIcons.trendingDown,
                         size: 12,
                         color: trendUp
                             ? ColorTokens.lightSuccess

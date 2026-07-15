@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/currency_formatter.dart';
 import 'package:jireta_loan/features/riders/domain/entities/rider_task.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class TaskCard extends StatelessWidget {
   final RiderTask task;
@@ -64,7 +65,7 @@ class TaskCard extends StatelessWidget {
 
               Row(
                 children: [
-                  Icon(Icons.location_on_outlined,
+                  Icon(LucideIcons.mapPin,
                       size: 16, color: theme.colorScheme.outline),
                   const SizedBox(width: 6),
                   Expanded(
@@ -132,8 +133,8 @@ class _TypeIcon extends StatelessWidget {
         ? ColorTokens.accent
         : ColorTokens.secondaryAccent;
     final icon = type == RiderTaskType.disbursement
-        ? Icons.outbox_outlined
-        : Icons.inbox_outlined;
+        ? LucideIcons.inbox
+        : LucideIcons.inbox;
 
     return Container(
       width: 40,

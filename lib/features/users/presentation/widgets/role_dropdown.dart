@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
 import 'package:jireta_loan/features/auth/domain/entities/user.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class RoleDropdown extends StatelessWidget {
   final UserRole currentRole;
@@ -53,7 +54,7 @@ class RoleDropdown extends StatelessWidget {
           value: currentRole.toApiString(),
           isDense: true,
           isExpanded: false,
-          icon: const Icon(Icons.arrow_drop_down, size: 16),
+          icon: const Icon(LucideIcons.chevronDown, size: 16),
           style: theme.textTheme.bodySmall?.copyWith(
             color: roleColor,
             fontWeight: FontWeight.w600,

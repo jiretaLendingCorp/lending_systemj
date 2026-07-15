@@ -12,6 +12,7 @@ import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_loan_
 import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_payments_page.dart';
 import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_notifications_page.dart';
 import 'package:jireta_loan/features/borrowers/presentation/pages/borrower_profile_page.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class _MobileNavItem {
   final String label;
@@ -30,26 +31,26 @@ class _MobileNavItem {
 const _riderNavItems = [
   _MobileNavItem(
     label: 'Today',
-    icon: Icons.today_outlined,
-    activeIcon: Icons.today,
+    icon: LucideIcons.calendarCheck,
+    activeIcon: LucideIcons.calendarCheck,
     route: '/rider/today',
   ),
   _MobileNavItem(
     label: 'Map',
-    icon: Icons.map_outlined,
-    activeIcon: Icons.map,
+    icon: LucideIcons.map,
+    activeIcon: LucideIcons.map,
     route: '/rider/map',
   ),
   _MobileNavItem(
     label: 'History',
-    icon: Icons.history_outlined,
-    activeIcon: Icons.history,
+    icon: LucideIcons.history,
+    activeIcon: LucideIcons.history,
     route: '/rider/history',
   ),
   _MobileNavItem(
     label: 'Profile',
-    icon: Icons.person_outline_rounded,
-    activeIcon: Icons.person_rounded,
+    icon: LucideIcons.user,
+    activeIcon: LucideIcons.user,
     route: '/rider/profile',
   ),
 ];
@@ -57,26 +58,26 @@ const _riderNavItems = [
 const _borrowerNavItems = [
   _MobileNavItem(
     label: 'My Loan',
-    icon: Icons.account_balance_wallet_outlined,
-    activeIcon: Icons.account_balance_wallet,
+    icon: LucideIcons.wallet,
+    activeIcon: LucideIcons.wallet,
     route: '/lender/loan',
   ),
   _MobileNavItem(
     label: 'Payments',
-    icon: Icons.payment_outlined,
-    activeIcon: Icons.payment,
+    icon: LucideIcons.creditCard,
+    activeIcon: LucideIcons.creditCard,
     route: '/lender/payments',
   ),
   _MobileNavItem(
     label: 'Notifications',
-    icon: Icons.notifications_outlined,
-    activeIcon: Icons.notifications,
+    icon: LucideIcons.bell,
+    activeIcon: LucideIcons.bell,
     route: '/lender/notifications',
   ),
   _MobileNavItem(
     label: 'Profile',
-    icon: Icons.person_outline_rounded,
-    activeIcon: Icons.person_rounded,
+    icon: LucideIcons.user,
+    activeIcon: LucideIcons.user,
     route: '/lender/profile',
   ),
 ];

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/borrowers/domain/entities/borrower_profile.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class KycStatusCard extends StatelessWidget {
   final KycStatus kycStatus;
@@ -98,9 +99,9 @@ class KycStatusCard extends StatelessWidget {
       };
 
   IconData get _statusIcon => switch (kycStatus) {
-        KycStatus.pending => Icons.schedule,
-        KycStatus.verified => Icons.verified_user_outlined,
-        KycStatus.rejected => Icons.error_outline,
+        KycStatus.pending => LucideIcons.clock,
+        KycStatus.verified => LucideIcons.shieldCheck,
+        KycStatus.rejected => LucideIcons.alertCircle,
       };
 
   String get _statusTitle => switch (kycStatus) {

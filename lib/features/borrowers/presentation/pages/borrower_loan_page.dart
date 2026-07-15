@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/features/borrowers/presentation/providers/borrower_notifier.dart';
 import 'package:jireta_loan/features/borrowers/presentation/widgets/kyc_status_card.dart';
@@ -35,7 +36,7 @@ class _BorrowerLoanPageState extends ConsumerState<LenderLoanPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(LucideIcons.refreshCw),
             onPressed: () =>
                 ref.read(borrowerFeatureProvider.notifier).loadProfile(),
           ),
@@ -130,7 +131,7 @@ class _BorrowerLoanPageState extends ConsumerState<LenderLoanPage> {
                     padding: const EdgeInsets.all(16),
                     child: FilledButton.icon(
                       onPressed: _navigateToLoanApplication,
-                      icon: const Icon(Icons.add_circle_outline),
+                      icon: const Icon(LucideIcons.plusCircle),
                       label: const Text('Apply for New Loan'),
                       style: FilledButton.styleFrom(
                         backgroundColor: ColorTokens.accent,
@@ -173,7 +174,7 @@ class _ErrorView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.error_outline, size: 48, color: theme.colorScheme.error),
+          Icon(LucideIcons.alertCircle, size: 48, color: theme.colorScheme.error),
           const SizedBox(height: 16),
           Text(message, style: theme.textTheme.bodyLarge, textAlign: TextAlign.center),
           const SizedBox(height: 16),
@@ -198,7 +199,7 @@ class _NoActiveLoanCard extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            Icon(Icons.account_balance_wallet_outlined,
+            Icon(LucideIcons.wallet,
                 size: 48, color: theme.colorScheme.outline),
             const SizedBox(height: 16),
             Text(

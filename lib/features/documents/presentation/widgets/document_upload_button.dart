@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class DocumentUploadButton extends StatefulWidget {
   final String label;
@@ -23,7 +24,7 @@ class DocumentUploadButton extends StatefulWidget {
   const DocumentUploadButton({
     super.key,
     required this.label,
-    this.icon = Icons.add_photo_alternate_outlined,
+    this.icon = LucideIcons.imagePlus,
     this.isUploading = false,
     this.progress = 0.0,
     this.isSuccess = false,
@@ -100,7 +101,7 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
       width: double.infinity,
       child: FilledButton.icon(
         onPressed: null,
-        icon: const Icon(Icons.check_circle, size: 18),
+        icon: const Icon(LucideIcons.checkCircle, size: 18),
         label: const Text('Uploaded'),
         style: FilledButton.styleFrom(
           backgroundColor: ColorTokens.lightSuccess,
@@ -115,7 +116,7 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
       width: double.infinity,
       child: FilledButton.icon(
         onPressed: widget.enabled ? _pickImage : null,
-        icon: const Icon(Icons.refresh, size: 18),
+        icon: const Icon(LucideIcons.refreshCw, size: 18),
         label: const Text('Retry Upload'),
         style: FilledButton.styleFrom(
           backgroundColor: ColorTokens.lightError,
@@ -155,7 +156,7 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
                 children: [
                   Expanded(
                     child: _SourceButton(
-                      icon: Icons.camera_alt_outlined,
+                      icon: LucideIcons.camera,
                       label: 'Camera',
                       onTap: () => Navigator.pop(context, ImageSource.camera),
                     ),
@@ -163,7 +164,7 @@ class _DocumentUploadButtonState extends State<DocumentUploadButton> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _SourceButton(
-                      icon: Icons.photo_library_outlined,
+                      icon: LucideIcons.image,
                       label: 'Gallery',
                       onTap: () => Navigator.pop(context, ImageSource.gallery),
                     ),

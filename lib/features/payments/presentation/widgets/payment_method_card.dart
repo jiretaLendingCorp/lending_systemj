@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/features/payments/domain/entities/payment.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class PaymentMethodCard extends StatelessWidget {
   final PaymentMethod method;
@@ -97,7 +98,7 @@ class PaymentMethodCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.check_rounded,
+                  LucideIcons.check,
                   color: Colors.white,
                   size: 16,
                 ),
@@ -123,9 +124,9 @@ class PaymentMethodCard extends StatelessWidget {
   }
 
   IconData get _methodIcon => switch (method) {
-        PaymentMethod.gcash => Icons.phone_android_rounded,
-        PaymentMethod.office => Icons.store_rounded,
-        PaymentMethod.cash => Icons.payments_rounded,
+        PaymentMethod.gcash => LucideIcons.smartphone,
+        PaymentMethod.office => LucideIcons.store,
+        PaymentMethod.cash => LucideIcons.banknote,
       };
 
   Color get _methodAccentColor => switch (method) {

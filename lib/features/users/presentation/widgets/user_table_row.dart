@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/date_formatter.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/features/users/domain/entities/user_management.dart';
 import 'package:jireta_loan/features/users/presentation/widgets/role_dropdown.dart';
@@ -116,26 +117,26 @@ class UserTableRow extends StatelessWidget {
                 children: [
                   if (user.isActive && onResetPassword != null)
                     _ActionButton(
-                      icon: Icons.lock_reset_outlined,
+                      icon: LucideIcons.lock,
                       tooltip: 'Reset Password',
                       onTap: onResetPassword!,
                     ),
                   if (user.isActive && onForceLogout != null)
                     _ActionButton(
-                      icon: Icons.logout_outlined,
+                      icon: LucideIcons.logOut,
                       tooltip: 'Force Logout',
                       onTap: onForceLogout!,
                     ),
                   if (user.isActive && onDeactivate != null)
                     _ActionButton(
-                      icon: Icons.person_off_outlined,
+                      icon: LucideIcons.userX,
                       tooltip: 'Deactivate',
                       onTap: onDeactivate!,
                       color: ColorTokens.lightError,
                     ),
                   if (!user.isActive && onReactivate != null)
                     _ActionButton(
-                      icon: Icons.person_add_outlined,
+                      icon: LucideIcons.userPlus,
                       tooltip: 'Reactivate',
                       onTap: onReactivate!,
                       color: ColorTokens.lightSuccess,

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jireta_loan/core/auth/auth_provider.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class RiderProfilePage extends ConsumerWidget {
   const RiderProfilePage({super.key});
@@ -82,21 +83,21 @@ class RiderProfilePage extends ConsumerWidget {
             Row(
               children: [
                 _StatCard(
-                  icon: Icons.check_circle_outline,
+                  icon: LucideIcons.checkCircle,
                   label: 'Completed',
                   value: '0',
                   color: ColorTokens.lightSuccess,
                 ),
                 const SizedBox(width: 12),
                 _StatCard(
-                  icon: Icons.trending_up_outlined,
+                  icon: LucideIcons.trendingUp,
                   label: 'Success Rate',
                   value: '0%',
                   color: ColorTokens.accent,
                 ),
                 const SizedBox(width: 12),
                 _StatCard(
-                  icon: Icons.route_outlined,
+                  icon: LucideIcons.navigation,
                   label: 'This Month',
                   value: '0',
                   color: ColorTokens.secondaryAccent,
@@ -118,7 +119,7 @@ class RiderProfilePage extends ConsumerWidget {
                 SwitchListTile.adaptive(
                   title: const Text('Push Notifications'),
                   subtitle: const Text('Receive task notifications'),
-                  secondary: const Icon(Icons.notifications_outlined),
+                  secondary: const Icon(LucideIcons.bell),
                   value: true,
                   onChanged: (value) {
                   },
@@ -126,7 +127,7 @@ class RiderProfilePage extends ConsumerWidget {
                 SwitchListTile.adaptive(
                   title: const Text('Location Services'),
                   subtitle: const Text('Enable GPS for check-ins'),
-                  secondary: const Icon(Icons.location_on_outlined),
+                  secondary: const Icon(LucideIcons.mapPin),
                   value: true,
                   onChanged: (value) {
                   },
@@ -139,16 +140,16 @@ class RiderProfilePage extends ConsumerWidget {
             _SettingsSection(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.help_outline),
+                  leading: const Icon(LucideIcons.helpCircle),
                   title: const Text('Help & Support'),
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing: const Icon(LucideIcons.chevronRight),
                   onTap: () {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.info_outline),
+                  leading: const Icon(LucideIcons.info),
                   title: const Text('About Jireta Loan'),
-                  trailing: const Icon(Icons.chevron_right),
+                  trailing: const Icon(LucideIcons.chevronRight),
                   onTap: () {
                   },
                 ),
@@ -186,7 +187,7 @@ class RiderProfilePage extends ConsumerWidget {
                     ),
                   );
                 },
-                icon: Icon(Icons.logout,
+                icon: Icon(LucideIcons.logOut,
                     color: theme.colorScheme.error),
                 label: Text(
                   'Sign Out',

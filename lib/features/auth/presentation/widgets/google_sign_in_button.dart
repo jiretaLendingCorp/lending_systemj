@@ -18,9 +18,7 @@ class GoogleSignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isWeb = kIsWeb;
-
-    if (isWeb) {
+    if (kIsWeb) {
       return _buildWebButton(context, isDark);
     }
     return _buildMobileButton(context, isDark);
@@ -38,7 +36,7 @@ class GoogleSignInButton extends StatelessWidget {
             color: isDark ? ColorTokens.darkBorder : ColorTokens.lightBorder,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
@@ -54,13 +52,13 @@ class GoogleSignInButton extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _GoogleLogo(size: 20),
+                  const _GoogleLogoAsset(size: 20),
                   const SizedBox(width: 12),
                   Text(
                     'Sign in with Google',
                     style: TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                       color: isDark
                           ? ColorTokens.darkText
                           : ColorTokens.lightText,
@@ -75,7 +73,7 @@ class GoogleSignInButton extends StatelessWidget {
   Widget _buildMobileButton(BuildContext context, bool isDark) {
     return SizedBox(
       width: double.infinity,
-      height: 48,
+      height: 52,
       child: OutlinedButton.icon(
         onPressed: enabled && !isLoading ? onPressed : null,
         icon: isLoading
@@ -87,12 +85,12 @@ class GoogleSignInButton extends StatelessWidget {
                   color: isDark ? ColorTokens.darkText : ColorTokens.lightText,
                 ),
               )
-            : _GoogleLogo(size: 20),
+            : const _GoogleLogoAsset(size: 22),
         label: Text(
           isLoading ? 'Signing in...' : 'Continue with Google',
           style: TextStyle(
             fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             color: isDark ? ColorTokens.darkText : ColorTokens.lightText,
           ),
         ),
@@ -102,7 +100,7 @@ class GoogleSignInButton extends StatelessWidget {
             color: isDark ? ColorTokens.darkBorder : ColorTokens.lightBorder,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
@@ -110,92 +108,18 @@ class GoogleSignInButton extends StatelessWidget {
   }
 }
 
-class _GoogleLogo extends StatelessWidget {
+class _GoogleLogoAsset extends StatelessWidget {
   final double size;
-
-  const _GoogleLogo({required this.size});
+  const _GoogleLogoAsset({required this.size});
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(size, size),
-      painter: _GoogleLogoPainter(),
+    return Image.asset(
+      'assets/images/google.png',
+      width: size,
+      height: size,
+      fit: BoxFit.contain,
+      filterQuality: FilterQuality.high,
     );
   }
-}
-
-class _GoogleLogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
-
-    final strokeWidth = size.width * 0.12;
-
-    final bluePaint = Paint()
-      ..color = const Color(0xFF4285F4)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.butt;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - strokeWidth / 2),
-      -1.2,
-      1.4,
-      false,
-      bluePaint,
-    );
-
-    final redPaint = Paint()
-      ..color = const Color(0xFFEA4335)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.butt;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - strokeWidth / 2),
-      -2.0,
-      0.8,
-      false,
-      redPaint,
-    );
-
-    final yellowPaint = Paint()
-      ..color = const Color(0xFFFBBC05)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.butt;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - strokeWidth / 2),
-      0.6,
-      1.0,
-      false,
-      yellowPaint,
-    );
-
-    final greenPaint = Paint()
-      ..color = const Color(0xFF34A853)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.butt;
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius - strokeWidth / 2),
-      1.6,
-      1.0,
-      false,
-      greenPaint,
-    );
-
-    final barPaint = Paint()
-      ..color = const Color(0xFF4285F4)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-    canvas.drawLine(
-      Offset(center.dx, center.dy),
-      Offset(size.width - strokeWidth, center.dy),
-      barPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

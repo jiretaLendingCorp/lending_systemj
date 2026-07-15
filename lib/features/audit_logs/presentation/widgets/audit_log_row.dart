@@ -1,6 +1,7 @@
 // lib/features/audit_logs/presentation/widgets/audit_log_row.dart
 import 'package:flutter/material.dart';
 import 'package:jireta_loan/core/theme/color_tokens.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import 'package:jireta_loan/core/utils/date_formatter.dart';
 import 'package:jireta_loan/features/audit_logs/domain/entities/audit_log.dart';
@@ -108,7 +109,7 @@ class AuditLogRow extends StatelessWidget {
             Expanded(
               flex: 1,
               child: log.hasDiff
-                  ? Icon(Icons.compare_arrows, size: 16, color: ColorTokens.lightInfo)
+                  ? Icon(LucideIcons.arrowLeftRight, size: 16, color: ColorTokens.lightInfo)
                   : const SizedBox.shrink(),
             ),
             SizedBox(

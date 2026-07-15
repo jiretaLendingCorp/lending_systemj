@@ -7,6 +7,7 @@ import 'package:jireta_loan/core/theme/color_tokens.dart';
 import 'package:jireta_loan/core/utils/constants.dart';
 import 'package:jireta_loan/core/utils/validators.dart';
 import 'package:jireta_loan/features/auth/presentation/providers/auth_notifier.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class OtpVerificationPage extends ConsumerStatefulWidget {
   final String email;
@@ -149,7 +150,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: const Icon(LucideIcons.arrowLeft),
           onPressed: () => context.pop(),
         ),
       ),
@@ -160,7 +161,7 @@ class _OtpVerificationPageState extends ConsumerState<OtpVerificationPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Icon(
-                Icons.verified_user_rounded,
+                LucideIcons.shieldCheck,
                 size: 64,
                 color: ColorTokens.accent,
               ),
